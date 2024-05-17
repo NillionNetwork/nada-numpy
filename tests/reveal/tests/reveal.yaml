@@ -1,0 +1,60 @@
+---
+program: main
+inputs:
+  secrets:
+    B_1_2:
+      SecretInteger: "3"
+    B_2_1:
+      SecretInteger: "3"
+    A_0_1:
+      SecretInteger: "3"
+    B_0_0:
+      SecretInteger: "3"
+    B_0_1:
+      SecretInteger: "3"
+    A_1_2:
+      SecretInteger: "3"
+    A_2_2:
+      SecretInteger: "3"
+    B_2_2:
+      SecretInteger: "3"
+    A_2_0:
+      SecretInteger: "3"
+    A_1_1:
+      SecretInteger: "3"
+    B_0_2:
+      SecretInteger: "3"
+    B_1_0:
+      SecretInteger: "3"
+    A_2_1:
+      SecretInteger: "3"
+    B_1_1:
+      SecretInteger: "3"
+    B_2_0:
+      SecretInteger: "3"
+    A_0_0:
+      SecretInteger: "3"
+    A_0_2:
+      SecretInteger: "3"
+    A_1_0:
+      SecretInteger: "3"
+  public_variables: {}
+expected_outputs:
+  my_output_0_2:
+    SecretInteger: "6"
+  my_output_2_1:
+    SecretInteger: "6"
+  my_output_0_1:
+    SecretInteger: "6"
+  my_output_0_0:
+    SecretInteger: "6"
+  my_output_1_2:
+    SecretInteger: "6"
+  my_output_1_1:
+    SecretInteger: "6"
+  my_output_2_0:
+    SecretInteger: "6"
+  my_output_2_2:
+    SecretInteger: "6"
+  my_output_1_0:
+    SecretInteger: "6"

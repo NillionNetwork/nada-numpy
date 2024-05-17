@@ -1,0 +1,18 @@
+---
+program: main
+inputs:
+  secrets:
+    A_0:
+      SecretInteger: "10"
+    A_1:
+      SecretInteger: "8"
+    A_2:
+      SecretInteger: "6"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    SecretInteger: "5"
+  my_output_1:
+    SecretInteger: "4"
+  my_output_2:
+    SecretInteger: "3"
