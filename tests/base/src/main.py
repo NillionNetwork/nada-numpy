@@ -1,6 +1,7 @@
 from nada_dsl import *
 import nada_algebra as na
 
+
 def nada_main():
     parties = na.parties(2)
 

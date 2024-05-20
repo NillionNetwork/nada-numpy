@@ -1,11 +1,24 @@
-from nada_dsl import Party, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger, Integer, UnsignedInteger
-from nada_algebra.array import NadaArray
+"""
+This module provides common functions to work with Nada Algebra, including the creation
+and manipulation of arrays and party objects.
+"""
+
+from nada_dsl import (
+    Party,
+    SecretInteger,
+    SecretUnsignedInteger,
+    PublicInteger,
+    PublicUnsignedInteger,
+    Integer,
+    UnsignedInteger,
+)
 import numpy as np
+from nada_algebra.array import NadaArray
 
 
-def parties(num: int, prefix: str = "Party"):
+def parties(num: int, prefix: str = "Party") -> list:
     """
-    Create a list of Party objects.
+    Create a list of Party objects with specified names.
 
     Args:
         num (int): The number of parties to create.
@@ -16,89 +29,116 @@ def parties(num: int, prefix: str = "Party"):
     """
     return [Party(name=f"{prefix}{i}") for i in range(num)]
 
-def __from_list(lst: list, nada_type: Integer | UnsignedInteger):
+
+def __from_list(lst: list, nada_type: Integer | UnsignedInteger) -> list:
+    """
+    Recursively convert a nested list to a list of NadaInteger objects.
+
+    Args:
+        lst (list): A nested list of integers.
+        nada_type (type): The type of NadaInteger objects to create.
+
+    Returns:
+        list: A nested list of NadaInteger objects.
+    """
     if len(lst.shape) == 1:
         return [nada_type(int(elem)) for elem in lst]
     return [__from_list(lst[i], nada_type) for i in range(len(lst))]
 
+
 def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
-    Create a cleartext NadaArray with the specified elements.
+    Create a cleartext NadaArray from a list of integers.
 
     Args:
         lst (list): A list of integers representing the elements of the array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
-        np.ndarray: The created NumPy array.
+        NadaArray: The created NadaArray.
     """
     if not isinstance(lst, np.ndarray):
         lst = np.array(lst)
     return NadaArray(np.array(__from_list(lst, nada_type)))
 
+
 def ones(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
-    Create a cleartext NadaArray with ones of dims dimensions.
+    Create a cleartext NadaArray filled with ones.
 
     Args:
         dims (list): A list of integers representing the dimensions of the array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
-        np.ndarray: The created NumPy array.
+        NadaArray: The created NadaArray filled with ones.
     """
-    return from_list(np.ones(dims))
+    return from_list(np.ones(dims), nada_type)
+
 
 def zeros(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
-    Create a cleartext NadaArray with zeros of dims dimensions.
+    Create a cleartext NadaArray filled with zeros.
 
     Args:
         dims (list): A list of integers representing the dimensions of the array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
-        np.ndarray: The created NumPy array.
-    """ 
-    return from_list(np.zeros(dims))
-
-def array(dims: list, party: Party, prefix: str, nada_type: SecretInteger | SecretUnsignedInteger | PublicInteger | PublicUnsignedInteger = SecretInteger) -> "NadaArray":
+        NadaArray: The created NadaArray filled with zeros.
     """
-    Create a NumPy array with the specified dimensions for specified nada_type.
+    return from_list(np.zeros(dims), nada_type)
+
+
+def array(
+    dims: list,
+    party: Party,
+    prefix: str,
+    nada_type: (
+        SecretInteger | SecretUnsignedInteger | PublicInteger | PublicUnsignedInteger
+    ) = SecretInteger,
+) -> NadaArray:
+    """
+    Create a NadaArray with the specified dimensions and elements of the given type.
 
     Args:
         dims (list): A list of integers representing the dimensions of the array.
-        party (Party): An object representing the party.
-        prefix (str): A string prefix for the array elements.
-        nada_type (type): 
+        party (Party): The party object.
+        prefix (str): A prefix for naming the array elements.
+        nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
     Returns:
-        np.ndarray: The created NumPy array.
-    """    
+        NadaArray: The created NadaArray.
+    """
     return NadaArray.array(dims, party, prefix, nada_type)
 
-def random(dims: list, nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger) -> "NadaArray":
+
+def random(
+    dims: list, nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger
+) -> NadaArray:
     """
-    Create a random array with the specified dimensions.
+    Create a random NadaArray with the specified dimensions.
 
     Args:
         dims (list): A list of integers representing the dimensions of the array.
-        party (Party): The party object representing the current party.
-        prefix (str): A prefix string to be used for generating random values.
+        nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
     Returns:
-        np.ndarray: A NumPy array with random SecretInteger values.
-
+        NadaArray: A NadaArray with random values of the specified type.
     """
     return NadaArray.random(dims, nada_type)
 
-def output(array: NadaArray, party: Party, prefix: str):
+
+def output(arr: NadaArray, party: Party, prefix: str):
     """
-    Recursively generates a list of Output objects for each element in the input NadaArray.
+    Generate a list of Output objects for each element in the input NadaArray.
 
     Args:
-        array (np.ndarray): The input Nada array.
+        arr (NadaArray): The input NadaArray.
         party (Party): The party object.
-        prefix (str): The prefix to be added to the Output names.
+        prefix (str): The prefix for naming the Output objects.
 
     Returns:
-        List[Output]: A list of Output objects.
-    """    
-    return array.output(party, prefix)
+        list: A list of Output objects.
+    """
+    return arr.output(party, prefix)

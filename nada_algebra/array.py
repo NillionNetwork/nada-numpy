@@ -1,7 +1,24 @@
-from typing import Callable, Union
-import numpy as np
+"""
+    This module provides an enhanced array class, NadaArray, with additional functionality
+    for mathematical operations and integration with the Nada Algebra library.
+"""
+
 from dataclasses import dataclass
-from nada_dsl import Input, Party, Output, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger, Integer, UnsignedInteger
+from typing import Callable, Union
+
+import numpy as np
+from nada_dsl import (
+    Input,
+    Party,
+    Output,
+    SecretInteger,
+    SecretUnsignedInteger,
+    PublicInteger,
+    PublicUnsignedInteger,
+    Integer,
+    UnsignedInteger,
+)
+
 
 @dataclass
 class NadaArray:
@@ -14,72 +31,133 @@ class NadaArray:
 
     inner: np.ndarray
 
-    def __add__(self, other: Union["NadaArray", np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]) -> "NadaArray":
+    def __add__(
+        self,
+        other: Union[
+            "NadaArray",
+            np.ndarray,
+            int,
+            Integer,
+            UnsignedInteger,
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+        ],
+    ) -> "NadaArray":
         """
-        Element-wise addition with broadcasting.
+        Perform element-wise addition with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to add.
+            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger,
+                SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to add.
+
         Returns:
             NadaArray: A new NadaArray representing the element-wise addition result.
         """
         if isinstance(other, NadaArray):
             return NadaArray(self.inner + other.inner)
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return NadaArray(self.inner + Integer(other))
         return NadaArray(self.inner + other)
 
-    def __sub__(self, other: Union["NadaArray", np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]) -> "NadaArray":
+    def __sub__(
+        self,
+        other: Union[
+            "NadaArray",
+            np.ndarray,
+            int,
+            Integer,
+            UnsignedInteger,
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+        ],
+    ) -> "NadaArray":
         """
-        Element-wise subtraction with broadcasting.
+        Perform element-wise subtraction with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to subtract.
+            other (Union[NadaArray, np.ndarray, int,
+                Integer, UnsignedInteger, SecretInteger,
+                SecretUnsignedInteger, PublicInteger,
+                PublicUnsignedInteger]): The object to subtract.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise subtraction result.
         """
         if isinstance(other, NadaArray):
             return NadaArray(self.inner - other.inner)
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return NadaArray(self.inner - Integer(other))
         return NadaArray(self.inner - other)
 
-    def __mul__(self, other: Union["NadaArray", np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]) -> "NadaArray":
+    def __mul__(
+        self,
+        other: Union[
+            "NadaArray",
+            np.ndarray,
+            int,
+            Integer,
+            UnsignedInteger,
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+        ],
+    ) -> "NadaArray":
         """
-        Element-wise multiplication with broadcasting.
+        Perform element-wise multiplication with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to multiply.
+            other (Union[NadaArray, np.ndarray, int,
+                Integer, UnsignedInteger, SecretInteger,
+                SecretUnsignedInteger, PublicInteger,
+                PublicUnsignedInteger]): The object to multiply.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise multiplication result.
         """
         if isinstance(other, NadaArray):
             return NadaArray(self.inner * other.inner)
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return NadaArray(self.inner * Integer(other))
         return NadaArray(self.inner * other)
 
-    def __truediv__(self, other: Union["NadaArray", np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]) -> "NadaArray":
+    def __truediv__(
+        self,
+        other: Union[
+            "NadaArray",
+            np.ndarray,
+            int,
+            Integer,
+            UnsignedInteger,
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+        ],
+    ) -> "NadaArray":
         """
-        Element-wise division with broadcasting.
+        Perform element-wise division with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to divide.
+            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger,
+                SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to divide.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise division result.
         """
         if isinstance(other, NadaArray):
             return NadaArray(self.inner / other.inner)
-        elif isinstance(other, int):
+        if isinstance(other, int):
             return NadaArray(self.inner / Integer(other))
         return NadaArray(self.inner / other)
-    
+
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
-        Computes the dot product between two NadaArray objects.
+        Compute the dot product between two NadaArray objects.
 
         Args:
             other (NadaArray): The NadaArray to compute dot product with.
@@ -89,18 +167,18 @@ class NadaArray:
         """
         return NadaArray(self.inner.dot(other.inner))
 
-    def sum(self) -> SecretInteger | SecretUnsignedInteger:
+    def sum(self) -> Union[SecretInteger, SecretUnsignedInteger]:
         """
-        Computes the variance of the elements in the array.
+        Compute the sum of the elements in the array.
 
         Returns:
-            NadaType: The mean of the array in the type corresponding to the array
+            Union[SecretInteger, SecretUnsignedInteger]: The sum of the array elements.
         """
         return NadaArray(self.inner.sum())
 
     def hstack(self, other: "NadaArray") -> "NadaArray":
         """
-        Horizontally stacks two NadaArray objects.
+        Horizontally stack two NadaArray objects.
 
         Args:
             other (NadaArray): The NadaArray to stack horizontally with.
@@ -112,7 +190,7 @@ class NadaArray:
 
     def vstack(self, other: "NadaArray") -> "NadaArray":
         """
-        Vertically stacks two NadaArray objects.
+        Vertically stack two NadaArray objects.
 
         Args:
             other (NadaArray): The NadaArray to stack vertically with.
@@ -124,7 +202,7 @@ class NadaArray:
 
     def reveal(self) -> "NadaArray":
         """
-        Recursively reveals the elements of the array.
+        Reveal the elements of the array.
 
         Returns:
             NadaArray: A new NadaArray with revealed values.
@@ -134,34 +212,40 @@ class NadaArray:
     @staticmethod
     def apply_function_elementwise(func: Callable, array: np.ndarray) -> np.ndarray:
         """
-        Applies a function element-wise to the input array.
+        Apply a function element-wise to the input array.
 
         Args:
             func (Callable): The function to apply.
             array (np.ndarray): The input array.
 
         Returns:
-            np.ndarray: A NumPy array with the applied function.
+            np.ndarray: A NumPy array with the function applied to each element.
         """
         if len(array.shape) == 1:
             return [func(x) for x in array]
-        return [NadaArray.apply_function_elementwise(func, array[i]) for i in range(array.shape[0])]
-    
+        return [
+            NadaArray.apply_function_elementwise(func, array[i])
+            for i in range(array.shape[0])
+        ]
+
     def applypyfunc(self, func: Callable) -> "NadaArray":
         """
-        Applies a Python function element-wise to the array.
+        Apply a Python function element-wise to the array.
 
         Args:
             func (Callable): The function to apply.
 
         Returns:
-            NadaArray: A new NadaArray with the applied function.
+            NadaArray: A new NadaArray with the function applied to each element.
         """
-        return NadaArray(np.array(NadaArray.apply_function_elementwise(func, self.inner)))
-    
-    def output_array(array: np.ndarray, party: Party, prefix: str):
+        return NadaArray(
+            np.array(NadaArray.apply_function_elementwise(func, self.inner))
+        )
+
+    @staticmethod
+    def output_array(array: np.ndarray, party: Party, prefix: str) -> list:
         """
-        Recursively generates a list of Output objects for each element in the input array.
+        Generate a list of Output objects for each element in the input array.
 
         Args:
             array (np.ndarray): The input array.
@@ -169,78 +253,111 @@ class NadaArray:
             prefix (str): The prefix to be added to the Output names.
 
         Returns:
-            List[Output]: A list of Output objects.
+            list: A list of Output objects.
         """
-        if isinstance(array, SecretInteger) or isinstance(array, SecretUnsignedInteger):
+        if isinstance(array, (SecretInteger, SecretUnsignedInteger)):
             return [Output(array, f"{prefix}_0", party)]
-        
+
         if len(array.shape) == 1:
-            return [Output(array[i], f"{prefix}_{i}", party) for i in range(array.shape[0])]
-        return [v for i in range(array.shape[0]) for v in NadaArray.output_array(array[i], party, f"{prefix}_{i}")]
-    
-    def output(self, party: Party, prefix: str):
+            return [
+                Output(array[i], f"{prefix}_{i}", party) for i in range(array.shape[0])
+            ]
+        return [
+            v
+            for i in range(array.shape[0])
+            for v in NadaArray.output_array(array[i], party, f"{prefix}_{i}")
+        ]
+
+    def output(self, party: Party, prefix: str) -> list:
         """
-        Recursively generates a list of Output objects for each element in the input NadaArray.
+        Generate a list of Output objects for each element in the NadaArray.
 
         Args:
-            array (np.ndarray): The input Nada array.
             party (Party): The party object.
-            prefix (str): The prefix to be added to the Output names.
+            prefix (str): The prefix for naming the Output objects.
 
         Returns:
-            List[Output]: A list of Output objects.
+            list: A list of Output objects.
         """
         return NadaArray.output_array(self.inner, party, prefix)
-    
+
+    @staticmethod
     def create_list(dims: list, party: Party, prefix: str, generator: Callable) -> list:
         """
-        Recursively creates a nested list of objects generated by generator function
+        Recursively create a nested list of objects generated by a generator function.
 
         Args:
             dims (list): A list of integers representing the dimensions of the desired nested list.
-            party (Party): The party object representing the party to which the SecretInteger objects belong.
-            prefix (str): A string prefix to be used in the names of the SecretInteger objects.
+            party (Party): The party object representing the party to which the elements belong.
+            prefix (str): A prefix for the names of the elements.
+            generator (Callable): The function to generate the elements.
 
         Returns:
-            list: A nested list of SecretInteger objects.
-
+            list: A nested list of generated objects.
         """
         if len(dims) == 1:
             return [generator(f"{prefix}_{i}", party) for i in range(dims[0])]
-        return [NadaArray.create_list(dims[1:], party, f"{prefix}_{i}", generator) for i in range(dims[0])]
+        return [
+            NadaArray.create_list(
+                dims[1:],
+                party,
+                f"{prefix}_{i}",
+                generator,
+            )
+            for i in range(dims[0])
+        ]
 
-    def array(dims: list, party: Party, prefix: str, nada_type: SecretInteger | SecretUnsignedInteger | PublicInteger | PublicUnsignedInteger = SecretInteger) -> "NadaArray":
+    @staticmethod
+    def array(
+        dims: list,
+        party: Party,
+        prefix: str,
+        nada_type: Union[
+            SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger
+        ] = SecretInteger,
+    ) -> "NadaArray":
         """
-        Create a NumPy array with the specified dimensions for specified nada_type.
+        Create a NadaArray with the specified dimensions and element type.
 
         Args:
             dims (list): A list of integers representing the dimensions of the array.
-            party (Party): An object representing the party.
-            prefix (str): A string prefix for the array elements.
-            nada_type (type): 
+            party (Party): The party object.
+            prefix (str): A prefix for naming the array elements.
+            nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
         Returns:
-            np.ndarray: The created NumPy array.
+            NadaArray: The created NadaArray.
         """
-        secret_int_generator = lambda name, party: nada_type(Input(name=name, party=party))
-        return NadaArray(np.array(NadaArray.create_list(dims, party, prefix, secret_int_generator)))
-    
+        return NadaArray(
+            np.array(
+                NadaArray.create_list(
+                    dims,
+                    party,
+                    prefix,
+                    lambda name, party: nada_type(Input(name=name, party=party)),
+                )
+            )
+        )
 
-    def random(dims: list, nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger) -> "NadaArray":
+    @staticmethod
+    def random(
+        dims: list,
+        nada_type: Union[SecretInteger, SecretUnsignedInteger] = SecretInteger,
+    ) -> "NadaArray":
         """
-        Create a random array with the specified dimensions.
+        Create a random NadaArray with the specified dimensions.
 
         Args:
             dims (list): A list of integers representing the dimensions of the array.
-            party (Party): The party object representing the current party.
-            prefix (str): A prefix string to be used for generating random values.
+            nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
         Returns:
-            np.ndarray: A NumPy array with random SecretInteger values.
-
+            NadaArray: The created random NadaArray.
         """
-        secret_random_generator = lambda name, party: nada_type.random() 
-        return NadaArray(np.array(NadaArray.create_list(dims, None, None, secret_random_generator)))
-
-
-    
+        return NadaArray(
+            np.array(
+                NadaArray.create_list(
+                    dims, None, None, lambda name, party: nada_type.random()
+                )
+            )
+        )
