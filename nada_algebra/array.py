@@ -168,7 +168,6 @@ class NadaArray:
         if isinstance(other, NadaArray):
             return NadaArray(self.inner @ other.inner)
 
-    
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
         Compute the dot product between two NadaArray objects.
