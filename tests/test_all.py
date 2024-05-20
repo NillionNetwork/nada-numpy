@@ -18,7 +18,8 @@ TESTS = [
 ]
 
 EXAMPLES = [
-
+    "dot_product",
+    "matrix_multiplication",
 ]
 
 TESTS = ["tests/" + test for test in TESTS] + ["examples/" + test for test in EXAMPLES]
