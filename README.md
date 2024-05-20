@@ -14,10 +14,17 @@ Nada-Algebra is a Python library designed for algebraic operations on NumPy-like
 - **Custom Function Application**: Apply custom functions to each element of the array.
 
 ## Installation
+### Using pip
 
+```bash
+pip install nada-algebra
+```
+
+### From Sources
 You can install the nada-algebra library using Poetry:
 
 ```bash
+git clone https://github.com/NillionNetwork/nada-algebra.git
 pip3 install poetry
 poetry install nada-algebra
 ```
