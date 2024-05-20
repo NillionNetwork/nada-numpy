@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  deploy:
+  deploy-test:
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,9 @@ jobs:
     - name: Build package
       run: poetry build
     - name: Publish package
+      env:
+        PYPI_TEST_PASSWORD: ${{ secrets.PYPI_TEST_TOKEN }}
       run: |
         poetry config repositories.testpypi https://test.pypi.org/legacy/
-        poetry config pypi-token.testpypi ${{ secrets.PYPI_TEST_TOKEN }}
+        poetry config pypi-token.testpypi $PYPI_TEST_PASSWORD
         poetry publish -vv --build --repository testpypi
