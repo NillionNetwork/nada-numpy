@@ -155,6 +155,20 @@ class NadaArray:
             return NadaArray(self.inner / Integer(other))
         return NadaArray(self.inner / other)
 
+    def __matmul__(self, other: "NadaArray") -> "NadaArray":
+        """
+        Perform matrix multiplication with another NadaArray.
+
+        Args:
+            other (NadaArray): The NadaArray to perform matrix multiplication with.
+
+        Returns:
+            NadaArray: A new NadaArray representing the result of matrix multiplication.
+        """
+        if isinstance(other, NadaArray):
+            return NadaArray(self.inner @ other.inner)
+
+    
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
         Compute the dot product between two NadaArray objects.

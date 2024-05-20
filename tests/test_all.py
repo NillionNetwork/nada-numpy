@@ -14,9 +14,14 @@ TESTS = [
     "hstack",
     "vstack",
     "reveal",
+    "matrix_multiplication",
 ]
 
-TESTS = ["tests/" + test for test in TESTS]
+EXAMPLES = [
+
+]
+
+TESTS = ["tests/" + test for test in TESTS] + ["examples/" + test for test in EXAMPLES]
 
 
 @pytest.fixture(params=TESTS)
