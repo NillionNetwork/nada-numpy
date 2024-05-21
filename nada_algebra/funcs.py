@@ -76,6 +76,20 @@ def ones(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArra
     return from_list(np.ones(dims), nada_type)
 
 
+def ones_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+    """
+    Create a cleartext NadaArray filled with one with the same shape and type as a given array.
+
+    Args:
+        a (np.ndarray): A reference array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
+
+    Returns:
+        NadaArray: The created NadaArray filled with ones.
+    """
+    return from_list(np.ones_like(a), nada_type)
+
+
 def zeros(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
@@ -88,6 +102,20 @@ def zeros(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArr
         NadaArray: The created NadaArray filled with zeros.
     """
     return from_list(np.zeros(dims), nada_type)
+
+
+def zeros_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+    """
+    Create a cleartext NadaArray filled with zeros with the same shape and type as a given array.
+
+    Args:
+        a (np.ndarray): A reference array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
+
+    Returns:
+        NadaArray: The created NadaArray filled with zeros.
+    """
+    return from_list(np.zeros_like(a), nada_type)
 
 
 def array(
