@@ -59,7 +59,6 @@ class NadaArray:
         "transpose",
     }
 
-
     def __getitem__(self, item):
         """
         Get an item from the array.
@@ -446,16 +445,20 @@ class NadaArray:
             Any: Result of attribute.
         """
         if name not in self.SUPPORTED_OPERATIONS:
-            raise AttributeError("NumPy method `%s` is not (currently) supported by NadaArrays." % name)
+            raise AttributeError(
+                "NumPy method `%s` is not (currently) supported by NadaArrays." % name
+            )
 
         attr = getattr(self.inner, name)
 
         if callable(attr):
+
             def wrapper(*args, **kwargs):
                 result = attr(*args, **kwargs)
                 if isinstance(result, np.ndarray):
                     return NadaArray(result)
                 return result
+
             return wrapper
 
         if isinstance(attr, np.ndarray):
@@ -464,7 +467,7 @@ class NadaArray:
         return attr
 
     def __setattr__(self, name, value):
-        if name == 'inner':
+        if name == "inner":
             super().__setattr__(name, value)
         else:
             setattr(self.inner, name, value)

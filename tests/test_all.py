@@ -21,6 +21,7 @@ TESTS = [
     "gauss_jordan",
     "generate_array",
     "supported_operations",
+    "unsigned_matrix_inverse",
 ]
 
 EXAMPLES = [
@@ -28,7 +29,9 @@ EXAMPLES = [
     "matrix_multiplication",
 ]
 
-TESTS = ["tests/" + test for test in TESTS] + ["examples/" + test for test in EXAMPLES]
+TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
+    ("examples/" + test, test) for test in EXAMPLES
+]
 
 
 @pytest.fixture(params=TESTS)
@@ -37,8 +40,9 @@ def testname(request):
 
 
 def build_nada(test_dir):
+    print(test_dir)
     result = subprocess.run(
-        ["nada", "build"], cwd=test_dir, capture_output=True, text=True
+        ["nada", "build", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
     if result.returncode != 0:
         pytest.fail(f"Build failed: {result.stderr}")
@@ -46,7 +50,7 @@ def build_nada(test_dir):
 
 def run_nada(test_dir):
     result = subprocess.run(
-        ["nada", "test"], cwd=test_dir, capture_output=True, text=True
+        ["nada", "test", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
     if result.returncode != 0:
         pytest.fail(f"Tests failed: {result.stderr}")
@@ -58,10 +62,8 @@ class TestSuite:
         # Get current working directory
         cwd = os.getcwd()
         try:
-            # Change to specific nada project directory
-            os.chdir(testname)
             # Build Nada Program
-            build_nada(os.getcwd())
+            build_nada(testname)
         finally:
             # Return to initial directory
             os.chdir(cwd)
@@ -70,10 +72,8 @@ class TestSuite:
         # Get current working directory
         cwd = os.getcwd()
         try:
-            # Change to specific nada project directory
-            os.chdir(testname)
-            # Execute Tests on Program
-            run_nada(os.getcwd())
+            # Build Nada Program
+            build_nada(testname)
         finally:
             # Return to initial directory
             os.chdir(cwd)
