@@ -1,0 +1,44 @@
+---
+program: main
+inputs:
+  secrets:
+    A_0_0:
+      SecretUnsignedInteger: "2"
+    A_0_1:
+      SecretUnsignedInteger: "4"
+    A_0_2:
+      SecretUnsignedInteger: "6"
+    A_1_0:
+      SecretUnsignedInteger: "1"
+    A_1_1:
+      SecretUnsignedInteger: "3"
+    A_1_2:
+      SecretUnsignedInteger: "5"
+    A_2_0:
+      SecretUnsignedInteger: "3"
+    A_2_1:
+      SecretUnsignedInteger: "1"
+    A_2_2:
+      SecretUnsignedInteger: "2"
+  public_variables: 
+    B: 
+      UnsignedInteger: "456"
+expected_outputs:
+  my_output_0_0:
+    UnsignedInteger: "1"
+  my_output_0_1:
+    UnsignedInteger: "0"
+  my_output_0_2:
+    UnsignedInteger: "0"
+  my_output_1_0:
+    UnsignedInteger: "0"
+  my_output_1_1:
+    UnsignedInteger: "1"
+  my_output_1_2:
+    UnsignedInteger: "0"
+  my_output_2_0:
+    UnsignedInteger: "0"
+  my_output_2_1:
+    UnsignedInteger: "0"
+  my_output_2_2:
+    UnsignedInteger: "1"

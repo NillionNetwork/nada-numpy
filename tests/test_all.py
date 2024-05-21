@@ -15,6 +15,10 @@ TESTS = [
     "vstack",
     "reveal",
     "matrix_multiplication",
+    "get_item",
+    "get_attr",
+    "set_item",
+    "gauss_jordan",
 ]
 
 EXAMPLES = [
