@@ -4,7 +4,7 @@
 """
 
 from dataclasses import dataclass
-from typing import Callable, Union
+from typing import Any, Callable, Union
 
 import numpy as np
 from nada_dsl import (
@@ -30,6 +30,35 @@ class NadaArray:
     """
 
     inner: np.ndarray
+
+    SUPPORTED_OPERATIONS = {
+        "compress",
+        "copy",
+        "cumprod",
+        "cumsum",
+        "diagonal",
+        "fill",
+        "flatten",
+        "item",
+        "itemset",
+        "prod",
+        "put",
+        "ravel",
+        "repeat",
+        "reshape",
+        "resize",
+        "shape",
+        "size",
+        "squeeze",
+        "sum",
+        "swapaxes",
+        "T",
+        "take",
+        "tolist",
+        "trace",
+        "transpose",
+    }
+
 
     def __getitem__(self, item):
         """
@@ -58,18 +87,6 @@ class NadaArray:
             self.inner[key] = value.inner
         else:
             self.inner[key] = value
-
-    def __getattr__(self, name: str):
-        """
-        Get an attribute from the array.
-
-        Args:
-            name (str): The attribute name.
-
-        Returns:
-            NadaArray: A new NadaArray representing the retrieved attribute.
-        """
-        return getattr(self.inner, name)
 
     def __add__(
         self,
@@ -219,15 +236,6 @@ class NadaArray:
             NadaArray: A new NadaArray representing the dot product result.
         """
         return NadaArray(self.inner.dot(other.inner))
-
-    def sum(self) -> Union[SecretInteger, SecretUnsignedInteger]:
-        """
-        Compute the sum of the elements in the array.
-
-        Returns:
-            Union[SecretInteger, SecretUnsignedInteger]: The sum of the array elements.
-        """
-        return NadaArray(self.inner.sum())
 
     def hstack(self, other: "NadaArray") -> "NadaArray":
         """
@@ -424,3 +432,39 @@ class NadaArray:
                 )
             )
         )
+
+    def __getattr__(self, name: str) -> Any:
+        """Routes other attributes to the inner NumPy array.
+
+        Args:
+            name (str): Attribute name.
+
+        Raises:
+            AttributeError: Raised if attribute not supported.
+
+        Returns:
+            Any: Result of attribute.
+        """
+        if name not in self.SUPPORTED_OPERATIONS:
+            raise AttributeError("NumPy method `%s` is not (currently) supported by NadaArrays." % name)
+
+        attr = getattr(self.inner, name)
+
+        if callable(attr):
+            def wrapper(*args, **kwargs):
+                result = attr(*args, **kwargs)
+                if isinstance(result, np.ndarray):
+                    return NadaArray(result)
+                return result
+            return wrapper
+
+        if isinstance(attr, np.ndarray):
+            attr = NadaArray(attr)
+
+        return attr
+
+    def __setattr__(self, name, value):
+        if name == 'inner':
+            super().__setattr__(name, value)
+        else:
+            setattr(self.inner, name, value)
