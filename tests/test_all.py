@@ -15,6 +15,7 @@ TESTS = [
     "vstack",
     "reveal",
     "matrix_multiplication",
+    "generate_array",
 ]
 
 EXAMPLES = [
