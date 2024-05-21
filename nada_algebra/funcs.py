@@ -3,6 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
+from typing import Any
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -118,13 +119,13 @@ def zeros_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) ->
     return from_list(np.zeros_like(a), nada_type)
 
 
-def alphas(dims: list, alpha: Integer | UnsignedInteger | SecretInteger) -> NadaArray:
+def alphas(dims: list, alpha: Any) -> NadaArray:
     """
     Create a NadaArray filled with a certain constant value.
 
     Args:
         dims (list): A list of integers representing the dimensions of the array.
-        alpha (Integer | UnsignedInteger | SecretInteger): Constant value.
+        alpha (Any): Some constant value.
 
     Returns:
         NadaArray: NadaArray filled with constant value.
@@ -133,13 +134,13 @@ def alphas(dims: list, alpha: Integer | UnsignedInteger | SecretInteger) -> Nada
     return np.frompyfunc(lambda _: alpha, 1, 1)(ones_array)
 
 
-def alphas_like(a: np.ndarray, alpha: Integer | UnsignedInteger | SecretInteger) -> NadaArray:
+def alphas_like(a: np.ndarray, alpha: Any) -> NadaArray:
     """
     Create a NadaArray filled with a certain constant value with the same shape and type as a given array.
 
     Args:
         a (np.ndarray): Reference array.
-        alpha (Integer | UnsignedInteger | SecretInteger): Constant value.
+        alpha (Any): Some constant value.
 
     Returns:
         NadaArray: NadaArray filled with constant value.
