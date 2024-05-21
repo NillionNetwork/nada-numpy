@@ -118,6 +118,36 @@ def zeros_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) ->
     return from_list(np.zeros_like(a), nada_type)
 
 
+def alphas(dims: list, alpha: Integer | UnsignedInteger | SecretInteger) -> NadaArray:
+    """
+    Create a NadaArray filled with a certain constant value.
+
+    Args:
+        dims (list): A list of integers representing the dimensions of the array.
+        alpha (Integer | UnsignedInteger | SecretInteger): Constant value.
+
+    Returns:
+        NadaArray: NadaArray filled with constant value.
+    """
+    ones_array = np.ones(dims)
+    return np.frompyfunc(lambda _: alpha, 1, 1)(ones_array)
+
+
+def alphas_like(a: np.ndarray, alpha: Integer | UnsignedInteger | SecretInteger) -> NadaArray:
+    """
+    Create a NadaArray filled with a certain constant value with the same shape and type as a given array.
+
+    Args:
+        a (np.ndarray): Reference array.
+        alpha (Integer | UnsignedInteger | SecretInteger): Constant value.
+
+    Returns:
+        NadaArray: NadaArray filled with constant value.
+    """
+    ones_array = np.ones_like(a)
+    return np.frompyfunc(lambda _: alpha, 1, 1)(ones_array)
+
+
 def array(
     dims: list,
     party: Party,
