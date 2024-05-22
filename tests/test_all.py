@@ -15,6 +15,8 @@ TESTS = [
     "vstack",
     "reveal",
     "matrix_multiplication",
+    "generate_array",
+    "supported_operations",
     "get_item",
     "get_attr",
     "set_item",
