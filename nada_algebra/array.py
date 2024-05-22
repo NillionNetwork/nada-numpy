@@ -31,6 +31,46 @@ class NadaArray:
 
     inner: np.ndarray
 
+    def __getitem__(self, item):
+        """
+        Get an item from the array.
+
+        Args:
+            item: The item to retrieve.
+
+        Returns:
+            NadaArray: A new NadaArray representing the retrieved item.
+        """
+        if len(self.inner.shape) == 1:
+            return self.inner[item]
+        return NadaArray(self.inner[item])
+
+    def __setitem__(self, key, value):
+        """
+        Set an item in the array.
+
+        Args:
+            key: The key to set.
+            value: The value to set.
+        """
+        if isinstance(value, NadaArray):
+            # print("NadaArray")
+            self.inner[key] = value.inner
+        else:
+            self.inner[key] = value
+
+    def __getattr__(self, name: str):
+        """
+        Get an attribute from the array.
+
+        Args:
+            name (str): The attribute name.
+
+        Returns:
+            NadaArray: A new NadaArray representing the retrieved attribute.
+        """
+        return getattr(self.inner, name)
+
     def __add__(
         self,
         other: Union[
@@ -268,7 +308,17 @@ class NadaArray:
         Returns:
             list: A list of Output objects.
         """
-        if isinstance(array, (SecretInteger, SecretUnsignedInteger)):
+        if isinstance(
+            array,
+            (
+                SecretInteger,
+                SecretUnsignedInteger,
+                PublicInteger,
+                PublicUnsignedInteger,
+                Integer,
+                UnsignedInteger,
+            ),
+        ):
             return [Output(array, f"{prefix}_0", party)]
 
         if len(array.shape) == 1:
