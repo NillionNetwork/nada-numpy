@@ -45,10 +45,16 @@ def nada_main():
     e = e.trace()
     e = e + five
 
+    f = na.array([1], parties[0], "F")
+    f.fill(Integer(40))
+    f.itemset(0, f.item(0) + Integer(2))
+    f = f.tolist()[0]
+
     return [
         Output(a, "out_0", parties[0]),
         Output(b, "out_1", parties[0]),
         Output(c, "out_2", parties[0]),
         Output(d, "out_3", parties[0]),
         Output(e, "out_4", parties[0]),
+        Output(f, "out_5", parties[0]),
     ]

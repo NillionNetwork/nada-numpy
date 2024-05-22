@@ -31,14 +31,16 @@ class NadaArray:
 
     inner: np.ndarray
 
-    SUPPORTED_OPERATIONS = [
+    SUPPORTED_OPERATIONS = {
         "compress",
         "copy",
         "cumprod",
         "cumsum",
         "diagonal",
+        "fill",
         "flatten",
         "item",
+        "itemset",
         "prod",
         "put",
         "ravel",
@@ -52,9 +54,10 @@ class NadaArray:
         "swapaxes",
         "T",
         "take",
+        "tolist",
         "trace",
         "transpose",
-    ]
+    }
 
     def __getitem__(self, item):
         """

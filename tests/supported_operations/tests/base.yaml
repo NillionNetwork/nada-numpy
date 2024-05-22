@@ -76,6 +76,8 @@ inputs:
       SecretInteger: "8"
     E_2_2:
       SecretInteger: "9"
+    F_0:
+      SecretInteger: "1"
   public_variables: {}
 expected_outputs:
   out_0:
@@ -88,3 +90,5 @@ expected_outputs:
     SecretInteger: 13
   out_4:
     SecretInteger: 21
+  out_5:
+    Integer: 42
