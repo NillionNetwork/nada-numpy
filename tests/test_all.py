@@ -16,6 +16,7 @@ TESTS = [
     "reveal",
     "matrix_multiplication",
     "generate_array",
+    "supported_operations",
 ]
 
 EXAMPLES = [
