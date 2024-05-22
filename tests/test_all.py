@@ -21,6 +21,8 @@ TESTS = [
     "get_attr",
     "set_item",
     "gauss_jordan",
+    "generate_array",
+    "supported_operations",
 ]
 
 EXAMPLES = [
