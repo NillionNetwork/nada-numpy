@@ -17,6 +17,7 @@ def nada_main():
     alphas2 = na.alphas_like(alphas1, alpha=a)
 
     two_a = alphas1 + alphas2
+
     out = two_a + zeros1 + zeros2 + ones1 + ones2
 
     return out.output(party, "my_output")

@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any
+from typing import Any, Iterable
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -31,20 +31,20 @@ def parties(num: int, prefix: str = "Party") -> list:
     return [Party(name=f"{prefix}{i}") for i in range(num)]
 
 
-def __from_list(lst: list, nada_type: Integer | UnsignedInteger) -> list:
+def __from_numpy(arr: np.ndarray, nada_type: Integer | UnsignedInteger) -> list:
     """
-    Recursively convert a nested list to a list of NadaInteger objects.
+    Recursively convert a n-dimensional NumPy array to a nested list of NadaInteger objects.
 
     Args:
-        lst (list): A nested list of integers.
+        arr (np.ndarray): A NumPy array of integers.
         nada_type (type): The type of NadaInteger objects to create.
 
     Returns:
         list: A nested list of NadaInteger objects.
     """
-    if len(lst.shape) == 1:
-        return [nada_type(int(elem)) for elem in lst]
-    return [__from_list(lst[i], nada_type) for i in range(len(lst))]
+    if len(arr.shape) == 1:
+        return [nada_type(int(elem)) for elem in arr]
+    return [__from_numpy(arr[i], nada_type) for i in range(arr.shape[0])]
 
 
 def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
@@ -60,15 +60,15 @@ def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> Nada
     """
     if not isinstance(lst, np.ndarray):
         lst = np.array(lst)
-    return NadaArray(np.array(__from_list(lst, nada_type)))
+    return NadaArray(np.array(__from_numpy(lst, nada_type)))
 
 
-def ones(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def ones(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with ones.
 
     Args:
-        dims (list): A list of integers representing the dimensions of the array.
+        dims (Iterable[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
@@ -77,26 +77,28 @@ def ones(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArra
     return from_list(np.ones(dims), nada_type)
 
 
-def ones_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def ones_like(a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with one with the same shape and type as a given array.
 
     Args:
-        a (np.ndarray): A reference array.
+        a (np.ndarray | NadaArray): A reference array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
         NadaArray: The created NadaArray filled with ones.
     """
+    if isinstance(a, NadaArray):
+        a = a.inner
     return from_list(np.ones_like(a), nada_type)
 
 
-def zeros(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def zeros(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
 
     Args:
-        dims (list): A list of integers representing the dimensions of the array.
+        dims (Iterable[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
@@ -105,52 +107,56 @@ def zeros(dims: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArr
     return from_list(np.zeros(dims), nada_type)
 
 
-def zeros_like(a: np.ndarray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def zeros_like(a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros with the same shape and type as a given array.
 
     Args:
-        a (np.ndarray): A reference array.
+        a (np.ndarray | NadaArray): A reference array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
         NadaArray: The created NadaArray filled with zeros.
     """
+    if isinstance(a, NadaArray):
+        a = a.inner
     return from_list(np.zeros_like(a), nada_type)
 
 
-def alphas(dims: list, alpha: Any) -> NadaArray:
+def alphas(dims: Iterable[int], alpha: Any) -> NadaArray:
     """
     Create a NadaArray filled with a certain constant value.
 
     Args:
-        dims (list): A list of integers representing the dimensions of the array.
+        dims (Iterable[int]): A list of integers representing the dimensions of the array.
         alpha (Any): Some constant value.
 
     Returns:
         NadaArray: NadaArray filled with constant value.
     """
     ones_array = np.ones(dims)
-    return np.frompyfunc(lambda _: alpha, 1, 1)(ones_array)
+    return NadaArray(np.frompyfunc(lambda _: alpha, 1, 1)(ones_array))
 
 
-def alphas_like(a: np.ndarray, alpha: Any) -> NadaArray:
+def alphas_like(a: np.ndarray | NadaArray, alpha: Any) -> NadaArray:
     """
     Create a NadaArray filled with a certain constant value with the same shape and type as a given array.
 
     Args:
-        a (np.ndarray): Reference array.
+        a (np.ndarray | NadaArray): Reference array.
         alpha (Any): Some constant value.
 
     Returns:
         NadaArray: NadaArray filled with constant value.
     """
+    if isinstance(a, NadaArray):
+        a = a.inner
     ones_array = np.ones_like(a)
-    return np.frompyfunc(lambda _: alpha, 1, 1)(ones_array)
+    return NadaArray(np.frompyfunc(lambda _: alpha, 1, 1)(ones_array))
 
 
 def array(
-    dims: list,
+    dims: Iterable[int],
     party: Party,
     prefix: str,
     nada_type: (
@@ -161,7 +167,7 @@ def array(
     Create a NadaArray with the specified dimensions and elements of the given type.
 
     Args:
-        dims (list): A list of integers representing the dimensions of the array.
+        dims (Iterable[int]): A list of integers representing the dimensions of the array.
         party (Party): The party object.
         prefix (str): A prefix for naming the array elements.
         nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
@@ -173,13 +179,13 @@ def array(
 
 
 def random(
-    dims: list, nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger
+    dims: Iterable[int], nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger
 ) -> NadaArray:
     """
     Create a random NadaArray with the specified dimensions.
 
     Args:
-        dims (list): A list of integers representing the dimensions of the array.
+        dims (Iterable[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
     Returns:
