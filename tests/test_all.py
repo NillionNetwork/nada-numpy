@@ -22,6 +22,10 @@ TESTS = [
     "generate_array",
     "supported_operations",
     "unsigned_matrix_inverse",
+    "rational_arithmetic",
+    "rational_comparison",
+    "secret_rational_arithmetic",
+    "secret_rational_comparison",
 ]
 
 EXAMPLES = [
