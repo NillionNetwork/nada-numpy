@@ -32,10 +32,23 @@ class NadaArray:
     inner: np.ndarray
 
     SUPPORTED_OPERATIONS = {
+        "base",
         "compress",
         "copy",
         "cumprod",
         "cumsum",
+        "data",
+        "dtype",
+        "diagonal",
+        "fill",
+        "flags",
+        "flat",
+        "flatten",
+        "item",
+        "itemset",
+        "itemsize",
+        "nbytes",
+        "ndim",
         "diagonal",
         "fill",
         "flatten",
@@ -49,6 +62,7 @@ class NadaArray:
         "resize",
         "shape",
         "size",
+        "strides",
         "squeeze",
         "sum",
         "swapaxes",
@@ -82,7 +96,6 @@ class NadaArray:
             value: The value to set.
         """
         if isinstance(value, NadaArray):
-            # print("NadaArray")
             self.inner[key] = value.inner
         else:
             self.inner[key] = value
