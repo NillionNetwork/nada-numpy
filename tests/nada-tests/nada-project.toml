@@ -1,0 +1,91 @@
+name = "tests"
+version = "0.1.0"
+authors = [""]
+
+[[programs]]
+path = "src/base.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_div.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_mul.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_sub.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_sum.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_vec.py"
+prime_size = 128
+
+[[programs]]
+path = "src/dot_product.py"
+prime_size = 128
+
+[[programs]]
+path = "src/gauss_jordan.py"
+prime_size = 64
+
+[[programs]]
+path = "src/get_attr.py"
+prime_size = 128
+
+[[programs]]
+path = "src/get_item.py"
+prime_size = 128
+
+[[programs]]
+path = "src/get_vec.py"
+prime_size = 128
+
+[[programs]]
+path = "src/hstack.py"
+prime_size = 128
+
+[[programs]]
+path = "src/matrix_multiplication.py"
+prime_size = 128
+
+[[programs]]
+path = "src/reveal.py"
+prime_size = 128
+
+[[programs]]
+path = "src/set_item.py"
+prime_size = 128
+
+[[programs]]
+path = "src/shape.py"
+prime_size = 128
+
+[[programs]]
+path = "src/sum.py"
+prime_size = 128
+
+[[programs]]
+path = "src/vstack.py"
+prime_size = 128
+
+[[programs]]
+path = "src/unsigned_matrix_inverse.py"
+prime_size = 64
+
+[[programs]]
+path = "src/supported_operations.py"
+prime_size = 128
+
+[[programs]]
+path = "src/generate_array.py"
+prime_size = 128
+
+[[programs]]
+path = "src/private_inverse.py"
+prime_size = 64

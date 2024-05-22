@@ -1,0 +1,30 @@
+---
+program: vstack
+inputs:
+  secrets:
+    A_2:
+      SecretInteger: "3"
+    B_1:
+      SecretInteger: "3"
+    B_0:
+      SecretInteger: "3"
+    B_2:
+      SecretInteger: "3"
+    A_0:
+      SecretInteger: "3"
+    A_1:
+      SecretInteger: "3"
+  public_variables: {}
+expected_outputs:
+  my_output_1_2:
+    SecretInteger: "3"
+  my_output_0_1:
+    SecretInteger: "3"
+  my_output_0_0:
+    SecretInteger: "3"
+  my_output_1_0:
+    SecretInteger: "3"
+  my_output_0_2:
+    SecretInteger: "3"
+  my_output_1_1:
+    SecretInteger: "3"
