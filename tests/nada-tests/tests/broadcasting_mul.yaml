@@ -1,0 +1,18 @@
+---
+program: broadcasting_mul
+inputs:
+  secrets:
+    A_0:
+      SecretInteger: "3"
+    A_1:
+      SecretInteger: "4"
+    A_2:
+      SecretInteger: "5"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    SecretInteger: "6"
+  my_output_1:
+    SecretInteger: "8"
+  my_output_2:
+    SecretInteger: "10"

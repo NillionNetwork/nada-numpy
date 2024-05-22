@@ -63,7 +63,9 @@ def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> Nada
     return NadaArray(np.array(__from_numpy(lst, nada_type)))
 
 
-def ones(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def ones(
+    dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer
+) -> NadaArray:
     """
     Create a cleartext NadaArray filled with ones.
 
@@ -77,7 +79,9 @@ def ones(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) ->
     return from_list(np.ones(dims), nada_type)
 
 
-def ones_like(a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def ones_like(
+    a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer
+) -> NadaArray:
     """
     Create a cleartext NadaArray filled with one with the same shape and type as a given array.
 
@@ -93,7 +97,9 @@ def ones_like(a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = 
     return from_list(np.ones_like(a), nada_type)
 
 
-def zeros(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def zeros(
+    dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer
+) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
 
@@ -107,7 +113,9 @@ def zeros(dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer) -
     return from_list(np.zeros(dims), nada_type)
 
 
-def zeros_like(a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def zeros_like(
+    a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer
+) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros with the same shape and type as a given array.
 
@@ -179,7 +187,8 @@ def array(
 
 
 def random(
-    dims: Iterable[int], nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger
+    dims: Iterable[int],
+    nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger,
 ) -> NadaArray:
     """
     Create a random NadaArray with the specified dimensions.
