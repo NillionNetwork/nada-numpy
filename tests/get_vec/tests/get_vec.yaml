@@ -1,0 +1,30 @@
+---
+program: main
+inputs:
+  secrets:
+    A_2_1:
+      SecretInteger: "3"
+    A_0_0:
+      SecretInteger: "3"
+    A_1_1:
+      SecretInteger: "3"
+    A_1_2:
+      SecretInteger: "3"
+    A_0_1:
+      SecretInteger: "3"
+    A_0_2:
+      SecretInteger: "3"
+    A_1_0:
+      SecretInteger: "3"
+    A_2_2:
+      SecretInteger: "3"
+    A_2_0:
+      SecretInteger: "3"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    SecretInteger: "9"
+  my_output_1:
+    SecretInteger: "9"
+  my_output_2:
+    SecretInteger: "9"

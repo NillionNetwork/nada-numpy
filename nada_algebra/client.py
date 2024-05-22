@@ -3,6 +3,7 @@ This module provides functions to work with the Python Nillion Client for handli
 secret and public variable integers and generating named party objects and input dictionaries.
 """
 
+from typing import Union
 from py_nillion_client import (
     SecretInteger,
     SecretUnsignedInteger,
@@ -29,12 +30,12 @@ def parties(num: int, prefix: str = "Party") -> list:
 def array(
     arr: np.ndarray,
     prefix: str,
-    nada_type: (
-        type(SecretInteger)
-        | type(SecretUnsignedInteger)
-        | type(PublicVariableInteger)
-        | type(PublicVariableUnsignedInteger)
-    ) = SecretInteger,
+    nada_type: Union[
+        SecretInteger,
+        SecretUnsignedInteger,
+        PublicVariableInteger,
+        PublicVariableUnsignedInteger,
+    ] = SecretInteger,
 ) -> dict:
     """
     Recursively generates a dictionary of Nillion input objects for each element

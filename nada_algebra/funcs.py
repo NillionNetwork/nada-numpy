@@ -206,4 +206,4 @@ def output(arr: NadaArray, party: Party, prefix: str):
     Returns:
         list: A list of Output objects.
     """
-    return arr.output(party, prefix)
+    return NadaArray.output_array(arr, party, prefix)
