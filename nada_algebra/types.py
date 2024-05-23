@@ -24,6 +24,7 @@ _NadaInteger = Union[
     PublicInteger,
     PublicUnsignedInteger,
 ]
+_NadaLike = Union[int, "Rational", "SecretRational", NadaType]
 
 
 class Rational:
@@ -45,7 +46,7 @@ class Rational:
             raise TypeError("Cannot instantiate Rational from type `%s`." % type(value))
 
         self._scale = scale
-        self._value = value if is_scaled else rescale(value, self._scale, "up")
+        self._value = value if is_scaled else rescale(value, scale, "up")
 
     @property
     def scale(self) -> UnsignedInteger:
@@ -97,34 +98,34 @@ class Rational:
 
         return Rational(quantized, scale)
 
-    def __add__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __add__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: x + y, self, other)
 
-    def __radd__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __radd__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: y + x, self, other)
 
-    def __sub__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __sub__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: x - y, self, other)
 
-    def __rsub__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __rsub__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: y - x, self, other)
 
-    def __mul__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __mul__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: x * y, self, other, op_rescaling="down")
 
-    def __rmul__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __rmul__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: y * x, self, other, op_rescaling="down")
 
-    def __truediv__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __truediv__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: x / y, self, other, op_rescaling="up")
 
-    def __rtruediv__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __rtruediv__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: y / x, self, other, op_rescaling="up")
 
-    def __mod__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __mod__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: x % y, self, other)
 
-    def __rmod__(self, other: Any) -> Union["Rational", "SecretRational"]:
+    def __rmod__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return apply_arithmetic_op(lambda x, y: y % x, self, other)
 
     def __pow__(self, other: int) -> "Rational":
@@ -141,19 +142,19 @@ class Rational:
             raise TypeError("Cannot take negative of unsigned integer")
         return Rational(self.value * Integer(-1), self.scale)
 
-    def __lt__(self, other: Any) -> SecretBoolean:
+    def __lt__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x < y, self, other)
 
-    def __gt__(self, other: Any) -> SecretBoolean:
+    def __gt__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x > y, self, other)
 
-    def __le__(self, other: Any) -> SecretBoolean:
+    def __le__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x <= y, self, other)
 
-    def __ge__(self, other: Any) -> SecretBoolean:
+    def __ge__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x >= y, self, other)
 
-    def __eq__(self, other: Any) -> SecretBoolean:
+    def __eq__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x == y, self, other)
 
 
@@ -200,37 +201,37 @@ class SecretRational:
         """
         return self._scale
 
-    def __add__(self, other: Any) -> "SecretRational":
+    def __add__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x + y, self, other)
 
-    def __radd__(self, other: Any) -> "SecretRational":
+    def __radd__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: y + x, self, other)
 
-    def __sub__(self, other: Any) -> "SecretRational":
+    def __sub__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x - y, self, other)
 
-    def __rsub__(self, other: Any) -> "SecretRational":
+    def __rsub__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: y - x, self, other)
 
-    def __mul__(self, other: Any) -> "SecretRational":
+    def __mul__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x * y, self, other, op_rescaling="down")
 
-    def __rmul__(self, other: Any) -> "SecretRational":
+    def __rmul__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: y * x, self, other, op_rescaling="down")
 
-    def __truediv__(self, other: Any) -> "SecretRational":
+    def __truediv__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x / y, self, other, op_rescaling="up")
 
-    def __rtruediv__(self, other: Any) -> "SecretRational":
+    def __rtruediv__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: y / x, self, other, op_rescaling="up")
 
-    def __mod__(self, other: Any) -> "SecretRational":
+    def __mod__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x % y, self, other)
 
-    def __rmod__(self, other: Any) -> "SecretRational":
+    def __rmod__(self, other: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: y % x, self, other)
 
-    def __pow__(self, other: Any) -> "SecretRational":
+    def __pow__(self, other: _NadaLike) -> "SecretRational":
         if not isinstance(other, int):
             raise TypeError("Cannot raise SecretRational to power of type `%s`" % type(other).__name__)
         # TODO: try to group truncation if no overflow
@@ -244,34 +245,34 @@ class SecretRational:
             raise TypeError("Cannot take negative of unsigned integer")
         return SecretRational(self.value * Integer(-1), self.scale)
 
-    def __lshift__(self, other: Any) -> "SecretRational":
+    def __lshift__(self, other: _NadaLike) -> "SecretRational":
         return SecretRational(self.value << other, self.scale)
 
-    def __rshift__(self, other: Any) -> "SecretRational":
+    def __rshift__(self, other: _NadaLike) -> "SecretRational":
         return SecretRational(self.value >> other, self.scale)
 
-    def __lt__(self, other: Any) -> SecretBoolean:
+    def __lt__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x < y, self, other)
 
-    def __gt__(self, other: Any) -> SecretBoolean:
+    def __gt__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x > y, self, other)
 
-    def __le__(self, other: Any) -> SecretBoolean:
+    def __le__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x <= y, self, other)
 
-    def __ge__(self, other: Any) -> SecretBoolean:
+    def __ge__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x >= y, self, other)
 
-    def __eq__(self, other: Any) -> SecretBoolean:
+    def __eq__(self, other: _NadaLike) -> SecretBoolean:
         return apply_comparison_op(lambda x, y: x == y, self, other)
 
-    def public_equals(self, other) -> PublicBoolean:
+    def public_equals(self, other: _NadaLike) -> PublicBoolean:
         return apply_comparison_op(lambda x, y: x.public_equals(y), self, other)
 
     def reveal(self) -> PublicInteger:
         return self.value.reveal()
 
-    def trunc_pr(self, arg_0) -> "SecretRational":
+    def trunc_pr(self, arg_0: _NadaLike) -> "SecretRational":
         return apply_arithmetic_op(lambda x, y: x.trunc_pr(y), self, arg_0)
 
 
@@ -294,20 +295,20 @@ def rescale(value: NadaType, scale: UnsignedInteger, direction: str) -> NadaType
         try:
             return value << scale
         except:
-            return value * (2**scale.value)
+            return value * (1 << scale)
     elif direction == "down":
         # TODO: remove try block when rshift implemented for every NadaType
         try:
             return value >> scale
         except:
-            return value / (2**scale.value)
+            return value / (1 << scale)
 
     raise ValueError("Invalid scaling direction `%s`. Expected \"up\" or \"down\"" % direction)
 
 def apply_arithmetic_op(
     op: Callable[[Any, Any], Any],
     this: Union[Rational, SecretRational],
-    other: Any,
+    other: _NadaLike,
     op_rescaling: str=None,
 ) -> Union[Rational, SecretRational]:
     """Applies arithmetic operation between this value and an other value, accounting
@@ -316,7 +317,7 @@ def apply_arithmetic_op(
     Args:
         op (Callable[[Any, Any], Any]): Operation to apply between self and other.
         this (Union[Rational, SecretRational]): This value.
-        other (Any): Other value.
+        other (_NadaLike): Other value.
         op_rescaling (str, optional): Rescaling direction after operation has been
             applied, if necessary. Defaults to None.
 
@@ -326,6 +327,9 @@ def apply_arithmetic_op(
     Returns:
         Union[Rational, SecretRational]: Operation result.
     """
+    if isinstance(other, int):
+        other = Integer(other)
+
     if isinstance(other, (Rational, SecretRational)):
         result = op(this.value, other.value)
         if op_rescaling is not None:  # rescale after op if needed
@@ -347,7 +351,7 @@ def apply_arithmetic_op(
 def apply_comparison_op(
     comparison_op: Callable[[Any, Any], Any],
     this: Union[Rational, SecretRational],
-    other: Any,
+    other: _NadaLike,
 ) -> Union[PublicBoolean, SecretBoolean]:
     """Applies comparison operation between this value and an other value, accounting
     for any possible rescaling.
@@ -355,7 +359,7 @@ def apply_comparison_op(
     Args:
         comparison_op (Callable[[Any, Any], Any]): Comparison operation to apply between self and other.
         this (Union[Rational, SecretRational]): This value.
-        other (Any): Other value.
+        other (_NadaLike): Other value.
 
     Raises:
         TypeError: Raised when an invalid scaling direction is passed.
@@ -363,10 +367,14 @@ def apply_comparison_op(
     Returns:
         Union[PublicBoolean, SecretBoolean]: Comparison operation result.
     """
+    if isinstance(other, int):
+        other = Integer(other)
+
     if isinstance(other, (Rational, SecretRational)):
         other = other.value
     elif isinstance(other, NadaType):
         other = rescale(other, this.scale, "up")
     else:
         raise TypeError("Cannot perform comparison between type `%s` and type `%s`" % (type(this).__name__, type(other).__name__))
+
     return comparison_op(this.value, other)
