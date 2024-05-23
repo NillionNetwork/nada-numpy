@@ -1,5 +1,5 @@
 ---
-program: main
+program: dot_product
 inputs:
   secrets:
     A_0:

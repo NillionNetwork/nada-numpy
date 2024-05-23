@@ -1,5 +1,5 @@
 ---
-program: main
+program: matrix_multiplication
 inputs:
   secrets:
     A_0_0:
