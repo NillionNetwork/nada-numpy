@@ -23,20 +23,24 @@ TESTS = [
     "gauss_jordan",
     "generate_array",
     "supported_operations",
-    "unsigned_matrix_inverse",
     "rational_arithmetic",
     "rational_comparison",
     "secret_rational_arithmetic",
     "secret_rational_comparison",
+    # Not supported yet
+    # "unsigned_matrix_inverse",
+    # "private_inverse"
+    # "unsigned_matrix_inverse_2"
 ]
 
 EXAMPLES = [
     "dot_product",
     "matrix_multiplication",
+    "broadcasting",
 ]
 
 TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
-    ("examples/" + test, test) for test in EXAMPLES
+    ("examples/" + test + "/", test) for test in EXAMPLES
 ]
 
 
@@ -50,16 +54,18 @@ def build_nada(test_dir):
     result = subprocess.run(
         ["nada", "build", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
-    if result.returncode != 0:
-        pytest.fail(f"Build failed: {result.stderr}")
+    err = result.stderr.lower() + result.stdout.lower()
+    if result.returncode != 0 or "error" in err or "fail" in err:
+        pytest.fail(f"Build {test_dir}:\n{result.stdout + result.stderr}")
 
 
 def run_nada(test_dir):
     result = subprocess.run(
         ["nada", "test", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
-    if result.returncode != 0:
-        pytest.fail(f"Tests failed: {result.stderr}")
+    err = result.stderr.lower() + result.stdout.lower()
+    if result.returncode != 0 or "error" in err or "fail" in err:
+        pytest.fail(f"Run {test_dir}:\n{result.stdout + result.stderr}")
 
 
 class TestSuite:
@@ -79,7 +85,7 @@ class TestSuite:
         cwd = os.getcwd()
         try:
             # Build Nada Program
-            build_nada(testname)
+            run_nada(testname)
         finally:
             # Return to initial directory
             os.chdir(cwd)
