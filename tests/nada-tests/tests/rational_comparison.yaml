@@ -46,3 +46,13 @@ expected_outputs:
     SecretBoolean: true
   my_output_19:
     SecretBoolean: true
+  my_output_20:
+    Boolean: true
+  my_output_21:
+    Boolean: true
+  my_output_22:
+    Boolean: false
+  my_output_23:
+    Boolean: false
+  my_output_24:
+    Boolean: false

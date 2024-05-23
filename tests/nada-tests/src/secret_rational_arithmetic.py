@@ -11,6 +11,7 @@ def nada_main():
     c = SecretInteger(Input("my_input_1", parties[0]))
     d = Integer(1)
     e = na.SecretRational(c, scale=UnsignedInteger(16), is_scaled=False)
+    f = 5
 
     out_0 = a + b
     out_1 = a - b
@@ -45,6 +46,12 @@ def nada_main():
     out_24 = a.reveal()
     out_25 = a.trunc_pr(Integer(0))
 
+    out_26 = a + f
+    out_27 = a - f
+    out_28 = a * f
+    out_29 = a / f
+    out_30 = a % f
+
     return [
         Output(out_0.value / Integer(2**16), "my_output_0", parties[0]),
         Output(out_1.value / Integer(2**16), "my_output_1", parties[0]),
@@ -72,4 +79,9 @@ def nada_main():
         Output(out_23.value / Integer(2**16), "my_output_23", parties[0]),
         Output(out_24 / Integer(2**16), "my_output_24", parties[0]),
         Output(out_25.value / Integer(2**16), "my_output_25", parties[0]),
+        Output(out_26.value / Integer(2**16), "my_output_26", parties[0]),
+        Output(out_27.value / Integer(2**16), "my_output_27", parties[0]),
+        Output(out_28.value / Integer(2**16), "my_output_28", parties[0]),
+        Output(out_29.value / Integer(2**16), "my_output_29", parties[0]),
+        Output(out_30.value / Integer(2**16), "my_output_30", parties[0]),
     ]

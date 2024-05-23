@@ -11,6 +11,7 @@ def nada_main():
     c = SecretInteger(Input("my_input_1", parties[0]))
     d = Integer(1)
     e = na.SecretRational(c, scale=UnsignedInteger(16), is_scaled=False)
+    f = 5
 
     out_0 = a < b
     out_1 = a <= b
@@ -38,6 +39,12 @@ def nada_main():
 
     out_20 = a.public_equals(e)
 
+    out_21 = a < f
+    out_22 = a <= f
+    out_23 = a > f
+    out_24 = a >= f
+    out_25 = a == f
+
     return [
         Output(out_0, "my_output_0", parties[0]),
         Output(out_1, "my_output_1", parties[0]),
@@ -60,4 +67,9 @@ def nada_main():
         Output(out_18, "my_output_18", parties[0]),
         Output(out_19, "my_output_19", parties[0]),
         Output(out_20, "my_output_20", parties[0]),
+        Output(out_21, "my_output_21", parties[0]),
+        Output(out_22, "my_output_22", parties[0]),
+        Output(out_23, "my_output_23", parties[0]),
+        Output(out_24, "my_output_24", parties[0]),
+        Output(out_25, "my_output_25", parties[0]),
     ]
