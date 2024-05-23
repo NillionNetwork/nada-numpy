@@ -89,3 +89,19 @@ prime_size = 128
 [[programs]]
 path = "src/private_inverse.py"
 prime_size = 64
+
+[[programs]]
+path = "src/rational_arithmetic.py"
+prime_size = 128
+
+[[programs]]
+path = "src/rational_comparison.py"
+prime_size = 128
+
+[[programs]]
+path = "src/secret_rational_arithmetic.py"
+prime_size = 128
+
+[[programs]]
+path = "src/secret_rational_comparison.py"
+prime_size = 128

@@ -1,0 +1,58 @@
+---
+program: rational_comparison
+inputs:
+  secrets:
+    my_input_0:
+      SecretInteger: "3"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    Boolean: false
+  my_output_1:
+    Boolean: false
+  my_output_2:
+    Boolean: true
+  my_output_3:
+    Boolean: true
+  my_output_4:
+    Boolean: false
+  my_output_5:
+    SecretBoolean: false
+  my_output_6:
+    SecretBoolean: true
+  my_output_7:
+    SecretBoolean: false
+  my_output_8:
+    SecretBoolean: true
+  my_output_9:
+    SecretBoolean: true
+  my_output_10:
+    Boolean: false
+  my_output_11:
+    Boolean: false
+  my_output_12:
+    Boolean: true
+  my_output_13:
+    Boolean: true
+  my_output_14:
+    Boolean: false
+  my_output_15:
+    SecretBoolean: false
+  my_output_16:
+    SecretBoolean: true
+  my_output_17:
+    SecretBoolean: false
+  my_output_18:
+    SecretBoolean: true
+  my_output_19:
+    SecretBoolean: true
+  my_output_20:
+    Boolean: true
+  my_output_21:
+    Boolean: true
+  my_output_22:
+    Boolean: false
+  my_output_23:
+    Boolean: false
+  my_output_24:
+    Boolean: false

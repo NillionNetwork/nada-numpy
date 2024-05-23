@@ -18,6 +18,21 @@ from nada_dsl import (
     Integer,
     UnsignedInteger,
 )
+from nada_algebra.types import Rational, SecretRational
+
+_NadaOperand = Union[
+    "NadaArray",
+    np.ndarray,
+    int,
+    Integer,
+    UnsignedInteger,
+    SecretInteger,
+    SecretUnsignedInteger,
+    PublicInteger,
+    PublicUnsignedInteger,
+    Rational,
+    SecretRational,
+]
 
 
 @dataclass
@@ -100,26 +115,12 @@ class NadaArray:
         else:
             self.inner[key] = value
 
-    def __add__(
-        self,
-        other: Union[
-            "NadaArray",
-            np.ndarray,
-            int,
-            Integer,
-            UnsignedInteger,
-            SecretInteger,
-            SecretUnsignedInteger,
-            PublicInteger,
-            PublicUnsignedInteger,
-        ],
-    ) -> "NadaArray":
+    def __add__(self, other: _NadaOperand) -> "NadaArray":
         """
         Perform element-wise addition with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger,
-                SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to add.
+            other (_NadaOperand): The object to add.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise addition result.
@@ -130,28 +131,12 @@ class NadaArray:
             return NadaArray(self.inner + Integer(other))
         return NadaArray(self.inner + other)
 
-    def __sub__(
-        self,
-        other: Union[
-            "NadaArray",
-            np.ndarray,
-            int,
-            Integer,
-            UnsignedInteger,
-            SecretInteger,
-            SecretUnsignedInteger,
-            PublicInteger,
-            PublicUnsignedInteger,
-        ],
-    ) -> "NadaArray":
+    def __sub__(self, other: _NadaOperand) -> "NadaArray":
         """
         Perform element-wise subtraction with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int,
-                Integer, UnsignedInteger, SecretInteger,
-                SecretUnsignedInteger, PublicInteger,
-                PublicUnsignedInteger]): The object to subtract.
+            other (_NadaOperand): The object to subtract.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise subtraction result.
@@ -162,28 +147,12 @@ class NadaArray:
             return NadaArray(self.inner - Integer(other))
         return NadaArray(self.inner - other)
 
-    def __mul__(
-        self,
-        other: Union[
-            "NadaArray",
-            np.ndarray,
-            int,
-            Integer,
-            UnsignedInteger,
-            SecretInteger,
-            SecretUnsignedInteger,
-            PublicInteger,
-            PublicUnsignedInteger,
-        ],
-    ) -> "NadaArray":
+    def __mul__(self, other: _NadaOperand) -> "NadaArray":
         """
         Perform element-wise multiplication with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int,
-                Integer, UnsignedInteger, SecretInteger,
-                SecretUnsignedInteger, PublicInteger,
-                PublicUnsignedInteger]): The object to multiply.
+            other (_NadaOperand): The object to multiply.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise multiplication result.
@@ -194,26 +163,12 @@ class NadaArray:
             return NadaArray(self.inner * Integer(other))
         return NadaArray(self.inner * other)
 
-    def __truediv__(
-        self,
-        other: Union[
-            "NadaArray",
-            np.ndarray,
-            int,
-            Integer,
-            UnsignedInteger,
-            SecretInteger,
-            SecretUnsignedInteger,
-            PublicInteger,
-            PublicUnsignedInteger,
-        ],
-    ) -> "NadaArray":
+    def __truediv__(self, other: _NadaOperand) -> "NadaArray":
         """
         Perform element-wise division with broadcasting.
 
         Args:
-            other (Union[NadaArray, np.ndarray, int, Integer, UnsignedInteger, SecretInteger,
-                SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger]): The object to divide.
+            other (_NadaOperand): The object to divide.
 
         Returns:
             NadaArray: A new NadaArray representing the element-wise division result.

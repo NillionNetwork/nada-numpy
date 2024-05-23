@@ -1,0 +1,62 @@
+---
+program: rational_arithmetic
+inputs:
+  secrets:
+    my_input_0:
+      SecretInteger: "2"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    Integer: "5"
+  my_output_1:
+    Integer: "1"
+  my_output_2:
+    Integer: "6"
+  my_output_3:
+    Integer: "1"
+  my_output_4:
+    Integer: "1"
+  my_output_5:
+    SecretInteger: "5"
+  my_output_6:
+    SecretInteger: "1"
+  my_output_7:
+    SecretInteger: "6"
+  my_output_8:
+    SecretInteger: "1"
+  my_output_9:
+    SecretInteger: "1"
+  my_output_10:
+    Integer: "4"
+  my_output_11:
+    Integer: "2"
+  my_output_12:
+    Integer: "3"
+  my_output_13:
+    Integer: "3"
+  my_output_14:
+    Integer: "0"
+  my_output_15:
+    SecretInteger: "5"
+  my_output_16:
+    SecretInteger: "1"
+  my_output_17:
+    SecretInteger: "6"
+  my_output_18:
+    SecretInteger: "1"
+  my_output_19:
+    SecretInteger: "1"
+  my_output_20:
+    Integer: "-3"
+  my_output_21:
+    Integer: "27"
+  my_output_22:
+    Integer: "8"
+  my_output_23:
+    Integer: "-2"
+  my_output_24:
+    Integer: "15"
+  my_output_25:
+    Integer: "0"
+  my_output_26:
+    Integer: "3"
