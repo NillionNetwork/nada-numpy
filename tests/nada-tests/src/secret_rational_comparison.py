@@ -5,7 +5,11 @@ import nada_algebra as na
 def nada_main():
     parties = na.parties(1)
 
-    a = na.SecretRational(SecretInteger(Input("my_input_0", parties[0])), scale=UnsignedInteger(16), is_scaled=False)
+    a = na.SecretRational(
+        SecretInteger(Input("my_input_0", parties[0])),
+        scale=UnsignedInteger(16),
+        is_scaled=False,
+    )
 
     b = na.Rational(Integer(2), scale=UnsignedInteger(16), is_scaled=False)
     c = SecretInteger(Input("my_input_1", parties[0]))

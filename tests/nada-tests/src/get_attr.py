@@ -7,6 +7,8 @@ def nada_main():
 
     a = na.array([3], parties[0], "A")
 
-    result = a[0] + a[1] + a[2]
+    result = Integer(0)
+    for i in range(a.shape[0]):  # GET ATTR
+        result += a[i]  # GET ITEM
 
     return na.output(result, parties[1], "my_output")
