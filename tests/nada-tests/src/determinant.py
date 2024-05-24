@@ -30,7 +30,7 @@ def determinant(A: NadaArray):
     """
     if A.shape[0] != A.shape[1]:
         raise ValueError("Matrix must be square")
-    
+
     # Base case for 2x2 matrix
     if A.shape == (2, 2):
         return (A[0][0] * A[1][1]) - (A[0][1] * A[1][0])
