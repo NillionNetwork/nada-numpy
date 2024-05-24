@@ -31,15 +31,18 @@ def public_modular_inverse(
     # We cannot do `value ** Integer(modulo - 2)` because the value of modulo overflows the limit of an Integer
     # We do instead: value ** (modulo - 2) == value ** ((modulo // 2) - 1) * value ** ((modulo // 2) - 1)
     # We multiply once more (value) # if modulo is odd
-    mod, rem = modulo // 2, modulo % 2              # Unless it is prime 2, it is going to be odd, but we check in any case
-    power = value ** Integer(mod - 1)               # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
-    power = power * power * value if rem else Integer(1) # value ** mo
+    mod, rem = (
+        modulo // 2,
+        modulo % 2,
+    )  # Unless it is prime 2, it is going to be odd, but we check in any case
+    power = value ** Integer(
+        mod - 1
+    )  # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
+    power = power * power * value if rem else Integer(1)  # value ** mo
     return power
 
 
-def private_modular_inverse(
-    secret: SecretInteger, modulo: int
-) -> SecretInteger:
+def private_modular_inverse(secret: SecretInteger, modulo: int) -> SecretInteger:
     """
     Calculate the modular inverse of a secret value with respect to a prime modulo.
 
