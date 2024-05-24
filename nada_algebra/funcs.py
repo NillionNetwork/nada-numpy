@@ -216,3 +216,29 @@ def output(arr: NadaArray, party: Party, prefix: str):
         list: A list of Output objects.
     """
     return NadaArray.output_array(arr, party, prefix)
+
+
+def vstack(arr_list: list[NadaArray]) -> NadaArray:
+    """
+    Stack arrays in sequence vertically (row wise).
+
+    Args:
+        arr_list (list): A list of NadaArray objects to stack.
+
+    Returns:
+        NadaArray: The stacked NadaArray.
+    """
+    return NadaArray(np.vstack(arr_list))
+
+
+def hstack(arr_list: list[NadaArray]) -> NadaArray:
+    """
+    Stack arrays in sequence horizontally (column wise).
+
+    Args:
+        arr_list (list): A list of NadaArray objects to stack.
+
+    Returns:
+        NadaArray: The stacked NadaArray.
+    """
+    return NadaArray(np.hstack(arr_list))

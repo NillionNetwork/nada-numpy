@@ -435,7 +435,26 @@ class NadaArray:
         return attr
 
     def __setattr__(self, name, value):
+        """
+        Overrides the default behavior of setting attributes.
+
+        If the attribute name is "inner", it sets the attribute value directly.
+        Otherwise, it sets the attribute value on the inner object.
+
+        Parameters:
+        name (str): The name of the attribute.
+        value: The value to set for the attribute.
+        """
         if name == "inner":
             super().__setattr__(name, value)
         else:
             setattr(self.inner, name, value)
+
+    def __len__(self):
+        """
+        Overrides the default behavior of returning the length of the object.
+
+        Returns:
+        int: The length of the inner numpy array.
+        """
+        return len(self.inner)
