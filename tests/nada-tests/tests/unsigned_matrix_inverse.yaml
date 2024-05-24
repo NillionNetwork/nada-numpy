@@ -25,20 +25,20 @@ inputs:
       UnsignedInteger: "456"
 expected_outputs:
   my_output_0_0:
-    SecretUnsignedInteger: "3074457345439651158"
+    SecretUnsignedInteger: "1"
   my_output_0_1:
-    SecretUnsignedInteger: "12297829381758604631"
+    SecretUnsignedInteger: "0"
   my_output_0_2:
-    SecretUnsignedInteger: "6148914690879302316"
+    SecretUnsignedInteger: "0"
   my_output_1_0:
-    SecretUnsignedInteger: "3074457345439651160"
+    SecretUnsignedInteger: "0"
   my_output_1_1:
-    SecretUnsignedInteger: "12297829381758604629"
+    SecretUnsignedInteger: "1"
   my_output_1_2:
-    SecretUnsignedInteger: "6148914690879302315"
+    SecretUnsignedInteger: "0"
   my_output_2_0:
-    SecretUnsignedInteger: "12297829381758604630"
+    SecretUnsignedInteger: "0"
   my_output_2_1:
-    SecretUnsignedInteger: "12297829381758604633"
+    SecretUnsignedInteger: "0"
   my_output_2_2:
-    SecretUnsignedInteger: "6148914690879302316"
+    SecretUnsignedInteger: "1"

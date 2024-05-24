@@ -177,8 +177,9 @@ def nada_main():
 
     A = na.array([3, 3], parties[0], "A", nada_type=SecretUnsignedInteger)
     A_inv = matrix_inverse(A, PRIME)
+    result = A @ A_inv
     # A_inv = na.random([3, 3], nada_type=SecretInteger)
     # A_inv = [[SecretInteger.random() for i in range(3)] for j in range(3)]
     # outputs = na.output(A_inv, parties[2], "my_output")
 
-    return A_inv.output(parties[2], "my_output")
+    return result.output(parties[2], "my_output")

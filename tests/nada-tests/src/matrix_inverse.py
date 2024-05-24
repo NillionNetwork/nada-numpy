@@ -11,10 +11,9 @@ PRIME_128 = 340282366920938463463374607429104828419
 PRIME_256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF98C00003
 PRIME = PRIME_64
 
-
 def public_modular_inverse(
-    value: Integer | UnsignedInteger, modulo: int
-) -> PublicUnsignedInteger | UnsignedInteger:
+    value: PublicInteger | Integer, modulo: int
+) -> PublicInteger | Integer:
     """
     Calculates the modular inverse of a public value with respect to a prime modulus.
 
@@ -26,27 +25,30 @@ def public_modular_inverse(
         The modular inverse of the value with respect to the modulo.
 
     Raises:
-        Exception: If the input type is not a `PublicUnsignedInteger` or `UnsignedInteger`.
+        Exception: If the input type is not a `PublicInteger` or `Integer`.
     """
-    # if not(type(value) == PublicUnsignedInteger or type(value) == UnsignedInteger):
-    #    raise Exception("Invalid input type: Expected PublicUnsignedInteger or UnsignedInteger")
-    return value ** UnsignedInteger(modulo - 2)
-
+    # We cannot do `value ** Integer(modulo - 2)` because the value of modulo overflows the limit of an Integer
+    # We do instead: value ** (modulo - 2) == value ** ((modulo // 2) - 1) * value ** ((modulo // 2) - 1)
+    # We multiply once more (value) # if modulo is odd
+    mod, rem = modulo // 2, modulo % 2              # Unless it is prime 2, it is going to be odd, but we check in any case
+    power = value ** Integer(mod - 1)               # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
+    power = power * power * value if rem else Integer(1) # value ** mo
+    return power
 
 def private_modular_inverse(
-    secret: SecretUnsignedInteger, modulo: int
-) -> SecretUnsignedInteger:
+    secret: SecretInteger, modulo: int
+) -> SecretInteger:
     """
     Calculate the modular inverse of a secret value with respect to a prime modulo.
 
     Args:
-        secret (SecretUnsignedInteger): The secret value for which the modular inverse is to be calculated.
+        secret (SecretInteger): The secret value for which the modular inverse is to be calculated.
         modulo (int): The prime modulo with respect to which the modular inverse is to be calculated.
 
     Returns:
-        SecretUnsignedInteger: The modular inverse of the secret value with respect to the modulo.
+        SecretInteger: The modular inverse of the secret value with respect to the modulo.
     """
-    r = SecretUnsignedInteger.random()
+    r = SecretInteger.random()
 
     ra = r * secret  # Masking our secret
     ra_revealed = ra.reveal()  # Revealing the masked secret
@@ -58,7 +60,6 @@ def private_modular_inverse(
     a_inv = ra_inv * r  # Unmask the secret with the random shares
 
     return a_inv
-
 
 def create_random_upper_triangular_matrix(n: int) -> NadaArray:
     """
@@ -78,7 +79,7 @@ def create_random_upper_triangular_matrix(n: int) -> NadaArray:
         np.array(
             [
                 [
-                    SecretUnsignedInteger.random() if i <= j else UnsignedInteger(0)
+                    SecretInteger.random() if i <= j else Integer(0)
                     for j in range(n)
                 ]
                 for i in range(n)
@@ -106,9 +107,9 @@ def create_random_lower_triangular_matrix(n: int) -> NadaArray:
             [
                 [
                     (
-                        SecretUnsignedInteger.random()
+                        SecretInteger.random()
                         if i > j
-                        else UnsignedInteger(1) if i == j else UnsignedInteger(0)
+                        else Integer(1) if i == j else Integer(0)
                     )
                     for j in range(n)
                 ]
@@ -171,7 +172,7 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
     for i in range(rows):
         # Find pivot row
         pivot_row = i
-        while pivot_row < rows and (mat[pivot_row][i] == UnsignedInteger(0)) is Boolean(
+        while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(
             True
         ):
             pivot_row += 1
@@ -202,10 +203,12 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
 def nada_main():
     parties = na.parties(3)
 
-    A = na.array([3, 3], parties[0], "A", nada_type=SecretUnsignedInteger)
+    A = na.array([3, 3], parties[0], "A", nada_type=SecretInteger)
     A_inv = matrix_inverse(A, PRIME)
+
+    result = A @ A_inv
     # A_inv = na.random([3, 3], nada_type=SecretInteger)
     # A_inv = [[SecretInteger.random() for i in range(3)] for j in range(3)]
     # outputs = na.output(A_inv, parties[2], "my_output")
 
-    return A_inv.output(parties[2], "my_output")
+    return result.output(parties[2], "my_output")
