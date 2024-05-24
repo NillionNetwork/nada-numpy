@@ -11,6 +11,7 @@ PRIME_128 = 340282366920938463463374607429104828419
 PRIME_256 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF98C00003
 PRIME = PRIME_64
 
+
 def public_modular_inverse(
     value: PublicInteger | Integer, modulo: int
 ) -> PublicInteger | Integer:
@@ -30,14 +31,18 @@ def public_modular_inverse(
     # We cannot do `value ** Integer(modulo - 2)` because the value of modulo overflows the limit of an Integer
     # We do instead: value ** (modulo - 2) == value ** ((modulo // 2) - 1) * value ** ((modulo // 2) - 1)
     # We multiply once more (value) # if modulo is odd
-    mod, rem = modulo // 2, modulo % 2              # Unless it is prime 2, it is going to be odd, but we check in any case
-    power = value ** Integer(mod - 1)               # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
-    power = power * power * value if rem else Integer(1) # value ** mo
+    mod, rem = (
+        modulo // 2,
+        modulo % 2,
+    )  # Unless it is prime 2, it is going to be odd, but we check in any case
+    power = value ** Integer(
+        mod - 1
+    )  # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
+    power = power * power * value if rem else Integer(1)  # value ** mo
     return power
 
-def private_modular_inverse(
-    secret: SecretInteger, modulo: int
-) -> SecretInteger:
+
+def private_modular_inverse(secret: SecretInteger, modulo: int) -> SecretInteger:
     """
     Calculate the modular inverse of a secret value with respect to a prime modulo.
 
@@ -61,6 +66,7 @@ def private_modular_inverse(
 
     return a_inv
 
+
 def create_random_upper_triangular_matrix(n: int) -> NadaArray:
     """
     Create a random upper triangular matrix with the specified dimensions.
@@ -78,10 +84,7 @@ def create_random_upper_triangular_matrix(n: int) -> NadaArray:
     return NadaArray(
         np.array(
             [
-                [
-                    SecretInteger.random() if i <= j else Integer(0)
-                    for j in range(n)
-                ]
+                [SecretInteger.random() if i <= j else Integer(0) for j in range(n)]
                 for i in range(n)
             ]
         )
@@ -172,9 +175,7 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
     for i in range(rows):
         # Find pivot row
         pivot_row = i
-        while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(
-            True
-        ):
+        while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
             pivot_row += 1
 
         # Swap pivot row with current row
