@@ -13,8 +13,8 @@ PRIME = PRIME_64
 
 
 def public_modular_inverse(
-    value: PublicInteger | Integer, modulo: int
-) -> PublicInteger | Integer:
+    value: Integer | UnsignedInteger, modulo: int
+) -> PublicUnsignedInteger | UnsignedInteger:
     """
     Calculates the modular inverse of a public value with respect to a prime modulus.
 
@@ -26,31 +26,27 @@ def public_modular_inverse(
         The modular inverse of the value with respect to the modulo.
 
     Raises:
-        Exception: If the input type is not a `PublicInteger` or `Integer`.
+        Exception: If the input type is not a `PublicUnsignedInteger` or `UnsignedInteger`.
     """
-    # We cannot do `value ** Integer(modulo - 2)` because the value of modulo overflows the limit of an Integer
-    # We do instead: value ** (modulo - 2) == value ** ((modulo // 2) - 1) * value ** ((modulo // 2) - 1)
-    # We multiply once more (value) # if modulo is odd
-    mod, rem = modulo // 2, modulo % 2              # Unless it is prime 2, it is going to be odd, but we check in any case
-    power = value ** Integer(mod - 1)               # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
-    power = power * power * value if rem else Integer(1) # value ** mo
-    return power
+    # if not(type(value) == PublicUnsignedInteger or type(value) == UnsignedInteger):
+    #    raise Exception("Invalid input type: Expected PublicUnsignedInteger or UnsignedInteger")
+    return value ** UnsignedInteger(modulo - 2)
 
 
 def private_modular_inverse(
-    secret: SecretInteger, modulo: int
-) -> SecretInteger:
+    secret: SecretUnsignedInteger, modulo: int
+) -> SecretUnsignedInteger:
     """
     Calculate the modular inverse of a secret value with respect to a prime modulo.
 
     Args:
-        secret (SecretInteger): The secret value for which the modular inverse is to be calculated.
+        secret (SecretUnsignedInteger): The secret value for which the modular inverse is to be calculated.
         modulo (int): The prime modulo with respect to which the modular inverse is to be calculated.
 
     Returns:
-        SecretInteger: The modular inverse of the secret value with respect to the modulo.
+        SecretUnsignedInteger: The modular inverse of the secret value with respect to the modulo.
     """
-    r = SecretInteger.random()
+    r = SecretUnsignedInteger.random()
 
     ra = r * secret  # Masking our secret
     ra_revealed = ra.reveal()  # Revealing the masked secret
@@ -67,7 +63,7 @@ def private_modular_inverse(
 def nada_main():
     parties = na.parties(3)
 
-    a = na.array([1], parties[0], "A", nada_type=SecretInteger)
+    a = na.array([1], parties[0], "A", nada_type=SecretUnsignedInteger)
     a_inv = private_modular_inverse(a[0], PRIME)
 
     result = a_inv * a[0]

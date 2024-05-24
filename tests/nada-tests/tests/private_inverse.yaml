@@ -3,8 +3,8 @@ program: private_inverse
 inputs:
   secrets:
     A_0:
-      SecretUnsignedInteger: "3"
+      SecretInteger: "3"
   public_variables: {}
 expected_outputs:
   my_output_0:
-    SecretUnsignedInteger: "1"
+    SecretInteger: "1"
