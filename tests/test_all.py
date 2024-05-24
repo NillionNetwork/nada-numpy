@@ -27,10 +27,10 @@ TESTS = [
     "rational_comparison",
     "secret_rational_arithmetic",
     "secret_rational_comparison",
+    "get_minor",
     # Not supported yet
-    # "unsigned_matrix_inverse",
-    # "private_inverse"
-    # "unsigned_matrix_inverse_2"
+    "unsigned_matrix_inverse",
+    "private_inverse",
 ]
 
 EXAMPLES = [
