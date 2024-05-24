@@ -91,6 +91,11 @@ path = "src/private_inverse.py"
 prime_size = 64
 
 [[programs]]
+path = "src/private_unsigned_inverse.py"
+prime_size = 64
+
+
+[[programs]]
 path = "src/rational_arithmetic.py"
 prime_size = 128
 
@@ -105,3 +110,19 @@ prime_size = 128
 [[programs]]
 path = "src/secret_rational_comparison.py"
 prime_size = 128
+
+[[programs]]
+path = "src/linear_regression.py"
+prime_size = 64
+
+[[programs]]
+path = "src/determinant.py"
+prime_size = 64
+
+[[programs]]
+path = "src/get_minor.py"
+prime_size = 64
+
+[[programs]]
+path = "src/matrix_inverse.py"
+prime_size = 64
