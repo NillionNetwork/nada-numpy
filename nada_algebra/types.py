@@ -30,7 +30,9 @@ _NadaLike = Union[int, "Rational", "SecretRational", NadaType]
 class Rational:
     """Wrapper class to store scaled Integer values representing e.g. a python float"""
 
-    def __init__(self, value: _NadaInteger, scale: UnsignedInteger, is_scaled: bool=True) -> None:
+    def __init__(
+        self, value: _NadaInteger, scale: UnsignedInteger, is_scaled: bool = True
+    ) -> None:
         """Initializes wrapper around Integer object.
 
         Args:
@@ -69,7 +71,9 @@ class Rational:
         return self._value
 
     @classmethod
-    def from_number(cls, value: _Number, scale: UnsignedInteger, is_scaled: bool=False) -> "Rational":
+    def from_number(
+        cls, value: _Number, scale: UnsignedInteger, is_scaled: bool = False
+    ) -> "Rational":
         """Converts and scales a Python-native (or light wrapper by e.g., NumPy)
         number (floating-point or integer).
 
@@ -94,7 +98,9 @@ class Rational:
         if not isinstance(value, (float, int)):
             raise TypeError("Cannot instantiate Rational from type `%s`" % type(value))
 
-        quantized = Integer(value) if is_scaled else Integer(round(value * (2**scale.value)))
+        quantized = (
+            Integer(value) if is_scaled else Integer(round(value * (2**scale.value)))
+        )
 
         return Rational(quantized, scale)
 
@@ -130,10 +136,12 @@ class Rational:
 
     def __pow__(self, other: int) -> "Rational":
         if not isinstance(other, int):
-            raise TypeError("Cannot raise Rational to a power of type `%s`" % type(other))
+            raise TypeError(
+                "Cannot raise Rational to a power of type `%s`" % type(other)
+            )
         # TODO: try to group truncation if no overflow
         result = self.value
-        for _ in range(other-1):
+        for _ in range(other - 1):
             result = rescale(result * self.value, self.scale, "down")
         return Rational(result, self.scale)
 
@@ -161,7 +169,9 @@ class Rational:
 class SecretRational:
     """Wrapper class to store scaled SecretInteger values representing e.g. a python float"""
 
-    def __init__(self, value: _NadaSecretInteger, scale: UnsignedInteger, is_scaled: bool=True) -> None:
+    def __init__(
+        self, value: _NadaSecretInteger, scale: UnsignedInteger, is_scaled: bool = True
+    ) -> None:
         """Initializes wrapper around _NadaSecretInteger object.
 
         Args:
@@ -233,10 +243,13 @@ class SecretRational:
 
     def __pow__(self, other: _NadaLike) -> "SecretRational":
         if not isinstance(other, int):
-            raise TypeError("Cannot raise SecretRational to power of type `%s`" % type(other).__name__)
+            raise TypeError(
+                "Cannot raise SecretRational to power of type `%s`"
+                % type(other).__name__
+            )
         # TODO: try to group truncation if no overflow
         result = self.value
-        for _ in range(other-1):
+        for _ in range(other - 1):
             result = rescale(result * self.value, self.scale, "down")
         return SecretRational(result, self.scale)
 
@@ -303,13 +316,16 @@ def rescale(value: NadaType, scale: UnsignedInteger, direction: str) -> NadaType
         except:
             return value / (1 << scale)
 
-    raise ValueError("Invalid scaling direction `%s`. Expected \"up\" or \"down\"" % direction)
+    raise ValueError(
+        'Invalid scaling direction `%s`. Expected "up" or "down"' % direction
+    )
+
 
 def apply_arithmetic_op(
     op: Callable[[Any, Any], Any],
     this: Union[Rational, SecretRational],
     other: _NadaLike,
-    op_rescaling: str=None,
+    op_rescaling: str = None,
 ) -> Union[Rational, SecretRational]:
     """Applies arithmetic operation between this value and an other value, accounting
     for any possible rescaling.
@@ -346,7 +362,11 @@ def apply_arithmetic_op(
             return SecretRational(result, this.scale)
         return Rational(result, this.scale)
 
-    raise TypeError("Cannot perform operation between type `%s` and type `%s`" % (type(this).__name__, type(other).__name__))
+    raise TypeError(
+        "Cannot perform operation between type `%s` and type `%s`"
+        % (type(this).__name__, type(other).__name__)
+    )
+
 
 def apply_comparison_op(
     comparison_op: Callable[[Any, Any], Any],
@@ -375,6 +395,9 @@ def apply_comparison_op(
     elif isinstance(other, NadaType):
         other = rescale(other, this.scale, "up")
     else:
-        raise TypeError("Cannot perform comparison between type `%s` and type `%s`" % (type(this).__name__, type(other).__name__))
+        raise TypeError(
+            "Cannot perform comparison between type `%s` and type `%s`"
+            % (type(this).__name__, type(other).__name__)
+        )
 
     return comparison_op(this.value, other)
