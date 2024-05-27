@@ -173,9 +173,11 @@ class NadaArray:
             NadaArray: Result NadaArray.
         """
         if not isinstance(other, int):
-            raise TypeError("Cannot raise `NadaArray` to power of type `%s`" % type(other).__name__)
+            raise TypeError(
+                "Cannot raise `NadaArray` to power of type `%s`" % type(other).__name__
+            )
         result = self.copy()
-        for _ in range(other-1):
+        for _ in range(other - 1):
             result = result * result
         return result
 
@@ -319,9 +321,11 @@ class NadaArray:
 
         if len(array.shape) == 1:
             return [
-                Output(array[i].value, f"{prefix}_{i}", party)
-                if isinstance(array[i], (Rational, SecretRational))
-                else Output(array[i], f"{prefix}_{i}", party) for i in range(array.shape[0])
+                (
+                    Output(array[i].value, f"{prefix}_{i}", party)
+                    if isinstance(array[i], (Rational, SecretRational))
+                    else Output(array[i], f"{prefix}_{i}", party)
+                )
                 for i in range(array.shape[0])
             ]
         return [
