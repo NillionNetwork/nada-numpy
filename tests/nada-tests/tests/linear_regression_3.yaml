@@ -1,0 +1,41 @@
+---
+program: linear_regression
+inputs:
+  secrets:
+    A_0_0:
+      SecretInteger: "-256" # 1 * SCALE
+    A_0_1:
+      SecretInteger: "-199" # 2 * SCALE
+    A_0_2:
+      SecretInteger: "-142" # 3 * SCALE
+    A_1_0:
+      SecretInteger: "-85" # 4 * SCALE
+    A_1_1:
+      SecretInteger: "-28" # 5 * SCALE
+    A_1_2:
+      SecretInteger: "28" # 6 * SCALE
+    A_2_0:
+      SecretInteger: "85" # 7 * SCALE
+    A_2_1:
+      SecretInteger: "142" # 8 * SCALE
+    A_2_2:
+      SecretInteger: "256" # 10 * SCALE
+    b_0:
+      SecretInteger: "-256" # 0 * SCALE
+    b_1:
+      SecretInteger: "-199" # 1 * SCALE
+    b_2:
+      SecretInteger: "-142" # 2 * SCALE
+  public_variables: 
+    lambda_0: 
+      Integer: "65536"
+expected_outputs:
+  b_0:
+    SecretInteger: "0"
+  w_0:
+    SecretInteger: "0"
+  w_1:
+    SecretInteger: "0"
+  w_2:
+    SecretInteger: "0"
+

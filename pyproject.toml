@@ -16,6 +16,9 @@ py-nillion-client = "^0.2.1"
 pytest = "^8.2.0"
 black = "^24.4.2"
 
+[tool.poetry.dev-scripts]
+install_version = "scripts.install_version:main"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

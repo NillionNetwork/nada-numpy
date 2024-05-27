@@ -126,3 +126,7 @@ prime_size = 64
 [[programs]]
 path = "src/matrix_inverse.py"
 prime_size = 64
+
+[[programs]]
+path = "src/matrix_inverse_out.py"
+prime_size = 64
