@@ -163,6 +163,24 @@ class NadaArray:
             return NadaArray(self.inner * Integer(other))
         return NadaArray(self.inner * other)
 
+    def __pow__(self, other: int) -> "NadaArray":
+        """Raises NadaArray to a power.
+
+        Args:
+            other (int): Power value.
+
+        Returns:
+            NadaArray: Result NadaArray.
+        """
+        if not isinstance(other, int):
+            raise TypeError(
+                "Cannot raise `NadaArray` to power of type `%s`" % type(other).__name__
+            )
+        result = self.copy()
+        for _ in range(other - 1):
+            result = result * result
+        return result
+
     def __truediv__(self, other: _NadaOperand) -> "NadaArray":
         """
         Perform element-wise division with broadcasting.
@@ -189,8 +207,11 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
-        if isinstance(other, NadaArray):
-            return NadaArray(self.inner @ other.inner)
+        return NadaArray(self.inner @ other.inner)
+
+    @property
+    def ndim(self) -> int:
+        return len(self.shape)
 
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
@@ -295,10 +316,17 @@ class NadaArray:
             ),
         ):
             return [Output(array, f"{prefix}_0", party)]
+        elif isinstance(array, (Rational, SecretRational)):
+            return [Output(array.value, f"{prefix}_0", party)]
 
         if len(array.shape) == 1:
             return [
-                Output(array[i], f"{prefix}_{i}", party) for i in range(array.shape[0])
+                (
+                    Output(array[i].value, f"{prefix}_{i}", party)
+                    if isinstance(array[i], (Rational, SecretRational))
+                    else Output(array[i], f"{prefix}_{i}", party)
+                )
+                for i in range(array.shape[0])
             ]
         return [
             v

@@ -90,7 +90,7 @@ class Rational:
         Returns:
             Rational: Instantiated wrapper around number.
         """
-        if (value is None) or (value == np.nan):
+        if value is None:
             raise ValueError("Cannot convert `%s` to Rational." % value)
 
         value = value.item() if isinstance(value, np.floating) else value
@@ -308,13 +308,13 @@ def rescale(value: NadaType, scale: UnsignedInteger, direction: str) -> NadaType
         try:
             return value << scale
         except:
-            return value * (1 << scale)
+            return value * Integer(1 << scale)
     elif direction == "down":
         # TODO: remove try block when rshift implemented for every NadaType
         try:
             return value >> scale
         except:
-            return value / (1 << scale)
+            return value / Integer(1 << scale)
 
     raise ValueError(
         'Invalid scaling direction `%s`. Expected "up" or "down"' % direction
