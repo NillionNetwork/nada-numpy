@@ -173,13 +173,13 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
 
     # Forward elimination
     for i in range(rows):
-        # Find pivot row
-        pivot_row = i
-        while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
-            pivot_row += 1
+        # # Find pivot row
+        # pivot_row = i
+        # while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
+        #     pivot_row += 1
 
-        # Swap pivot row with current row
-        mat[[i, pivot_row]] = mat[[pivot_row, i]]
+        # # Swap pivot row with current row
+        # mat[[i, pivot_row]] = mat[[pivot_row, i]]
 
         # Scale pivot row to have leading 1
         diagonal_element = mat[i][i]

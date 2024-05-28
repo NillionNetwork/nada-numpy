@@ -173,12 +173,12 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
     # Forward elimination
     for i in range(rows):
         # Find pivot row
-        pivot_row = i
-        while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
-            pivot_row += 1
+        # pivot_row = i
+        # while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
+        #     pivot_row += 1
 
-        # Swap pivot row with current row
-        mat[[i, pivot_row]] = mat[[pivot_row, i]]
+        # # Swap pivot row with current row
+        # mat[[i, pivot_row]] = mat[[pivot_row, i]]
 
         # Scale pivot row to have leading 1
         diagonal_element = mat[i][i]
@@ -252,7 +252,7 @@ def linsol(A: NadaArray, b: NadaArray, modulo: int):
     A_invb = gauss_jordan_zn(RAR, modulo)
     A_invb = A_invb[:, n:].reshape(
         -1,
-    )  # After elimination, the right half of the matrix is the inverse
+    )  # (n, 1) -> (n,)  # After elimination, the right half of the matrix is the inverse
     detRA = determinant(RA)  # Determinant of RA
     detA = detRA * detR_inv
     # raise Exception(type(A_invb), type(detA))

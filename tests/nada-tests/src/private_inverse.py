@@ -38,7 +38,7 @@ def public_modular_inverse(
     power = value ** Integer(
         mod - 1
     )  # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
-    power = power * power * value if rem else Integer(1)  # value ** mo
+    power = power * power * (value if rem else Integer(1))  # value ** mo
     return power
 
 
