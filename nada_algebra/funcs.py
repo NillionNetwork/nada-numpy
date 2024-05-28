@@ -218,7 +218,7 @@ def output(arr: NadaArray, party: Party, prefix: str):
     return NadaArray.output_array(arr, party, prefix)
 
 
-def vstack(arr_list: list[NadaArray]) -> NadaArray:
+def vstack(arr_list: list) -> NadaArray:
     """
     Stack arrays in sequence vertically (row wise).
 
@@ -231,7 +231,7 @@ def vstack(arr_list: list[NadaArray]) -> NadaArray:
     return NadaArray(np.vstack(arr_list))
 
 
-def hstack(arr_list: list[NadaArray]) -> NadaArray:
+def hstack(arr_list: list) -> NadaArray:
     """
     Stack arrays in sequence horizontally (column wise).
 
