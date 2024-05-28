@@ -40,7 +40,7 @@ EXAMPLES = [
 ]
 
 TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
-    ("examples/" + test + "/", test) for test in EXAMPLES
+    (os.path.join("examples/", test), test) for test in EXAMPLES
 ]
 
 
@@ -71,24 +71,12 @@ def run_nada(test_dir):
 class TestSuite:
 
     def test_build(self, testname):
-        # Get current working directory
-        cwd = os.getcwd()
-        try:
-            # Build Nada Program
-            build_nada(testname)
-        finally:
-            # Return to initial directory
-            os.chdir(cwd)
+        # Build Nada Program
+        build_nada(testname)
 
     def test_run(self, testname):
-        # Get current working directory
-        cwd = os.getcwd()
-        try:
-            # Build Nada Program
-            run_nada(testname)
-        finally:
-            # Return to initial directory
-            os.chdir(cwd)
+        # Build Nada Program
+        run_nada(testname)
 
 
 def test_client():

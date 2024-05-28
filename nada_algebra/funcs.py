@@ -216,3 +216,16 @@ def output(arr: NadaArray, party: Party, prefix: str):
         list: A list of Output objects.
     """
     return NadaArray.output_array(arr, party, prefix)
+
+def identity(n: int, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+    """
+    Create a cleartext NadaArray with ones on the diagonal and zeros elsewhere.
+
+    Args:
+        n (int): The size of the square matrix.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
+
+    Returns:
+        NadaArray: The created NadaArray.
+    """
+    return from_list(np.identity(n), nada_type)
