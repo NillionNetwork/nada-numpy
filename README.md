@@ -8,10 +8,12 @@ Nada-Algebra is a Python library designed for algebraic operations on NumPy-like
 
 ## Features
 
+### Use Numpy Array Features
 - **Dot Product**: Compute the dot product between two NadaArray objects.
 - **Element-wise Operations**: Perform element-wise addition, subtraction, multiplication, and division with broadcasting support.
 - **Stacking**: Horizontally and vertically stack arrays.
-- **Custom Function Application**: Apply custom functions to each element of the array.
+### Use Decimal Numbers in Nada
+- **Rational Number Support**: Our implementation of `Rational` and `SecretRational` allows the use of simplified implementations of decimal numbers on top of Nillion.
 
 ## Installation
 ### Using pip
