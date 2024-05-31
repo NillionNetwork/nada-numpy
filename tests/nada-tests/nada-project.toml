@@ -59,6 +59,10 @@ path = "src/reveal.py"
 prime_size = 128
 
 [[programs]]
+path = "src/rationals.py"
+prime_size = 128
+
+[[programs]]
 path = "src/set_item.py"
 prime_size = 128
 

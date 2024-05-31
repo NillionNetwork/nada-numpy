@@ -14,6 +14,7 @@ TESTS = [
     "hstack",
     "vstack",
     "reveal",
+    "rationals",
     "matrix_multiplication",
     "generate_array",
     "supported_operations",
