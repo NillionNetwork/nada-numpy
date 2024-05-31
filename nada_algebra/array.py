@@ -207,7 +207,8 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
-        return NadaArray(self.inner @ other.inner)
+        result = self.inner @ other.inner
+        return NadaArray(np.array(result))
 
     @property
     def ndim(self) -> int:
