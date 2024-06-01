@@ -379,11 +379,11 @@ class NadaArray:
         dims: list,
         party: Party,
         prefix: str,
-        as_rational: bool = False,
-        scale: int = 16,
         nada_type: Union[
             SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger
         ] = SecretInteger,
+        as_rational: bool = False,
+        scale: int = 16,
     ) -> "NadaArray":
         """
         Create a NadaArray with the specified dimensions and element type.
@@ -392,9 +392,9 @@ class NadaArray:
             dims (list): A list of integers representing the dimensions of the array.
             party (Party): The party object.
             prefix (str): A prefix for naming the array elements.
+            nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
             as_rational (bool, optional): Whether or not to read array elements as rational values. Defaults to False.
             scale (int, optional): Quantization scaling factor. Only used if `as_rational` is true. Defaults to 16.
-            nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
         Returns:
             NadaArray: The created NadaArray.
