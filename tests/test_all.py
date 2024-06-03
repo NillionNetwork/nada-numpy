@@ -114,11 +114,8 @@ def test_client():
 def test_rational_client():
     import nada_algebra.client as na_client  # For use with Python Client
     import py_nillion_client as nillion
-    import numpy as np
 
-    parties = na_client.parties(3)
-
-    secret_rational = na_client.SecretRational(3.2, parties[0])
+    secret_rational = na_client.SecretRational(3.2)
 
     assert type(secret_rational) == nillion.SecretInteger
 
