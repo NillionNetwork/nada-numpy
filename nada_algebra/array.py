@@ -18,7 +18,7 @@ from nada_dsl import (
     Integer,
     UnsignedInteger,
 )
-from nada_algebra.types import Rational, SecretRational
+from nada_algebra.types import Rational, SecretRational, RationalConfig
 
 _NadaOperand = Union[
     "NadaArray",
@@ -380,7 +380,12 @@ class NadaArray:
         party: Party,
         prefix: str,
         nada_type: Union[
-            SecretInteger, SecretUnsignedInteger, PublicInteger, PublicUnsignedInteger
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+            SecretRational,
+            Rational,
         ] = SecretInteger,
     ) -> "NadaArray":
         """
@@ -394,22 +399,33 @@ class NadaArray:
 
         Returns:
             NadaArray: The created NadaArray.
+
+        Raises:
+            ValueError: Raised if the nada_type is not supported.
         """
+        generator = None
+        if nada_type in (Rational, SecretRational):
+            generator = lambda name, party: nada_type(name=name, party=party)
+        elif nada_type in (
+            SecretInteger,
+            SecretUnsignedInteger,
+            PublicInteger,
+            PublicUnsignedInteger,
+        ):
+            generator = lambda name, party: nada_type(Input(name=name, party=party))
+        else:
+            raise ValueError(f"Unsupported nada_type: {nada_type}")
+
         return NadaArray(
-            np.array(
-                NadaArray.create_list(
-                    dims,
-                    party,
-                    prefix,
-                    lambda name, party: nada_type(Input(name=name, party=party)),
-                )
-            )
+            np.array(NadaArray.create_list(dims, party, prefix, generator))
         )
 
     @staticmethod
     def random(
         dims: list,
-        nada_type: Union[SecretInteger, SecretUnsignedInteger] = SecretInteger,
+        nada_type: Union[
+            SecretInteger, SecretUnsignedInteger, SecretRational
+        ] = SecretInteger,
     ) -> "NadaArray":
         """
         Create a random NadaArray with the specified dimensions.
@@ -420,14 +436,21 @@ class NadaArray:
 
         Returns:
             NadaArray: The created random NadaArray.
+
+        Raises:
+            ValueError: Raised if the nada_type is not supported.
         """
-        return NadaArray(
-            np.array(
-                NadaArray.create_list(
-                    dims, None, None, lambda name, party: nada_type.random()
-                )
+        generator = None
+        if nada_type is SecretRational:
+            generator = lambda name, party: SecretRational.from_parts(
+                SecretInteger.random(), RationalConfig.LOG_SCALE
             )
-        )
+        elif nada_type in (SecretInteger, SecretUnsignedInteger):
+            generator = lambda name, party: nada_type.random()
+        else:
+            raise ValueError(f"Unsupported nada_type: {nada_type}")
+
+        return NadaArray(np.array(NadaArray.create_list(dims, None, None, generator)))
 
     def __getattr__(self, name: str) -> Any:
         """Routes other attributes to the inner NumPy array.

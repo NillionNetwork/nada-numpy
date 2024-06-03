@@ -11,7 +11,7 @@ from py_nillion_client import (
     PublicVariableUnsignedInteger,
 )
 import numpy as np
-from nada_algebra.types import RationalConfig
+from nada_algebra.types import RationalConfig, Rational, SecretRational
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -36,6 +36,8 @@ def array(
         SecretUnsignedInteger,
         PublicVariableInteger,
         PublicVariableUnsignedInteger,
+        Rational,
+        SecretRational,
     ] = SecretInteger,
 ) -> dict:
     """
