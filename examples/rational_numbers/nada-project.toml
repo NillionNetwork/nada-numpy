@@ -1,0 +1,7 @@
+name = "rational_numbers"
+version = "0.1.0"
+authors = [""]
+
+[[programs]]
+path = "src/rational_numbers.py"
+prime_size = 128

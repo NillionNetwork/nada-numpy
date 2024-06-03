@@ -1,0 +1,12 @@
+---
+program: chained_rational_operations
+inputs:
+  secrets:
+    my_input_0:
+      SecretInteger: "209715"
+    my_input_1:
+      SecretInteger: "294912"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    SecretInteger: "294912"

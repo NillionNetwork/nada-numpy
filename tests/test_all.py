@@ -27,17 +27,14 @@ TESTS = [
     "rational_comparison",
     "secret_rational_arithmetic",
     "secret_rational_comparison",
+    "chained_rational_operations",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"
     # "unsigned_matrix_inverse_2"
 ]
 
-EXAMPLES = [
-    "dot_product",
-    "matrix_multiplication",
-    "broadcasting",
-]
+EXAMPLES = ["dot_product", "matrix_multiplication", "broadcasting", "rational_numbers"]
 
 TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
     (os.path.join("examples/", test), test) for test in EXAMPLES
@@ -111,3 +108,19 @@ def test_client():
     )
 
     assert public_variables is not None
+
+
+def test_rational_client():
+    import nada_algebra.client as na_client  # For use with Python Client
+    import py_nillion_client as nillion
+    import numpy as np
+
+    parties = na_client.parties(3)
+
+    secret_rational = na_client.SecretRational(3.2, parties[0])
+
+    assert type(secret_rational) == nillion.SecretInteger
+
+    rational = na_client.PublicRational(1.7)
+
+    assert type(rational) == nillion.PublicVariableInteger
