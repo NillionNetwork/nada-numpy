@@ -8,9 +8,8 @@ This tutorial uses fixed point numbers as it is the only available way to use Fi
 
 If we want to input a variable `a = float(3.2)`, we need to first encode it. For that we will define a new variable `a'` which is going to be the scaled version. In this case, the scaling factor (to simplify) is going to by 3 bits so, $log_2\Delta = 3$ and $\Delta = 2^3 = 8$. With the following formula, we compute the encoded value:
 
-$$
-a' = round(a * \Delta) = round(a * 2^{log_2\Delta}) = 3.2 \cdot 2^3 = 3.2 \cdot 8 = 26
-$$
+$$ a' = round(a * \Delta) = round(a * 2^{log_2\Delta}) = 3.2 \cdot 2^3 = 3.2 \cdot 8 = 26 $$
+
 Thus, in order to introduce a value with 3 bits of precision, we would be inputing 26 instead of 3.2.
 
 
