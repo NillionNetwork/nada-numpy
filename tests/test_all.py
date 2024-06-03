@@ -28,6 +28,7 @@ TESTS = [
     "secret_rational_arithmetic",
     "secret_rational_comparison",
     "chained_rational_operations",
+    "rational_array",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"

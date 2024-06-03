@@ -109,3 +109,7 @@ prime_size = 128
 [[programs]]
 path = "src/chained_rational_operations.py"
 prime_size = 128
+
+[[programs]]
+path = "src/rational_array.py"
+prime_size = 128

@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Iterable
+from typing import Any, Iterable, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -13,8 +13,14 @@ from nada_dsl import (
     Integer,
     UnsignedInteger,
 )
+
 import numpy as np
 from nada_algebra.array import NadaArray
+from nada_algebra.types import Rational, SecretRational
+
+
+_NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
+""" A Nada Cleartext Type is: `Integer`, `UnsignedInteger`, or `Rational` """
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -31,7 +37,7 @@ def parties(num: int, prefix: str = "Party") -> list:
     return [Party(name=f"{prefix}{i}") for i in range(num)]
 
 
-def __from_numpy(arr: np.ndarray, nada_type: Integer | UnsignedInteger) -> list:
+def __from_numpy(arr: np.ndarray, nada_type: _NadaCleartextType) -> list:
     """
     Recursively convert a n-dimensional NumPy array to a nested list of NadaInteger objects.
 
@@ -43,11 +49,13 @@ def __from_numpy(arr: np.ndarray, nada_type: Integer | UnsignedInteger) -> list:
         list: A nested list of NadaInteger objects.
     """
     if len(arr.shape) == 1:
+        if isinstance(nada_type, Rational):
+            return [nada_type(elem) for elem in arr]
         return [nada_type(int(elem)) for elem in arr]
     return [__from_numpy(arr[i], nada_type) for i in range(arr.shape[0])]
 
 
-def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> NadaArray:
+def from_list(lst: list, nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray from a list of integers.
 
@@ -63,9 +71,7 @@ def from_list(lst: list, nada_type: Integer | UnsignedInteger = Integer) -> Nada
     return NadaArray(np.array(__from_numpy(lst, nada_type)))
 
 
-def ones(
-    dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer
-) -> NadaArray:
+def ones(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with ones.
 
@@ -80,7 +86,7 @@ def ones(
 
 
 def ones_like(
-    a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer
+    a: np.ndarray | NadaArray, nada_type: _NadaCleartextType = Integer
 ) -> NadaArray:
     """
     Create a cleartext NadaArray filled with one with the same shape and type as a given array.
@@ -97,9 +103,7 @@ def ones_like(
     return from_list(np.ones_like(a), nada_type)
 
 
-def zeros(
-    dims: Iterable[int], nada_type: Integer | UnsignedInteger = Integer
-) -> NadaArray:
+def zeros(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
 
@@ -114,7 +118,7 @@ def zeros(
 
 
 def zeros_like(
-    a: np.ndarray | NadaArray, nada_type: Integer | UnsignedInteger = Integer
+    a: np.ndarray | NadaArray, nada_type: _NadaCleartextType = Integer
 ) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros with the same shape and type as a given array.
@@ -168,7 +172,11 @@ def array(
     party: Party,
     prefix: str,
     nada_type: (
-        SecretInteger | SecretUnsignedInteger | PublicInteger | PublicUnsignedInteger
+        SecretInteger
+        | SecretUnsignedInteger
+        | PublicInteger
+        | PublicUnsignedInteger
+        | SecretRational
     ) = SecretInteger,
 ) -> NadaArray:
     """
@@ -188,7 +196,7 @@ def array(
 
 def random(
     dims: Iterable[int],
-    nada_type: SecretInteger | SecretUnsignedInteger = SecretInteger,
+    nada_type: SecretInteger | SecretUnsignedInteger | SecretRational = SecretInteger,
 ) -> NadaArray:
     """
     Create a random NadaArray with the specified dimensions.
