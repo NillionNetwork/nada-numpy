@@ -28,30 +28,35 @@ _NadaLike = Union[int, "Rational", "SecretRational", NadaType]
 
 _NadaRational = Union["Rational", "SecretRational"]
 
-LOG_SCALE = 16
 
+class RationalConfig(object):
 
-def set_rational_scale(scale: int) -> None:
-    """Sets the global scaling factor.
+    LOG_SCALE = 16
 
-    Args:
-        scale (int): New scaling factor in number of bits.
-    """
-    global LOG_SCALE
-    LOG_SCALE = scale
+    @classmethod
+    def set_rational_scale(cls, scale: int) -> None:
+        """Sets the global scaling factor.
+
+        Args:
+            scale (int): New scaling factor in number of bits.
+        """
+        cls.LOG_SCALE = scale
 
 
 class Rational:
     """Wrapper class to store scaled Integer values representing a fixed-point number."""
 
     def __init__(
-        self, value: _Number, log_scale=LOG_SCALE, is_scaled: bool = False
+        self,
+        value: _Number,
+        log_scale=RationalConfig.LOG_SCALE,
+        is_scaled: bool = False,
     ) -> None:
         """Initializes wrapper around Integer object.
 
         Args:
             value (_Number): The value to be represented as a Rational.
-            log_scale (int): Quantization scaling factor. Defaults to LOG_SCALE.
+            log_scale (int): Quantization scaling factor. Defaults to RationalConfig.LOG_SCALE.
             is_scaled (bool, optional): Flag that represents whether the value is already scaled.
                 Defaults to False.
 
@@ -90,8 +95,8 @@ class Rational:
         return self._value
 
     @classmethod
-    def from_rational(cls, value: Integer, scale: int) -> "Rational":
-        """Creates a Rational from an Integer value.
+    def from_parts(cls, value: Integer, scale: int) -> "Rational":
+        """Creates a Rational from an Integer value and scale.
 
         Args:
             value (Integer): Integer value to convert.
@@ -102,11 +107,14 @@ class Rational:
         """
         return Rational(value, scale, is_scaled=True)
 
-    def add(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def add(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """Add two rational numbers.
 
         Args:
             other (_NadaRational): Other rational number to add.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the addition.
@@ -119,23 +127,23 @@ class Rational:
                 f"Operation + not allowed between types {type(self)} + {type(other)}"
             )
 
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot add values with different scales.")
+
         if isinstance(other, SecretRational):
-            return SecretRational.from_rational(
-                other.value + self.value, self.log_scale
-            )
+            return SecretRational.from_parts(other.value + self.value, self.log_scale)
         else:
-            return Rational.from_rational(self.value + other.value, self.log_scale)
+            return Rational.from_parts(self.value + other.value, self.log_scale)
 
     def __add__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
-        return self.add(other)
-
-    def __radd__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
         return self.add(other)
 
     def __iadd__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
         return self.add(other)
 
-    def sub(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def sub(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """Subtract two rational numbers.
 
         Args:
@@ -143,6 +151,7 @@ class Rational:
 
         Returns:
             Union[Rational, SecretRational]: Result of the subtraction.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Raises:
             TypeError: If the other value is of an incompatible type.
@@ -152,27 +161,30 @@ class Rational:
                 f"Operation - not allowed between types {type(self)} - {type(other)}"
             )
 
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot substract values with different scales.")
+
         if isinstance(other, SecretRational):
-            return SecretRational.from_rational(
-                self.value - other.value, self.log_scale
-            )
+            return SecretRational.from_parts(self.value - other.value, self.log_scale)
         else:
-            return Rational.from_rational(self.value - other.value, self.log_scale)
+            return Rational.from_parts(self.value - other.value, self.log_scale)
 
     def __sub__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
-        return self.sub(other)
-
-    def __rsub__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return self.sub(other)
 
     def __isub__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
         return self.sub(other)
 
-    def mul(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def mul_no_rescale(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """Multiply two rational numbers.
+
+        WARNING: This function does not rescale by default. Use `mul` to multiply and rescale.
 
         Args:
             other (_NadaRational): Other rational number to multiply.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the multiplication.
@@ -185,38 +197,43 @@ class Rational:
                 f"Operation * not allowed between types {type(self)} * {type(other)}"
             )
 
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot multiply values with different scales.")
+
         if isinstance(other, SecretRational):
-            return SecretRational.from_rational(
+            return SecretRational.from_parts(
                 self.value * other.value, self.log_scale + other.log_scale
             )
         else:
-            return Rational.from_rational(
+            return Rational.from_parts(
                 self.value * other.value, self.log_scale + other.log_scale
             )
 
-    def mul_rescale(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def mul(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """Multiply two rational numbers and rescale the result.
 
         Args:
             other (_NadaRational): Other rational number to multiply.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the multiplication.
         """
-        c = self.mul(other)
+        c = self.mul_no_rescale(other, unchecked=unchecked)
         d = c.rescale_down()
         return d
 
     def __mul__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
-        return self.mul_rescale(other)
-
-    def __rmul__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
-        return self.mul_rescale(other)
+        return self.mul(other)
 
     def __imul__(self, other: _NadaLike) -> Union["Rational", "SecretRational"]:
-        return self.mul_rescale(other)
+        return self.mul(other)
 
-    def divide(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def divide_no_rescale(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """Divide two rational numbers.
 
         Args:
@@ -233,18 +250,24 @@ class Rational:
                 f"Operation / not allowed between types {type(self)} / {type(other)}"
             )
 
+        if (
+            not unchecked
+            and self.log_scale != other.log_scale + RationalConfig.LOG_SCALE
+        ):
+            raise ValueError(
+                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}. Required scale: {self.log_scale}  / {other.log_scale + RationalConfig.LOG_SCALE}"
+            )
+
         if isinstance(other, SecretRational):
-            return SecretRational.from_rational(
+            return SecretRational.from_parts(
                 self.value / other.value, self.log_scale - other.log_scale
             )
         else:
-            return Rational.from_rational(
+            return Rational.from_parts(
                 self.value / other.value, self.log_scale - other.log_scale
             )
 
-    def divide_rescale(
-        self, other: _NadaRational
-    ) -> Union["Rational", "SecretRational"]:
+    def divide(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
         """Divide two rational numbers and rescale the result.
 
         Args:
@@ -254,17 +277,17 @@ class Rational:
             Union[Rational, SecretRational]: Result of the division.
         """
         a = self.rescale_up()
-        c = a.divide(other)
+        c = a.divide_no_rescale(other)
         return c
 
     def __truediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __rtruediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __itruediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __pow__(self, other: int) -> "Rational":
         """Raise a rational number to an integer power using binary exponentiation.
@@ -298,7 +321,7 @@ class Rational:
             exponent //= 2
 
         if other < 0:
-            return Rational.from_rational(1 / result.value, result.log_scale)
+            return Rational.from_parts(1 / result.value, result.log_scale)
 
         return result
 
@@ -308,7 +331,7 @@ class Rational:
         Returns:
             SecretRational: Negated SecretRational value.
         """
-        return Rational.from_rational(self.value * Integer(-1), self.log_scale)
+        return Rational.from_parts(self.value * Integer(-1), self.log_scale)
 
     def __lt__(self, other: _NadaRational) -> SecretBoolean:
         """Check if this SecretRational is less than another.
@@ -390,8 +413,8 @@ class Rational:
             raise ValueError("Cannot compare values with different scales.")
         return self.value == other.value
 
-    def rescale_up(self, log_scale: int = LOG_SCALE):
-        """Rescale the value in the upward direction by a scaling factor (default LOG_SCALE).
+    def rescale_up(self, log_scale: int = RationalConfig.LOG_SCALE):
+        """Rescale the value in the upward direction by a scaling factor (default RationalConfig.LOG_SCALE).
 
         This is equivalent to multiplying the value by `2**(log_scale)`.
 
@@ -402,16 +425,16 @@ class Rational:
             SecretRational: Rescaled SecretRational value.
         """
         try:
-            return Rational.from_rational(
+            return Rational.from_parts(
                 self._value << UnsignedInteger(log_scale), self.log_scale + log_scale
             )
-        except:
-            return Rational.from_rational(
+        except TypeError:
+            return Rational.from_parts(
                 self._value * Integer(1 << log_scale), self.log_scale + log_scale
             )
 
-    def rescale_down(self, log_scale: int = LOG_SCALE):
-        """Rescale the value in the downward direction by a scaling factor (default LOG_SCALE).
+    def rescale_down(self, log_scale: int = RationalConfig.LOG_SCALE):
+        """Rescale the value in the downward direction by a scaling factor (default RationalConfig.LOG_SCALE).
 
         This is equivalent to dividing the value by `2**(log_scale)`.
 
@@ -422,11 +445,11 @@ class Rational:
             SecretRational: Rescaled SecretRational value.
         """
         try:
-            return Rational.from_rational(
+            return Rational.from_parts(
                 self._value >> UnsignedInteger(log_scale), self.log_scale - log_scale
             )
-        except:
-            return Rational.from_rational(
+        except TypeError:
+            return Rational.from_parts(
                 self._value / Integer(1 << log_scale), self.log_scale - log_scale
             )
 
@@ -439,7 +462,7 @@ class SecretRational:
         name: str = None,
         party: Party = None,
         value: SecretInteger = None,
-        log_scale=LOG_SCALE,
+        log_scale=RationalConfig.LOG_SCALE,
     ) -> None:
         """Initializes wrapper around SecretInteger object. The object should come scaled up by default otherwise precision may be lost.
 
@@ -447,7 +470,7 @@ class SecretRational:
             name (str, optional): Name for the SecretInteger input.
             party (Party, optional): Party associated with the SecretInteger input.
             value (SecretInteger, optional): SecretInteger value to be represented as SecretRational.
-            log_scale (int): Quantization scaling factor. Defaults to LOG_SCALE.
+            log_scale (int): Quantization scaling factor. Defaults to RationalConfig.LOG_SCALE.
 
         Raises:
             ValueError: If neither value nor name and party are provided.
@@ -484,7 +507,7 @@ class SecretRational:
         return self._value
 
     @classmethod
-    def from_rational(cls, value: Integer, log_scale: int) -> "SecretRational":
+    def from_parts(cls, value: Integer, log_scale: int) -> "SecretRational":
         """Creates a SecretRational from an Integer value.
 
         Args:
@@ -496,11 +519,12 @@ class SecretRational:
         """
         return SecretRational(value=value, log_scale=log_scale)
 
-    def add(self, other: _NadaRational) -> "SecretRational":
+    def add(self, other: _NadaRational, unchecked: bool = False) -> "SecretRational":
         """Add two SecretRational numbers.
 
         Args:
             other (_NadaRational): The other SecretRational to add.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -512,21 +536,14 @@ class SecretRational:
             raise TypeError(
                 f"Operation + not allowed between types {type(self)} + {type(other)}"
             )
-        return SecretRational.from_rational(self.value + other.value, self.log_scale)
+
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot add values with different scales.")
+
+        return SecretRational.from_parts(self.value + other.value, self.log_scale)
 
     def __add__(self, other: _NadaRational) -> "SecretRational":
         """Override the addition operator for SecretRational.
-
-        Args:
-            other (_NadaRational): The other SecretRational to add.
-
-        Returns:
-            SecretRational: Result of the addition.
-        """
-        return self.add(other)
-
-    def __radd__(self, other: _NadaRational) -> "SecretRational":
-        """Override the reflected addition operator for SecretRational.
 
         Args:
             other (_NadaRational): The other SecretRational to add.
@@ -547,11 +564,12 @@ class SecretRational:
         """
         return self.add(other)
 
-    def sub(self, other: _NadaRational) -> "SecretRational":
+    def sub(self, other: _NadaRational, unchecked: bool = False) -> "SecretRational":
         """Subtract two SecretRational numbers.
 
         Args:
             other (_NadaRational): The other SecretRational to subtract.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -563,25 +581,16 @@ class SecretRational:
             raise TypeError(
                 f"Operation - not allowed between types {type(self)} - {type(other)}"
             )
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot substract values with different scales.")
 
-        return SecretRational.from_rational(self.value - other.value, self.log_scale)
+        return SecretRational.from_parts(self.value - other.value, self.log_scale)
 
     def __sub__(self, other: _NadaRational) -> "SecretRational":
         """Override the subtraction operator for SecretRational.
 
         Args:
             other (_NadaRational): The other SecretRational to subtract.
-
-        Returns:
-            SecretRational: Result of the subtraction.
-        """
-        return self.sub(other)
-
-    def __rsub__(self, other: _NadaLike) -> "SecretRational":
-        """Override the reflected subtraction operator for SecretRational.
-
-        Args:
-            other (_NadaLike): The other value to subtract from.
 
         Returns:
             SecretRational: Result of the subtraction.
@@ -599,11 +608,15 @@ class SecretRational:
         """
         return self.sub(other)
 
-    def mul(self, other: _NadaRational) -> "SecretRational":
+    def mul_no_rescale(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> "SecretRational":
         """Multiply two SecretRational numbers.
 
         Args:
             other (_NadaRational): The other SecretRational to multiply.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
+
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -615,20 +628,25 @@ class SecretRational:
             raise TypeError(
                 f"Operation * not allowed between types {type(self)} * {type(other)}"
             )
-        return SecretRational.from_rational(
+
+        if not unchecked and self.log_scale != other.log_scale:
+            raise ValueError("Cannot multiply values with different scales.")
+
+        return SecretRational.from_parts(
             self.value * other.value, self.log_scale + other.log_scale
         )
 
-    def mul_rescale(self, other: _NadaRational) -> "SecretRational":
+    def mul(self, other: _NadaRational, unchecked: bool = False) -> "SecretRational":
         """Multiply two SecretRational numbers and rescale the result.
 
         Args:
             other (_NadaRational): The other SecretRational to multiply.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Returns:
             SecretRational: Result of the multiplication, rescaled.
         """
-        c = self.mul(other)
+        c = self.mul_no_rescale(other, unchecked=unchecked)
         d = c.rescale_down()
         return d
 
@@ -641,18 +659,7 @@ class SecretRational:
         Returns:
             SecretRational: Result of the multiplication, rescaled.
         """
-        return self.mul_rescale(other)
-
-    def __rmul__(self, other: _NadaLike) -> "SecretRational":
-        """Override the reflected multiplication operator for SecretRational.
-
-        Args:
-            other (_NadaLike): The other value to multiply.
-
-        Returns:
-            SecretRational: Result of the multiplication, rescaled.
-        """
-        return self.mul_rescale(other)
+        return self.mul(other)
 
     def __imul__(self, other: _NadaLike) -> "SecretRational":
         """Override the in-place multiplication operator for SecretRational.
@@ -663,13 +670,16 @@ class SecretRational:
         Returns:
             SecretRational: Result of the multiplication, rescaled.
         """
-        return self.mul_rescale(other)
+        return self.mul(other)
 
-    def divide(self, other: _NadaRational) -> "SecretRational":
+    def divide_no_rescale(
+        self, other: _NadaRational, unchecked: bool = False
+    ) -> "SecretRational":
         """Divide two SecretRational numbers.
 
         Args:
             other (_NadaRational): The other SecretRational to divide by.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -682,21 +692,30 @@ class SecretRational:
                 f"Operation / not allowed between types {type(self)} / {type(other)}"
             )
 
-        return SecretRational.from_rational(
+        if (
+            not unchecked
+            and self.log_scale != other.log_scale + RationalConfig.LOG_SCALE
+        ):
+            raise ValueError(
+                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}. Required scale: {self.log_scale}  / {other.log_scale + RationalConfig.LOG_SCALE}"
+            )
+
+        return SecretRational.from_parts(
             self.value / other.value, self.log_scale - other.log_scale
         )
 
-    def divide_rescale(self, other: _NadaRational) -> "SecretRational":
+    def divide(self, other: _NadaRational, unchecked: bool = False) -> "SecretRational":
         """Divide two SecretRational numbers and rescale the result.
 
         Args:
             other (_NadaRational): The other SecretRational to divide by.
+            unchecked (bool, optional): Flag to disable scale checking. Defaults to False.
 
         Returns:
             SecretRational: Result of the division, rescaled.
         """
         a = self.rescale_up()
-        c = a.divide(other)
+        c = a.divide_no_rescale(other, unchecked=unchecked)
         return c
 
     def __truediv__(self, other: _NadaRational) -> "SecretRational":
@@ -708,7 +727,7 @@ class SecretRational:
         Returns:
             SecretRational: Result of the division, rescaled.
         """
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __rtruediv__(self, other: _NadaRational) -> "SecretRational":
         """Override the reflected true division operator for SecretRational.
@@ -719,7 +738,7 @@ class SecretRational:
         Returns:
             SecretRational: Result of the division, rescaled.
         """
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __itruediv__(self, other: _NadaRational) -> "SecretRational":
         """Override the in-place true division operator for SecretRational.
@@ -730,7 +749,7 @@ class SecretRational:
         Returns:
             SecretRational: Result of the division, rescaled.
         """
-        return self.divide_rescale(other)
+        return self.divide(other)
 
     def __pow__(self, other: int) -> "SecretRational":
         """Raise a SecretRational to an integer power using binary exponentiation.
@@ -764,7 +783,7 @@ class SecretRational:
             exponent //= 2
 
         if other < 0:
-            return SecretRational.from_rational(1 / result.value, result.log_scale)
+            return SecretRational.from_parts(1 / result.value, result.log_scale)
 
         return result
 
@@ -774,7 +793,7 @@ class SecretRational:
         Returns:
             SecretRational: Negated SecretRational value.
         """
-        return SecretRational.from_rational(self.value * Integer(-1), self.log_scale)
+        return SecretRational.from_parts(self.value * Integer(-1), self.log_scale)
 
     def __lshift__(self, other: _NadaLike) -> "SecretRational":
         """Left shift the SecretRational value.
@@ -908,7 +927,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return SecretRational.from_rational(
+        return Rational.from_parts(
             self.value.public_equals(other.value), self.log_scale
         )
 
@@ -918,7 +937,7 @@ class SecretRational:
         Returns:
             Rational: Revealed SecretRational value.
         """
-        return SecretRational.from_rational(self.value.reveal(), self.log_scale)
+        return SecretRational.from_parts(self.value.reveal(), self.log_scale)
 
     def trunc_pr(self, arg_0: _NadaLike) -> "SecretRational":
         """Truncate the SecretRational value.
@@ -929,9 +948,9 @@ class SecretRational:
         Returns:
             SecretRational: Truncated SecretRational value.
         """
-        return SecretRational.from_rational(self.value.trunc_pr(arg_0), self.log_scale)
+        return SecretRational.from_parts(self.value.trunc_pr(arg_0), self.log_scale)
 
-    def rescale_up(self, log_scale: int = LOG_SCALE) -> "SecretRational":
+    def rescale_up(self, log_scale: int = RationalConfig.LOG_SCALE) -> "SecretRational":
         """Rescale the SecretRational value upwards by a scaling factor.
 
         Args:
@@ -941,15 +960,17 @@ class SecretRational:
             SecretRational: Rescaled SecretRational value.
         """
         try:
-            return SecretRational.from_rational(
+            return SecretRational.from_parts(
                 self._value << UnsignedInteger(log_scale), self.log_scale + log_scale
             )
-        except:
-            return SecretRational.from_rational(
+        except TypeError:
+            return SecretRational.from_parts(
                 self._value * Integer(1 << log_scale), self.log_scale + log_scale
             )
 
-    def rescale_down(self, log_scale: int = LOG_SCALE) -> "SecretRational":
+    def rescale_down(
+        self, log_scale: int = RationalConfig.LOG_SCALE
+    ) -> "SecretRational":
         """Rescale the SecretRational value downwards by a scaling factor.
 
         Args:
@@ -959,10 +980,10 @@ class SecretRational:
             SecretRational: Rescaled SecretRational value.
         """
         try:
-            return SecretRational.from_rational(
+            return SecretRational.from_parts(
                 self._value >> UnsignedInteger(log_scale), self.log_scale - log_scale
             )
-        except:
-            return SecretRational.from_rational(
+        except TypeError:
+            return SecretRational.from_parts(
                 self._value / Integer(1 << log_scale), self.log_scale - log_scale
             )

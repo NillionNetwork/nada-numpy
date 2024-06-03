@@ -11,7 +11,7 @@ from py_nillion_client import (
     PublicVariableUnsignedInteger,
 )
 import numpy as np
-import types
+from nada_algebra.types import RationalConfig
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -76,7 +76,7 @@ def concat(list_dict: list[dict]) -> dict:
     return {k: v for d in list_dict for k, v in d.items()}
 
 
-def __rational(value: Union[float, int]):
+def __rational(value: Union[float, int]) -> int:
     """
     Returns the integer representation of the given float value.
 
@@ -86,10 +86,10 @@ def __rational(value: Union[float, int]):
     Returns:
         int: The integer representation of the input value.
     """
-    return round(value * (1 << types.LOG_SCALE))
+    return round(value * (1 << RationalConfig.LOG_SCALE))
 
 
-def PublicRational(value: Union[float, int]):
+def PublicRational(value: Union[float, int]) -> PublicVariableInteger:
     """
     Returns the integer representation of the given float value.
 
@@ -102,7 +102,7 @@ def PublicRational(value: Union[float, int]):
     return PublicVariableInteger(__rational(value))
 
 
-def SecretRational(value: Union[float, int], party: str):
+def SecretRational(value: Union[float, int], party: str) -> SecretInteger:
     """
     Returns the integer representation of the given float value.
 
@@ -113,4 +113,4 @@ def SecretRational(value: Union[float, int], party: str):
     Returns:
         int: The integer representation of the input value.
     """
-    return PublicVariableInteger(__rational(value))
+    return SecretInteger(__rational(value))
