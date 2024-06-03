@@ -275,7 +275,7 @@ def linear_regression_zn(
     n, d = X.shape
     A = X.T @ X + na.identity(d) * lambda_  # (n,d) @ (d,n) = (d,d)
     # A = SCALE * SCALE + SCALE
-    b = X.T @ y  # (d,n) @ (n,) = (d,)
+    b = X.T.dot(y)  # (d,n) @ (n,) = (d,)
     adjAb, detA = linsol(A, b, modulo)
     detAw = adjAb
     return detAw, detA
@@ -283,11 +283,9 @@ def linear_regression_zn(
 
 def nada_main():
     parties = na.parties(3)
-
-    DIM = 3
-    NUM_FEATURES = 3
-    X = na.array([DIM, NUM_FEATURES], parties[0], "A", nada_type=SecretInteger)
-    y = na.array([NUM_FEATURES], parties[1], "b", nada_type=SecretInteger)
+    DIM = 10
+    X = na.array([DIM, 5], parties[0], "A", nada_type=SecretInteger)
+    y = na.array([DIM], parties[1], "b", nada_type=SecretInteger)
     lambda_ = na.array([1], parties[0], "lambda", nada_type=PublicInteger)
 
     (w, b) = linear_regression_zn(X, y, PRIME, lambda_)

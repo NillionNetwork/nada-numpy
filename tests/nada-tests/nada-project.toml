@@ -116,6 +116,10 @@ path = "src/linear_regression.py"
 prime_size = 64
 
 [[programs]]
+path = "src/linear_regression_large.py"
+prime_size = 64
+
+[[programs]]
 path = "src/determinant.py"
 prime_size = 64
 
@@ -128,5 +132,10 @@ path = "src/matrix_inverse.py"
 prime_size = 64
 
 [[programs]]
-path = "src/matrix_inverse_out.py"
+path = "src/matrix_inverse_large.py"
+prime_size = 64
+
+
+[[programs]]
+path = "src/determinant_large.py"
 prime_size = 64

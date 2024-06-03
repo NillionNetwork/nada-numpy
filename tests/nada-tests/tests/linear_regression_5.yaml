@@ -1,0 +1,41 @@
+---
+program: linear_regression
+inputs:
+  secrets:
+    A_0_0:
+        SecretInteger: "-67"
+    A_0_1:
+        SecretInteger: "38"
+    A_0_2:
+        SecretInteger: "-74"
+    A_1_0:
+        SecretInteger: "-214"
+    A_1_1:
+        SecretInteger: "-256"
+    A_1_2:
+        SecretInteger: "-110"
+    A_2_0:
+        SecretInteger: "256"
+    A_2_1:
+        SecretInteger: "-142"
+    A_2_2:
+        SecretInteger: "-232"
+    b_0:
+        SecretInteger: "-96"
+    b_1:
+        SecretInteger: "230"
+    b_2:
+        SecretInteger: "207"
+  public_variables: 
+    lambda_0: 
+      Integer: "0"
+expected_outputs:
+  b_0:
+    SecretInteger: "0"
+  w_0:
+    SecretInteger: "0"
+  w_1:
+    SecretInteger: "0"
+  w_2:
+    SecretInteger: "0"
+

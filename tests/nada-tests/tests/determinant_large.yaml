@@ -1,0 +1,138 @@
+---
+program: determinant_large
+inputs:
+  secrets:
+    A_0_0:
+        SecretInteger: "1"
+    A_0_1:
+        SecretInteger: "0"
+    A_0_2:
+        SecretInteger: "0"
+    A_0_3:
+        SecretInteger: "0"
+    A_0_4:
+        SecretInteger: "0"
+    A_0_5:
+        SecretInteger: "0"
+    A_0_6:
+        SecretInteger: "0"
+    A_0_7:
+        SecretInteger: "0"
+    A_1_0:
+        SecretInteger: "9"
+    A_1_1:
+        SecretInteger: "10"
+    A_1_2:
+        SecretInteger: "0"
+    A_1_3:
+        SecretInteger: "0"
+    A_1_4:
+        SecretInteger: "0"
+    A_1_5:
+        SecretInteger: "0"
+    A_1_6:
+        SecretInteger: "0"
+    A_1_7:
+        SecretInteger: "0"
+    A_2_0:
+        SecretInteger: "17"
+    A_2_1:
+        SecretInteger: "18"
+    A_2_2:
+        SecretInteger: "19"
+    A_2_3:
+        SecretInteger: "0"
+    A_2_4:
+        SecretInteger: "0"
+    A_2_5:
+        SecretInteger: "0"
+    A_2_6:
+        SecretInteger: "0"
+    A_2_7:
+        SecretInteger: "0"
+    A_3_0:
+        SecretInteger: "25"
+    A_3_1:
+        SecretInteger: "26"
+    A_3_2:
+        SecretInteger: "27"
+    A_3_3:
+        SecretInteger: "28"
+    A_3_4:
+        SecretInteger: "0"
+    A_3_5:
+        SecretInteger: "0"
+    A_3_6:
+        SecretInteger: "0"
+    A_3_7:
+        SecretInteger: "0"
+    A_4_0:
+        SecretInteger: "33"
+    A_4_1:
+        SecretInteger: "34"
+    A_4_2:
+        SecretInteger: "35"
+    A_4_3:
+        SecretInteger: "36"
+    A_4_4:
+        SecretInteger: "37"
+    A_4_5:
+        SecretInteger: "0"
+    A_4_6:
+        SecretInteger: "0"
+    A_4_7:
+        SecretInteger: "0"
+    A_5_0:
+        SecretInteger: "41"
+    A_5_1:
+        SecretInteger: "42"
+    A_5_2:
+        SecretInteger: "43"
+    A_5_3:
+        SecretInteger: "44"
+    A_5_4:
+        SecretInteger: "45"
+    A_5_5:
+        SecretInteger: "46"
+    A_5_6:
+        SecretInteger: "0"
+    A_5_7:
+        SecretInteger: "0"
+    A_6_0:
+        SecretInteger: "49"
+    A_6_1:
+        SecretInteger: "50"
+    A_6_2:
+        SecretInteger: "51"
+    A_6_3:
+        SecretInteger: "52"
+    A_6_4:
+        SecretInteger: "53"
+    A_6_5:
+        SecretInteger: "54"
+    A_6_6:
+        SecretInteger: "55"
+    A_6_7:
+        SecretInteger: "0"
+    A_7_0:
+        SecretInteger: "57"
+    A_7_1:
+        SecretInteger: "58"
+    A_7_2:
+        SecretInteger: "59"
+    A_7_3:
+        SecretInteger: "60"
+    A_7_4:
+        SecretInteger: "61"
+    A_7_5:
+        SecretInteger: "62"
+    A_7_6:
+        SecretInteger: "63"
+    A_7_7:
+        SecretInteger: "64"
+
+
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    Integer: "31872332800"

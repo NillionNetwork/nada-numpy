@@ -28,7 +28,7 @@ inputs:
       SecretInteger: "-142" # 2 * SCALE
   public_variables: 
     lambda_0: 
-      Integer: "16777216"
+      Integer: "0"
 expected_outputs:
   b_0:
     SecretInteger: "0"

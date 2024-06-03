@@ -1,0 +1,58 @@
+---
+program: linear_regression_large
+inputs:
+  secrets:
+    A_0_0:
+        SecretInteger: "18"
+    A_0_1:
+        SecretInteger: "-211"
+    A_0_2:
+        SecretInteger: "215"
+    A_0_3:
+        SecretInteger: "-251"
+    A_1_0:
+        SecretInteger: "124"
+    A_1_1:
+        SecretInteger: "-144"
+    A_1_2:
+        SecretInteger: "-127"
+    A_1_3:
+        SecretInteger: "-209"
+    A_2_0:
+        SecretInteger: "246"
+    A_2_1:
+        SecretInteger: "179"
+    A_2_2:
+        SecretInteger: "116"
+    A_2_3:
+        SecretInteger: "203"
+    A_3_0:
+        SecretInteger: "65"
+    A_3_1:
+        SecretInteger: "-256"
+    A_3_2:
+        SecretInteger: "208"
+    A_3_3:
+        SecretInteger: "7"
+    b_0:
+        SecretInteger: "174"
+    b_1:
+        SecretInteger: "-203"
+    b_2:
+        SecretInteger: "256"
+    b_3:
+        SecretInteger: "-203"
+  public_variables:
+    lambda_0:
+      Integer: "0"
+expected_outputs:
+  w_0:
+    SecretInteger: "3"
+  w_3:
+    SecretInteger: "3"
+  w_2:
+    SecretInteger: "3"
+  b_0:
+    SecretInteger: "3"
+  w_1:
+    SecretInteger: "3"

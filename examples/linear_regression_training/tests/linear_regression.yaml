@@ -1,0 +1,140 @@
+program: linear_regression
+inputs:
+  secrets:
+    A_0_0:
+      SecretInteger: "-220" # round(-0.86 * SCALE)
+    A_0_1:
+      SecretInteger: "251" # round(0.98 * SCALE)
+    A_0_2:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_0_3:
+      SecretInteger: "-210" # round(-0.8200000000000001 * SCALE)
+    A_0_4:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_1_0:
+      SecretInteger: "-236" # round(-0.92 * SCALE)
+    A_1_1:
+      SecretInteger: "164" # round(0.6399999999999999 * SCALE)
+    A_1_2:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    A_1_3:
+      SecretInteger: "-236" # round(-0.92 * SCALE)
+    A_1_4:
+      SecretInteger: "-246" # round(-0.96 * SCALE)
+    A_2_0:
+      SecretInteger: "-215" # round(-0.84 * SCALE)
+    A_2_1:
+      SecretInteger: "5" # round(0.020000000000000018 * SCALE)
+    A_2_2:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_2_3:
+      SecretInteger: "-220" # round(-0.86 * SCALE)
+    A_2_4:
+      SecretInteger: "-246" # round(-0.96 * SCALE)
+    A_3_0:
+      SecretInteger: "-230" # round(-0.9 * SCALE)
+    A_3_1:
+      SecretInteger: "10" # round(0.040000000000000036 * SCALE)
+    A_3_2:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_3_3:
+      SecretInteger: "-230" # round(-0.9 * SCALE)
+    A_3_4:
+      SecretInteger: "-246" # round(-0.96 * SCALE)
+    A_4_0:
+      SecretInteger: "-220" # round(-0.86 * SCALE)
+    A_4_1:
+      SecretInteger: "128" # round(0.5 * SCALE)
+    A_4_2:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    A_4_3:
+      SecretInteger: "-215" # round(-0.84 * SCALE)
+    A_4_4:
+      SecretInteger: "-230" # round(-0.9 * SCALE)
+    A_5_0:
+      SecretInteger: "-241" # round(-0.94 * SCALE)
+    A_5_1:
+      SecretInteger: "143" # round(0.56 * SCALE)
+    A_5_2:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    A_5_3:
+      SecretInteger: "-210" # round(-0.8200000000000001 * SCALE)
+    A_5_4:
+      SecretInteger: "-225" # round(-0.88 * SCALE)
+    A_6_0:
+      SecretInteger: "-220" # round(-0.86 * SCALE)
+    A_6_1:
+      SecretInteger: "118" # round(0.45999999999999996 * SCALE)
+    A_6_2:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_6_3:
+      SecretInteger: "-230" # round(-0.9 * SCALE)
+    A_6_4:
+      SecretInteger: "-225" # round(-0.88 * SCALE)
+    A_7_0:
+      SecretInteger: "-215" # round(-0.84 * SCALE)
+    A_7_1:
+      SecretInteger: "-26" # round(-0.09999999999999998 * SCALE)
+    A_7_2:
+      SecretInteger: "-251" # round(-0.98 * SCALE)
+    A_7_3:
+      SecretInteger: "-236" # round(-0.92 * SCALE)
+    A_7_4:
+      SecretInteger: "-225" # round(-0.88 * SCALE)
+    A_8_0:
+      SecretInteger: "-230" # round(-0.9 * SCALE)
+    A_8_1:
+      SecretInteger: "138" # round(0.54 * SCALE)
+    A_8_2:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    A_8_3:
+      SecretInteger: "-215" # round(-0.84 * SCALE)
+    A_8_4:
+      SecretInteger: "-246" # round(-0.96 * SCALE)
+    A_9_0:
+      SecretInteger: "-236" # round(-0.92 * SCALE)
+    A_9_1:
+      SecretInteger: "200" # round(0.78 * SCALE)
+    A_9_2:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    A_9_3:
+      SecretInteger: "-236" # round(-0.92 * SCALE)
+    A_9_4:
+      SecretInteger: "-256" # round(-1.0 * SCALE)
+    b_0:
+      SecretInteger: "210" # round(0.8200000000000001 * SCALE)
+    b_1:
+      SecretInteger: "77" # round(0.30000000000000004 * SCALE)
+    b_2:
+      SecretInteger: "-26" # round(-0.09999999999999998 * SCALE)
+    b_3:
+      SecretInteger: "-72" # round(-0.28 * SCALE)
+    b_4:
+      SecretInteger: "82" # round(0.32000000000000006 * SCALE)
+    b_5:
+      SecretInteger: "56" # round(0.21999999999999997 * SCALE)
+    b_6:
+      SecretInteger: "67" # round(0.26 * SCALE)
+    b_7:
+      SecretInteger: "-41" # round(-0.16000000000000003 * SCALE)
+    b_8:
+      SecretInteger: "56" # round(0.21999999999999997 * SCALE)
+    b_9:
+      SecretInteger: "97" # round(0.3799999999999999 * SCALE)
+  public_variables: 
+    lambda_0: 
+      Integer: "65536"
+      
+expected_outputs:
+  b_0:
+    SecretInteger: "0" 
+  w_0:
+    SecretInteger: "0" 
+  w_1:
+    SecretInteger: "0" 
+  w_2:
+    SecretInteger: "0" 
+  w_3:
+    SecretInteger: "0" 
+  w_4:
+    SecretInteger: "0" 
