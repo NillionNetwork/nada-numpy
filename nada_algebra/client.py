@@ -11,7 +11,7 @@ from py_nillion_client import (
     PublicVariableUnsignedInteger,
 )
 import numpy as np
-from nada_algebra.types import RationalConfig, Rational, SecretRational
+from nada_algebra import types
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -36,8 +36,8 @@ def array(
         SecretUnsignedInteger,
         PublicVariableInteger,
         PublicVariableUnsignedInteger,
-        Rational,
-        SecretRational,
+        types.Rational,
+        types.SecretRational,
     ] = SecretInteger,
 ) -> dict:
     """
@@ -47,15 +47,35 @@ def array(
     Args:
         arr (np.ndarray): The input array.
         prefix (str): The prefix to be added to the output names.
-        nada_type (Union[type[SecretInteger], type[SecretUnsignedInteger], \
-            type[PublicVariableInteger], type[PublicVariableUnsignedInteger]], optional):
-            The type of the values introduced. Defaults to SecretInteger.
+        nada_type (type, optional): The type of the values introduced. Defaults to SecretInteger.
 
     Returns:
         dict: A dictionary mapping generated names to Nillion input objects.
     """
+    # TODO: remove check for zero values when pushing zero secrets is supported
     if len(arr.shape) == 1:
-        return {f"{prefix}_{i}": nada_type(int(arr[i])) for i in range(arr.shape[0])}
+        if nada_type == types.Rational:
+            return {
+                f"{prefix}_{i}": (PublicRational(arr[i])) for i in range(arr.shape[0])
+            }
+        if nada_type == types.SecretRational:
+            return {
+                f"{prefix}_{i}": (
+                    SecretRational(arr[i]) if arr[i] != 0 else SecretInteger(1)
+                )
+                for i in range(arr.shape[0])
+            }
+        return {
+            f"{prefix}_{i}": (
+                nada_type(int(arr[i]))
+                if (
+                    nada_type in (PublicVariableInteger, PublicVariableUnsignedInteger)
+                    or int(arr[i]) != 0
+                )
+                else nada_type(1)
+            )
+            for i in range(arr.shape[0])
+        }
     return {
         k: v
         for i in range(arr.shape[0])
@@ -88,7 +108,7 @@ def __rational(value: Union[float, int]) -> int:
     Returns:
         int: The integer representation of the input value.
     """
-    return round(value * (1 << RationalConfig.LOG_SCALE))
+    return round(value * (1 << types.RationalConfig.LOG_SCALE))
 
 
 def PublicRational(value: Union[float, int]) -> PublicVariableInteger:
@@ -104,13 +124,12 @@ def PublicRational(value: Union[float, int]) -> PublicVariableInteger:
     return PublicVariableInteger(__rational(value))
 
 
-def SecretRational(value: Union[float, int], party: str) -> SecretInteger:
+def SecretRational(value: Union[float, int]) -> SecretInteger:
     """
     Returns the integer representation of the given float value.
 
     Args:
         value (Union[float, int]): The input value.
-        party (str): The party name.
 
     Returns:
         int: The integer representation of the input value.
