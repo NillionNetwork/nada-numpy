@@ -17,7 +17,6 @@ from typing import Union
 
 
 _Number = Union[float, int, np.floating]
-_NadaSecretInteger = Union[SecretInteger]
 _NadaInteger = Union[
     Integer,
     PublicInteger,
