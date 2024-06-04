@@ -9,17 +9,14 @@ from nada_dsl import (
     Integer,
     NadaType,
     SecretInteger,
-    SecretUnsignedInteger,
     SecretBoolean,
     PublicBoolean,
     PublicInteger,
-    PublicUnsignedInteger,
 )
-from typing import Any, Callable, Union
+from typing import Union
 
 
 _Number = Union[float, int, np.floating]
-_NadaSecretInteger = Union[SecretInteger]
 _NadaInteger = Union[
     Integer,
     PublicInteger,
