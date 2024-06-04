@@ -9,8 +9,9 @@ class __RationalConfig:
     """Rational config data class"""
 
     _instance: "__RationalConfig" = None
-    _default_log_scale = 16
-    _log_scale = _default_log_scale
+
+    _default_log_scale: int = 16
+    _log_scale: int = _default_log_scale
 
     def __new__(cls, *args, **kwargs) -> "__RationalConfig":
         """Ensures this class is a singleton and is instantiated only once.
