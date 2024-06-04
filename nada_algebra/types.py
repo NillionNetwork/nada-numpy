@@ -2,21 +2,103 @@
 
 import numpy as np
 
+import nada_dsl as dsl
+
 from nada_dsl import (
     UnsignedInteger,
     Integer,
     SecretInteger,
-    SecretBoolean,
-    PublicBoolean,
+    SecretUnsignedInteger,
     PublicInteger,
     Input,
     Party,
 )
 from nada_algebra.rational_config import get_log_scale
+
+
 from typing import Union
 
 
 _NadaRational = Union["Rational", "SecretRational"]
+
+_NadaType = Union[
+    Integer,
+    PublicInteger,
+    PublicUnsignedInteger,
+    SecretInteger,
+    SecretUnsignedInteger,
+    UnsignedInteger,
+]
+
+
+class SecretBoolean(dsl.SecretBoolean):
+
+    def __init__(self, value):
+        super().__init__(value.inner)
+
+    def if_else(
+        self: dsl.SecretBoolean,
+        arg_0: _NadaType | "SecretRational" | "Rational",
+        arg_1: _NadaType | "SecretRational" | "Rational",
+    ) -> Union[SecretInteger, SecretUnsignedInteger]:
+        first_arg = arg_0
+        second_arg = arg_1
+        if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
+            arg_1, (SecretRational, Rational)
+        ):
+            # Both are SecretRational or Rational objects
+            if arg_0.log_scale != arg_1.log_scale:
+                raise ValueError("Cannot output values with different scales.")
+            first_arg = arg_0.value
+            second_arg = arg_1.value
+        elif isinstance(arg_0, (Rational, SecretRational)) or isinstance(
+            arg_1, (Rational, SecretRational)
+        ):
+            # Both are SecretRational or Rational objects
+            raise TypeError(f"Invalid operation: {self}.IfElse({arg_0}, {arg_1})")
+
+        result = super().if_else(first_arg, second_arg)
+
+        if isinstance(arg_0, (SecretRational, Rational)):
+            # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
+            return SecretRational.from_parts(result, arg_0.log_scale)
+        else:
+            return result
+
+
+class PublicBoolean(dsl.PublicBoolean):
+
+    def __init__(self, value):
+        super().__init__(value.inner)
+
+    def if_else(
+        self: dsl.SecretBoolean,
+        arg_0: _NadaType | "SecretRational" | "Rational",
+        arg_1: _NadaType | "SecretRational" | "Rational",
+    ) -> Union[SecretInteger, SecretUnsignedInteger]:
+        first_arg = arg_0
+        second_arg = arg_1
+        if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
+            arg_1, (SecretRational, Rational)
+        ):
+            # Both are SecretRational or Rational objects
+            if arg_0.log_scale != arg_1.log_scale:
+                raise ValueError("Cannot output values with different scales.")
+            first_arg = arg_0.value
+            second_arg = arg_1.value
+        elif isinstance(arg_0, (Rational, SecretRational)) or isinstance(
+            arg_1, (Rational, SecretRational)
+        ):
+            # Both are SecretRational or Rational objects but of different type
+            raise TypeError(f"Invalid operation: {self}.IfElse({arg_0}, {arg_1})")
+
+        result = super().if_else(first_arg, second_arg)
+
+        if isinstance(arg_0, (SecretRational, Rational)):
+            # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
+            return Rational.from_parts(result, arg_0.log_scale)
+        else:
+            return result
 
 
 class Rational:
@@ -740,7 +822,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value < other.value
+        return SecretBoolean(self.value < other.value)
 
     def __gt__(self, other: _NadaRational) -> SecretBoolean:
         """
@@ -757,7 +839,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value > other.value
+        return SecretBoolean(self.value > other.value)
 
     def __le__(self, other: _NadaRational) -> SecretBoolean:
         """
@@ -774,7 +856,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value <= other.value
+        return SecretBoolean(self.value <= other.value)
 
     def __ge__(self, other: _NadaRational) -> SecretBoolean:
         """
@@ -791,7 +873,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value >= other.value
+        return SecretBoolean(self.value >= other.value)
 
     def __eq__(self, other: _NadaRational) -> SecretBoolean:
         """
@@ -808,7 +890,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value == other.value
+        return SecretBoolean(self.value == other.value)
 
     def __ne__(self, other: _NadaRational) -> SecretBoolean:
         """

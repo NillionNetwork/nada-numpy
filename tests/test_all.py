@@ -31,6 +31,7 @@ TESTS = [
     "rational_array",
     "rational_scaling",
     "rational_operability",
+    "rational_if_else",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"
