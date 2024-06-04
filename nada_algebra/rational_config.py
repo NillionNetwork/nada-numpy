@@ -14,7 +14,8 @@ class __RationalConfig:
     _log_scale: int = _default_log_scale
 
     def __new__(cls, *args, **kwargs) -> "__RationalConfig":
-        """Ensures this class is a singleton and is instantiated only once.
+        """
+        Ensures this class is a singleton and is instantiated only once.
 
         Raises:
             RuntimeError: Raised when this class is attempted to be initialized more than once.
