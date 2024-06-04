@@ -16,11 +16,10 @@ from nada_dsl import (
 
 import numpy as np
 from nada_algebra.array import NadaArray
-from nada_algebra.types import Rational, SecretRational
+from nada_algebra.types import Rational, SecretRational, rational
 
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
-""" A Nada Cleartext Type is: `Integer`, `UnsignedInteger`, or `Rational` """
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -66,6 +65,8 @@ def from_list(lst: list, nada_type: _NadaCleartextType = Integer) -> NadaArray:
     Returns:
         NadaArray: The created NadaArray.
     """
+    if nada_type == Rational:
+        nada_type = rational
     if not isinstance(lst, np.ndarray):
         lst = np.array(lst)
     return NadaArray(np.array(__from_numpy(lst, nada_type)))
@@ -82,6 +83,8 @@ def ones(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaAr
     Returns:
         NadaArray: The created NadaArray filled with ones.
     """
+    if nada_type == Rational:
+        nada_type = rational
     return from_list(np.ones(dims), nada_type)
 
 
@@ -98,6 +101,8 @@ def ones_like(
     Returns:
         NadaArray: The created NadaArray filled with ones.
     """
+    if nada_type == Rational:
+        nada_type = rational
     if isinstance(a, NadaArray):
         a = a.inner
     return from_list(np.ones_like(a), nada_type)
@@ -114,6 +119,8 @@ def zeros(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaA
     Returns:
         NadaArray: The created NadaArray filled with zeros.
     """
+    if nada_type == Rational:
+        nada_type = rational
     return from_list(np.zeros(dims), nada_type)
 
 
@@ -130,6 +137,8 @@ def zeros_like(
     Returns:
         NadaArray: The created NadaArray filled with zeros.
     """
+    if nada_type == Rational:
+        nada_type = rational
     if isinstance(a, NadaArray):
         a = a.inner
     return from_list(np.zeros_like(a), nada_type)
@@ -171,13 +180,14 @@ def array(
     dims: Iterable[int],
     party: Party,
     prefix: str,
-    nada_type: (
-        SecretInteger
-        | SecretUnsignedInteger
-        | PublicInteger
-        | PublicUnsignedInteger
-        | SecretRational
-    ) = SecretInteger,
+    nada_type: Union[
+        SecretInteger,
+        SecretUnsignedInteger,
+        PublicInteger,
+        PublicUnsignedInteger,
+        SecretRational,
+        Rational,
+    ],
 ) -> NadaArray:
     """
     Create a NadaArray with the specified dimensions and elements of the given type.
@@ -186,7 +196,7 @@ def array(
         dims (Iterable[int]): A list of integers representing the dimensions of the array.
         party (Party): The party object.
         prefix (str): A prefix for naming the array elements.
-        nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
+        nada_type (type): The type of elements to create.
 
     Returns:
         NadaArray: The created NadaArray.
