@@ -10,6 +10,7 @@ from nada_dsl import (
     SecretInteger,
     SecretUnsignedInteger,
     PublicInteger,
+    PublicUnsignedInteger,
     Input,
     Party,
 )
@@ -32,15 +33,29 @@ _NadaType = Union[
 
 
 class SecretBoolean(dsl.SecretBoolean):
+    """SecretBoolean rational wrapper"""
 
-    def __init__(self, value):
+    def __init__(self, value: dsl.SecretBoolean):
         super().__init__(value.inner)
 
     def if_else(
-        self: dsl.SecretBoolean,
-        arg_0: _NadaType | "SecretRational" | "Rational",
-        arg_1: _NadaType | "SecretRational" | "Rational",
+        self,
+        arg_0: Union[_NadaType, "SecretRational", "Rational"],
+        arg_1: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[SecretInteger, SecretUnsignedInteger]:
+        """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+
+        Args:
+            arg_0 (Union[_NadaType, &quot;SecretRational&quot;, &quot;Rational&quot;]): First argument.
+            arg_1 (Union[_NadaType, &quot;SecretRational&quot;, &quot;Rational&quot;]): Second argument.
+
+        Raises:
+            ValueError: Raised when incompatibly-scaled values are passed.
+            TypeError: Raised when invalid operation is called.
+
+        Returns:
+            Union[SecretInteger, SecretUnsignedInteger]: Return value.
+        """
         first_arg = arg_0
         second_arg = arg_1
         if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
@@ -61,21 +76,35 @@ class SecretBoolean(dsl.SecretBoolean):
 
         if isinstance(arg_0, (SecretRational, Rational)):
             # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
-            return SecretRational.from_parts(result, arg_0.log_scale)
+            return SecretRational(result, arg_0.log_scale, is_scaled=True)
         else:
             return result
 
 
 class PublicBoolean(dsl.PublicBoolean):
+    """PublicBoolean rational wrapper"""
 
-    def __init__(self, value):
+    def __init__(self, value: dsl.PublicBoolean):
         super().__init__(value.inner)
 
     def if_else(
-        self: dsl.SecretBoolean,
-        arg_0: _NadaType | "SecretRational" | "Rational",
-        arg_1: _NadaType | "SecretRational" | "Rational",
+        self,
+        arg_0: Union[_NadaType, "SecretRational", "Rational"],
+        arg_1: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[SecretInteger, SecretUnsignedInteger]:
+        """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+
+        Args:
+            arg_0 (Union[_NadaType, &quot;SecretRational&quot;, &quot;Rational&quot;]): First argument.
+            arg_1 (Union[_NadaType, &quot;SecretRational&quot;, &quot;Rational&quot;]): Second argument.
+
+        Raises:
+            ValueError: Raised when incompatibly-scaled values are passed.
+            TypeError: Raised when invalid operation is called.
+
+        Returns:
+            Union[SecretInteger, SecretUnsignedInteger]: Return value.
+        """
         first_arg = arg_0
         second_arg = arg_1
         if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
@@ -96,7 +125,7 @@ class PublicBoolean(dsl.PublicBoolean):
 
         if isinstance(arg_0, (SecretRational, Rational)):
             # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
-            return Rational.from_parts(result, arg_0.log_scale)
+            return Rational(result, arg_0.log_scale, is_scaled=True)
         else:
             return result
 
@@ -995,7 +1024,7 @@ def secret_rational(
     Args:
         name (str): Name of variable in Nillion network.
         party (Party): Name of party that provided variable.
-        log_scale (int): Quantization scaling factor.
+        log_scale (int, optional): Quantization scaling factor. Defaults to None.
         is_scaled (bool, optional): Flag that indicates whether provided value has already been
             scaled by log_scale factor. Defaults to True.
 
@@ -1015,7 +1044,7 @@ def public_rational(
     Args:
         name (str): Name of variable in Nillion network.
         party (Party): Name of party that provided variable.
-        log_scale (int): Quantization scaling factor.
+        log_scale (int, optional): Quantization scaling factor. Defaults to None.
         is_scaled (bool, optional): Flag that indicates whether provided value has already been
             scaled by log_scale factor. Defaults to True.
 
@@ -1026,21 +1055,34 @@ def public_rational(
     return Rational(value, log_scale, is_scaled)
 
 
-def rational(value: Union[int, float, np.floating]) -> Rational:
+def rational(
+    value: Union[int, float, np.floating],
+    log_scale: int = None,
+    is_scaled: bool = False,
+) -> Rational:
     """
     Creates a Rational from a number variable.
 
     Args:
         value (Union[int, float, np.floating]): Provided input value.
+        log_scale (int, optional): Quantization scaling factor. Defaults to default log_scale.
+        is_scaled (bool, optional): Flag that indicates whether provided value has already been
+            scaled by log_scale factor. Defaults to True.
 
     Returns:
         Rational: Instantiated Rational object.
     """
+    if log_scale is None:
+        log_scale = get_log_scale()
+
     if isinstance(value, np.floating):
         value = value.item()
     if isinstance(value, int):
-        return Rational(Integer(value), is_scaled=False)
+        return Rational(Integer(value), log_scale=log_scale, is_scaled=is_scaled)
     if isinstance(value, float):
-        quantized = round(value * (1 << get_log_scale()))
+        assert (
+            is_scaled is False
+        ), "Got a value of type `float` with `is_scaled` set to True. This should never occur; only fixed-point numbers can be scaled (i.e., quantized)."
+        quantized = round(value * (1 << log_scale))
         return Rational(Integer(quantized), is_scaled=True)
     raise TypeError("Cannot instantiate Rational from type `%s`." % type(value))
