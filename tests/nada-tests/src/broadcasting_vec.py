@@ -5,7 +5,7 @@ import nada_algebra as na
 def nada_main():
     parties = na.parties(3)
 
-    a = na.array([3, 3, 3], parties[0], "A")
+    a = na.array([3, 3, 3], parties[0], "A", SecretInteger)
     b = na.ones([3, 3, 3])
     c = na.zeros([3, 3, 3])
     d = na.ones([3, 3, 3])

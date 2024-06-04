@@ -4,10 +4,10 @@ import nada_algebra as na
 
 def nada_main():
     parties = na.parties(1)
-    a = na.SecretRational("my_input_0", parties[0])  # 3.2 -> 209715
-    b = na.SecretRational("my_input_1", parties[0])  # 4.5 -> 294912
-    c = na.Rational(1.2)  # 1.2 -> 78643
-    d = na.SecretRational("my_input_2", parties[0])  # 3.2  -> 294912
+    a = na.secret_rational("my_input_0", parties[0])  # 3.2 -> 209715
+    b = na.secret_rational("my_input_1", parties[0])  # 4.5 -> 294912
+    c = na.rational(1.2)  # 1.2 -> 78643
+    d = na.secret_rational("my_input_2", parties[0])  # 3.2  -> 294912
 
     out_0 = a < b  # True
     out_1 = a <= b  # True

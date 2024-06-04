@@ -29,6 +29,8 @@ TESTS = [
     "secret_rational_comparison",
     "chained_rational_operations",
     "rational_array",
+    "rational_scaling",
+    "rational_operability",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"
@@ -89,7 +91,7 @@ def test_client():
     secrets = nillion.Secrets(
         na_client.concat(
             [
-                na_client.array(np.ones((3, 3)), "A"),
+                na_client.array(np.ones((3, 3)), "A", nillion.SecretInteger),
                 na_client.array(np.ones((3, 3)), "B", nillion.SecretUnsignedInteger),
             ]
         )
@@ -115,10 +117,10 @@ def test_rational_client():
     import nada_algebra.client as na_client  # For use with Python Client
     import py_nillion_client as nillion
 
-    secret_rational = na_client.SecretRational(3.2)
+    secret_rational = na_client.secret_rational(3.2)
 
     assert type(secret_rational) == nillion.SecretInteger
 
-    rational = na_client.PublicRational(1.7)
+    rational = na_client.public_rational(1.7)
 
     assert type(rational) == nillion.PublicVariableInteger

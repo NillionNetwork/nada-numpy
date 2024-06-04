@@ -5,8 +5,8 @@ import nada_algebra as na
 def nada_main():
     parties = na.parties(3)
 
-    a = na.array([3, 3], parties[0], "A")
-    b = na.array([3, 3], parties[1], "B")
+    a = na.array([3, 3], parties[0], "A", SecretInteger)
+    b = na.array([3, 3], parties[1], "B", SecretInteger)
     c = a.reveal()
 
     result = b + c

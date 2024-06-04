@@ -113,3 +113,11 @@ prime_size = 128
 [[programs]]
 path = "src/rational_array.py"
 prime_size = 128
+
+[[programs]]
+path = "src/rational_scaling.py"
+prime_size = 128
+
+[[programs]]
+path = "src/rational_operability.py"
+prime_size = 128

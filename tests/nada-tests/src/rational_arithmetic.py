@@ -5,9 +5,9 @@ import nada_algebra as na
 def nada_main():
     parties = na.parties(1)
 
-    a = na.Rational(3.2)
-    b = na.Rational(4.5)
-    c = na.SecretRational("my_input_0", parties[0])  # 1.2
+    a = na.rational(3.2)
+    b = na.rational(4.5)
+    c = na.secret_rational("my_input_0", parties[0])  # 1.2
 
     out_0 = a + b  # 7.7 -> 504627
     out_1 = a - b  # -1.3 -> -85197

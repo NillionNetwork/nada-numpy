@@ -7,13 +7,13 @@ def nada_main():
     parties = na.parties(3)
 
     # We use na.SecretRational to create a secret rational number for party 0
-    a = na.SecretRational("my_input_0", parties[0])
+    a = na.secret_rational("my_input_0", parties[0])
 
     # We use na.SecretRational to create a secret rational number for party 1
-    b = na.SecretRational("my_input_1", parties[1])
+    b = na.secret_rational("my_input_1", parties[1])
 
     # This is a compile time rational number
-    c = na.Rational(1.2)
+    c = na.rational(1.2)
 
     # The formula below does operations on rational numbers and returns a rational number
     # It's easy to see that (a + b - c) is both on numerator and denominator, so the end result is b
