@@ -1,3 +1,4 @@
+import pytest
 from nada_dsl import *
 import nada_algebra as na
 
@@ -6,8 +7,22 @@ def nada_main():
     parties = na.parties(3)
 
     a = na.array([3, 3], parties[0], "A", SecretInteger)
-    b = na.array([3, 3], parties[1], "B", SecretInteger)
-    c = a.reveal()
+    b = na.array([3, 3], parties[1], "B", na.SecretRational)
 
-    result = b + c
-    return na.output(result, parties[2], "my_output")
+    c = a.reveal()
+    d = b.reveal()
+
+    assert c.dtype == PublicInteger, c.dtype
+    assert c.shape == a.shape
+
+    assert d.dtype == na.Rational, d.dtype
+    assert d.shape == b.shape
+
+    with pytest.raises(Exception):
+        c.reveal()
+    with pytest.raises(Exception):
+        d.reveal()
+
+    return na.output(c, parties[2], "my_output_A") + na.output(
+        d, parties[2], "my_output_B"
+    )

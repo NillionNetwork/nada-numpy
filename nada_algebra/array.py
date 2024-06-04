@@ -4,7 +4,8 @@
 """
 
 from dataclasses import dataclass
-from typing import Any, Callable, Union
+from types import NoneType
+from typing import Any, Callable, Type, Union
 
 import numpy as np
 from nada_dsl import (
@@ -46,7 +47,6 @@ class NadaArray:
         "cumsum",
         "data",
         "diagonal",
-        "dtype",
         "fill",
         "flags",
         "flat",
@@ -471,3 +471,24 @@ class NadaArray:
             int: The length of the inner numpy array.
         """
         return len(self.inner)
+
+    @property
+    def empty(self) -> bool:
+        """Whether or not the NadaArray contains any elements.
+
+        Returns:
+            bool: Bool result.
+        """
+        return len(self.inner) == 0
+
+    @property
+    def dtype(self) -> Type:
+        """
+        Gets inner data type of NadaArray values.
+
+        Returns:
+            Type: Inner data type.
+        """
+        if self.empty:
+            return NoneType
+        return type(self.inner.item(0))

@@ -192,7 +192,10 @@ class Rational:
 
         Args:
             other (_NadaRational): Other rational number to add.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the addition.
@@ -232,7 +235,10 @@ class Rational:
 
         Returns:
             Union[Rational, SecretRational]: Result of the subtraction.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
             TypeError: If the other value is of an incompatible type.
@@ -268,7 +274,10 @@ class Rational:
 
         Args:
             other (_NadaRational): Other rational number to multiply.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the multiplication.
@@ -305,7 +314,10 @@ class Rational:
 
         Args:
             other (_NadaRational): Other rational number to multiply.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the multiplication.
@@ -358,18 +370,24 @@ class Rational:
                 is_scaled=True,
             )
 
-    def divide(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+    def divide(
+        self, other: _NadaRational, ignore_scale: bool = False
+    ) -> Union["Rational", "SecretRational"]:
         """
         Divide two rational numbers and rescale the result.
 
         Args:
             other (_NadaRational): Other rational number to divide by.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             Union[Rational, SecretRational]: Result of the division.
         """
         a = self.rescale_up()
-        c = a.divide_no_rescale(other)
+        c = a.divide_no_rescale(other, ignore_scale)
         return c
 
     def __truediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
@@ -411,7 +429,9 @@ class Rational:
             exponent //= 2
 
         if other < 0:
-            return Rational(Integer(1) / result.value, result.log_scale, is_scaled=True)
+            return rational(1) / Rational(
+                result.value, result.log_scale, is_scaled=True
+            )
 
         return result
 
@@ -599,7 +619,7 @@ class SecretRational:
         self._log_scale = log_scale
 
         if is_scaled is False:
-            value = value << log_scale
+            value = value << UnsignedInteger(log_scale)
         self._value = value
 
     @property
@@ -628,7 +648,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to add.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -658,7 +681,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to subtract.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -689,7 +715,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to multiply.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -715,7 +744,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to multiply.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             SecretRational: Result of the multiplication, rescaled.
@@ -738,7 +770,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to divide by.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
             TypeError: If the other value is not a Rational or SecretRational.
@@ -768,7 +803,10 @@ class SecretRational:
 
         Args:
             other (_NadaRational): The other SecretRational to divide by.
-            ignore_scale (bool, optional): Flag to disable scale checking. Defaults to False.
+            ignore_scale (bool, optional): Flag to disable scale checking. Disabling
+                auto-scaling can lead to significant performance gains as it allows
+                "bundling" scaling ops. However, it is advanced feature and can lead
+                to unexpected results if used incorrectly. Defaults to False.
 
         Returns:
             SecretRational: Result of the division, rescaled.
@@ -816,7 +854,9 @@ class SecretRational:
             exponent //= 2
 
         if other < 0:
-            return SecretRational(1 / result.value, result.log_scale)
+            return rational(1) / SecretRational(
+                result.value, result.log_scale, is_scaled=True
+            )
 
         return result
 
