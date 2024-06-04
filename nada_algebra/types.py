@@ -46,8 +46,8 @@ class SecretBoolean(dsl.SecretBoolean):
         """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
         Args:
-            arg_0 (Union[_NadaType, SecretRational;, Rational]): First argument.
-            arg_1 (Union[_NadaType, SecretRational;, Rational]): Second argument.
+            arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
+            arg_1 (Union[_NadaType, SecretRational, Rational]): Second argument.
 
         Raises:
             ValueError: Raised when incompatibly-scaled values are passed.
@@ -95,8 +95,8 @@ class PublicBoolean(dsl.PublicBoolean):
         """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
         Args:
-            arg_0 (Union[_NadaType, SecretRational;, Rational]): First argument.
-            arg_1 (Union[_NadaType, SecretRational;, Rational]): Second argument.
+            arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
+            arg_1 (Union[_NadaType, SecretRational, Rational]): Second argument.
 
         Raises:
             ValueError: Raised when incompatibly-scaled values are passed.
