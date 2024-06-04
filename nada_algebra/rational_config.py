@@ -8,8 +8,25 @@ from dataclasses import dataclass
 class __RationalConfig:
     """Rational config data class"""
 
+    _instance: "__RationalConfig" = None
     _default_log_scale = 16
     _log_scale = _default_log_scale
+
+    def __new__(cls, *args, **kwargs) -> "__RationalConfig":
+        """Ensures this class is a singleton and is instantiated only once.
+
+        Raises:
+            RuntimeError: Raised when this class is attempted to be initialized more than once.
+
+        Returns:
+            __RationalConfig: New instance of class.
+        """
+        if cls._instance is not None:
+            raise RuntimeError(
+                f"{cls.__name__} class is a singleton and has already been instantiated"
+            )
+        cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance
 
     @property
     def log_scale(self) -> int:
