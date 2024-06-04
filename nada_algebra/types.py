@@ -524,7 +524,7 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return not (self.value == other.value)
+        return SecretBoolean(self.value != other.value)
 
     def rescale_up(self, log_scale: int = None) -> "Rational":
         """
@@ -953,7 +953,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return not (self.value == other.value)
+        return SecretBoolean(self.value != other.value)
 
     def public_equals(self, other: _NadaRational) -> PublicBoolean:
         """
@@ -970,7 +970,7 @@ class SecretRational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return Rational(self.value.public_equals(other.value), self.log_scale)
+        return self.value.public_equals(other.value)
 
     def reveal(self) -> Rational:
         """
