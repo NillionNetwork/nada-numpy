@@ -113,3 +113,7 @@ prime_size = 128
 [[programs]]
 path = "src/rational_array.py"
 prime_size = 128
+
+[[programs]]
+path = "src/rational_if_else.py"
+prime_size = 128
