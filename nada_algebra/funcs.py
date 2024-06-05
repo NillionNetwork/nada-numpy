@@ -315,6 +315,79 @@ def size(arr: NadaArray) -> int:
     return arr.size
 
 
+def to_nada(arr: np.ndarray, nada_type: _NadaCleartextType) -> NadaArray:
+    """
+    Converts a plain-text NumPy array to the equivalent NadaArray with
+    a specified compatible NadaType.
+
+    Args:
+        arr (np.ndarray): Input Numpy array.
+        nada_type (_NadaCleartextType): Desired clear-text NadaType.
+
+    Returns:
+        NadaArray: Output NadaArray.
+    """
+    if nada_type == Rational:
+        generator = rational
+    else:
+        arr = arr.astype(int)
+        generator = nada_type
+    return NadaArray(np.frompyfunc(generator, 1, 1)(arr))
+
+
+@copy_metadata(np.pad)
+def pad(
+    arr: NadaArray,
+    pad_width: Union[Iterable[int], int],
+    mode: str = "constant",
+    **kwargs,
+) -> NadaArray:
+    if mode not in {"constant", "edge", "reflect", "symmetric", "wrap"}:
+        raise NotImplementedError("Not currently possible to pad NadaArray in mode `%s`" % mode)
+
+    # Override python defaults by NadaType defaults
+    overriden_kwargs = {}
+    if mode == "constant":
+        if arr.is_rational:
+            nada_type = rational
+        elif isinstance(arr.dtype, _NadaCleartextType):
+            nada_type = arr.dtype
+        else:
+            nada_type = Integer
+
+        overriden_kwargs["constant_values"] = kwargs.get("constant_values", nada_type(0))
+
+    padded_inner = np.pad(
+        arr,
+        pad_width,
+        mode,
+        **overriden_kwargs,
+        **kwargs,
+    )
+
+    return NadaArray(padded_inner)
+
+
+@copy_metadata(np.eye)
+def eye(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
+    return to_nada(np.eye(*args, **kwargs), nada_type)
+
+
+@copy_metadata(np.arange)
+def arange(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
+    return to_nada(np.arange(*args, **kwargs), nada_type)
+
+
+@copy_metadata(np.linspace)
+def linspace(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
+    return to_nada(np.linspace(*args, **kwargs), nada_type)
+
+
+@copy_metadata(np.split)
+def split(a: NadaArray, *args, **kwargs) -> NadaArray:
+    return NadaArray(np.split(a.inner, *args, **kwargs))
+
+
 @copy_metadata(np.compress)
 def compress(a: NadaArray, *args, **kwargs):
     return a.compress(*args, **kwargs)
