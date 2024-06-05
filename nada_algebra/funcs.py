@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Iterable, Union
+from typing import Any, Callable, Iterable, Type, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -20,6 +20,74 @@ from nada_algebra.types import Rational, SecretRational, rational
 
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
+
+
+# These functions take at least a NadaArray argument and
+# get referred to the NadaArray method with the same name
+SUPPORTED_FUNCTIONAL_OPS = {
+    "compress"
+    "copy"
+    "cumprod"
+    "cumsum"
+    "diagonal"
+    "ndim"
+    "prod"
+    "put"
+    "ravel"
+    "repeat"
+    "reshape"
+    "resize"
+    "shape"
+    "size"
+    "squeeze"
+    "sum"
+    "swapaxes"
+    "take"
+    "trace"
+    "transpose"
+}
+
+
+def __create_func(func_name: str) -> Callable[..., Any]:
+    """
+    Creates a function with a given name.
+
+    Args:
+        func_name (str): Given function name.
+
+    Returns:
+        Callable[..., Any]: Created function object.
+    """
+
+    def func(a: NadaArray, *args, **kwargs) -> Any:
+        """
+        Function that takes at least a NadaArray input and returns whatever output
+        the NadaArray method with the same name would have returned.
+
+        E.g.,: `some_func(nada_array, arg_0, arg1=arg_1)` is made equivalent to
+        `nada_array.some_func(arg_0, arg_1=arg_1)` as is the case in NumPy.
+
+        Args:
+            a (NadaArray): NadaArray input.
+
+        Raises:
+            TypeError: Raised when input array is not of type `NadaArray`.
+
+        Returns:
+            Any: Some output.
+        """
+        if not isinstance(a, NadaArray):
+            raise TypeError(
+                "Function operations %s requires input array of type NadaArray but received `%s`"
+                % (func_name, type(a).__name__)
+            )
+        return getattr(a, func_name)(*args, **kwargs)
+
+    return func
+
+
+for func_name in SUPPORTED_FUNCTIONAL_OPS:
+    globals()[func_name] = __create_func(func_name)
 
 
 def parties(num: int, prefix: str = "Party") -> list:
