@@ -552,7 +552,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value < other.value
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value < other.value)
+        return PublicBoolean(self.value < other.value)
 
     def __gt__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
         """
@@ -569,7 +571,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value > other.value
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value > other.value)
+        return PublicBoolean(self.value > other.value)
 
     def __le__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
         """
@@ -586,7 +590,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value <= other.value
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value <= other.value)
+        return PublicBoolean(self.value <= other.value)
 
     def __ge__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
         """
@@ -603,7 +609,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value >= other.value
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value >= other.value)
+        return PublicBoolean(self.value >= other.value)
 
     def __eq__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
         """
@@ -620,7 +628,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return self.value == other.value
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value == other.value)
+        return PublicBoolean(self.value == other.value)
 
     def __ne__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
         """
@@ -637,7 +647,9 @@ class Rational:
         """
         if self.log_scale != other.log_scale:
             raise ValueError("Cannot compare values with different scales.")
-        return SecretBoolean(self.value != other.value)
+        if isinstance(other, SecretRational):
+            return SecretBoolean(self.value != other.value)
+        return PublicBoolean(self.value != other.value)
 
     def rescale_up(self, log_scale: int = None) -> "Rational":
         """
