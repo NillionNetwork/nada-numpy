@@ -39,7 +39,7 @@ def copy_metadata(source_func: Callable) -> Callable:
         if hasattr(source_func, "__annotations__"):
             annot = source_func.__annotations__
         func.__annotations__ = annot
-            
+
         return func
 
     return decorator
