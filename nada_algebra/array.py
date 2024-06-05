@@ -154,11 +154,6 @@ class NadaArray:
         Returns:
             NadaArray: Result NadaArray.
         """
-        if not isinstance(other, int):
-            raise TypeError(
-                "Cannot raise `NadaArray` to power of type `%s`. Expected `int`."
-                % type(other).__name__
-            )
         return self.apply(lambda x: x**other)
 
     def __truediv__(self, other: Any) -> "NadaArray":
