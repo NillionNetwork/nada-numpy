@@ -1,5 +1,6 @@
 """General utils functions"""
 
+import re
 from typing import Callable
 
 
@@ -25,12 +26,20 @@ def copy_metadata(source_func: Callable) -> Callable:
         Returns:
             Callable: Function with metadata.
         """
-        func.__doc__ = source_func.__doc__ if hasattr(source_func, "__doc__") else ""
-        func.__annotations__ = (
-            source_func.__annotations__
-            if hasattr(source_func, "__annotations__")
-            else {}
-        )
+        doc = ""
+        if hasattr(source_func, "__doc__"):
+            doc = source_func.__doc__
+        func.__doc__ = doc
+
+        # Replace NumPy references with NadaArray references
+        doc = re.sub(r"\b(numpy)\b", "NadaArray", doc, flags=re.IGNORECASE)
+        doc = re.sub(r"\b(np)\b", "na", doc, flags=re.IGNORECASE)
+
+        annot = {}
+        if hasattr(source_func, "__annotations__"):
+            annot = source_func.__annotations__
+        func.__annotations__ = annot
+            
         return func
 
     return decorator
