@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Callable, Iterable, Type, Union
+from typing import Any, Callable, Iterable, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -25,26 +25,26 @@ _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
 # These functions take at least a NadaArray argument and
 # get referred to the NadaArray method with the same name
 SUPPORTED_FUNCTIONAL_OPS = {
-    "compress"
-    "copy"
-    "cumprod"
-    "cumsum"
-    "diagonal"
-    "ndim"
-    "prod"
-    "put"
-    "ravel"
-    "repeat"
-    "reshape"
-    "resize"
-    "shape"
-    "size"
-    "squeeze"
-    "sum"
-    "swapaxes"
-    "take"
-    "trace"
-    "transpose"
+    "compress",
+    "copy",
+    "cumprod",
+    "cumsum",
+    "diagonal",
+    "ndim",
+    "prod",
+    "put",
+    "ravel",
+    "repeat",
+    "reshape",
+    "resize",
+    "shape",
+    "size",
+    "squeeze",
+    "sum",
+    "swapaxes",
+    "take",
+    "trace",
+    "transpose",
 }
 
 
@@ -85,7 +85,7 @@ def __create_func(func_name: str) -> Callable[..., Any]:
 
     return func
 
-
+# Refers any functional call to the corresponding method call
 for func_name in SUPPORTED_FUNCTIONAL_OPS:
     globals()[func_name] = __create_func(func_name)
 
