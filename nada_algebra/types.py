@@ -48,7 +48,7 @@ class SecretBoolean(dsl.SecretBoolean):
         self,
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
-    ) -> Union[SecretInteger, "SecretRational"]:
+    ) -> Union[SecretInteger, SecretUnsignedInteger, "SecretRational"]:
         """
         If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
@@ -61,7 +61,7 @@ class SecretBoolean(dsl.SecretBoolean):
             TypeError: Raised when invalid operation is called.
 
         Returns:
-            Union[SecretInteger, "SecretRational"]: Return value.
+            Union[SecretInteger, SecretUnsignedInteger, "SecretRational"]: Return value.
         """
         first_arg = arg_0
         second_arg = arg_1
@@ -103,7 +103,14 @@ class PublicBoolean(dsl.PublicBoolean):
         self,
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
-    ) -> Union[SecretInteger, "SecretRational"]:
+    ) -> Union[
+        PublicInteger,
+        PublicUnsignedInteger,
+        SecretInteger,
+        SecretUnsignedInteger,
+        "Rational",
+        "SecretRational",
+    ]:
         """
         If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
@@ -116,7 +123,8 @@ class PublicBoolean(dsl.PublicBoolean):
             TypeError: Raised when invalid operation is called.
 
         Returns:
-            Union[SecretInteger, "SecretRational"]: Return value.
+            Union[PublicInteger, PublicUnsignedInteger, SecretInteger,
+                SecretUnsignedInteger, "Rational", "SecretRational"]: Return value.
         """
         first_arg = arg_0
         second_arg = arg_1
@@ -136,9 +144,10 @@ class PublicBoolean(dsl.PublicBoolean):
 
         result = super().if_else(first_arg, second_arg)
 
-        if isinstance(arg_0, (SecretRational, Rational)):
-            # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
+        if isinstance(arg_0, SecretRational) or isinstance(arg_1, SecretRational):
             return SecretRational(result, arg_0.log_scale, is_scaled=True)
+        elif isinstance(arg_0, Rational) and isinstance(arg_1, Rational):
+            return Rational(result, arg_0.log_scale, is_scaled=True)
         return result
 
 
