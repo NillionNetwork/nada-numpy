@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Callable, Iterable, Union
+from typing import Any, Callable, Iterable, Tuple, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -30,15 +30,12 @@ SUPPORTED_FUNCTIONAL_OPS = [
     "cumprod",
     "cumsum",
     "diagonal",
-    "ndim",
     "prod",
     "put",
     "ravel",
     "repeat",
     "reshape",
     "resize",
-    "shape",
-    "size",
     "squeeze",
     "sum",
     "swapaxes",
@@ -84,6 +81,7 @@ def __create_func(func_name: str) -> Callable[..., Any]:
         return getattr(a, func_name)(*args, **kwargs)
 
     return func
+
 
 # Refers any functional call to the corresponding method call
 for func_name in SUPPORTED_FUNCTIONAL_OPS:
@@ -329,7 +327,46 @@ def hstack(arr_list: list) -> NadaArray:
     """
     return NadaArray(np.hstack(arr_list))
 
+
+def empty(arr: NadaArray) -> bool:
+    """
+    Returns whether provided array is empty or not.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Whether array is empty or not.
+    """
+    return arr.empty
+
+def shape(arr: NadaArray) -> Tuple[int]:
+    """
+    Returns Array shape.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array shape.
+    """
+    return arr.shape
+
+def size(arr: NadaArray) -> int:
+    """
+    Returns array size.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array size.
+    """
+    return arr.size
+
+
 __all__ = [
-    name for name, obj in globals().items()
-    if callable(obj) and not name.startswith('_')
+    name
+    for name, obj in globals().items()
+    if callable(obj) and not name.startswith("_")
 ] + SUPPORTED_FUNCTIONAL_OPS
