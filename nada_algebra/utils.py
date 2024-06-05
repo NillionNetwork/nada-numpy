@@ -29,11 +29,11 @@ def copy_metadata(source_func: Callable) -> Callable:
         doc = ""
         if hasattr(source_func, "__doc__"):
             doc = source_func.__doc__
-        func.__doc__ = doc
+            # Replace NumPy references with NadaArray references
+            doc = re.sub(r"\b(numpy)\b", "NadaArray", doc, flags=re.IGNORECASE)
+            doc = re.sub(r"\b(np)\b", "na", doc, flags=re.IGNORECASE)
 
-        # Replace NumPy references with NadaArray references
-        doc = re.sub(r"\b(numpy)\b", "NadaArray", doc, flags=re.IGNORECASE)
-        doc = re.sub(r"\b(np)\b", "na", doc, flags=re.IGNORECASE)
+        func.__doc__ = doc
 
         annot = {}
         if hasattr(source_func, "__annotations__"):
