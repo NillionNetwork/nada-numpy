@@ -341,6 +341,19 @@ def empty(arr: NadaArray) -> bool:
     return arr.empty
 
 
+def ndim(arr: NadaArray) -> int:
+    """
+    Returns number of array dimensions.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array dimensions.
+    """
+    return arr.ndim
+
+
 def shape(arr: NadaArray) -> Tuple[int]:
     """
     Returns Array shape.
