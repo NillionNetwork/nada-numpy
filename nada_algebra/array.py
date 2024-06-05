@@ -614,3 +614,13 @@ class NadaArray:
         if self.empty:
             return NoneType
         return type(self.inner.item(0))
+
+    @property
+    def is_rational(self) -> bool:
+        """
+        Returns whether or not the Array's type is a rational.
+
+        Returns:
+            bool: Boolean output.
+        """
+        return self.dtype in (Rational, SecretRational)
