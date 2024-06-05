@@ -48,7 +48,7 @@ class SecretBoolean(dsl.SecretBoolean):
         self,
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
-    ) -> "SecretRational":
+    ) -> Union[SecretInteger, "SecretRational"]:
         """
         If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
@@ -61,7 +61,7 @@ class SecretBoolean(dsl.SecretBoolean):
             TypeError: Raised when invalid operation is called.
 
         Returns:
-            SecretRational: Return value.
+            Union[SecretInteger, "SecretRational"]: Return value.
         """
         first_arg = arg_0
         second_arg = arg_1
@@ -84,8 +84,7 @@ class SecretBoolean(dsl.SecretBoolean):
         if isinstance(arg_0, (SecretRational, Rational)):
             # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
             return SecretRational(result, arg_0.log_scale, is_scaled=True)
-        else:
-            return result
+        return result
 
 
 class PublicBoolean(dsl.PublicBoolean):
@@ -104,7 +103,7 @@ class PublicBoolean(dsl.PublicBoolean):
         self,
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
-    ) -> Union["Rational", "SecretRational"]:
+    ) -> Union[SecretInteger, "SecretRational"]:
         """
         If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
@@ -117,7 +116,7 @@ class PublicBoolean(dsl.PublicBoolean):
             TypeError: Raised when invalid operation is called.
 
         Returns:
-            Union["Rational", "SecretRational"]: Return value.
+            Union[SecretInteger, "SecretRational"]: Return value.
         """
         first_arg = arg_0
         second_arg = arg_1
@@ -139,9 +138,8 @@ class PublicBoolean(dsl.PublicBoolean):
 
         if isinstance(arg_0, (SecretRational, Rational)):
             # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
-            return Rational(result, arg_0.log_scale, is_scaled=True)
-        else:
-            return result
+            return SecretRational(result, arg_0.log_scale, is_scaled=True)
+        return result
 
 
 class Rational:
