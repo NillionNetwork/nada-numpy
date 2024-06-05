@@ -5,6 +5,8 @@ from nada_algebra.funcs import *
 from nada_algebra.types import (
     Rational,
     SecretRational,
+    PublicBoolean,
+    SecretBoolean,
     public_rational,
     rational,
     secret_rational,
