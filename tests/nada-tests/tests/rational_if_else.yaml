@@ -8,21 +8,35 @@ inputs:
       SecretInteger: "294912" # 3.2
     C:
       SecretInteger: "65536" # 1
+    D:
+      SecretInteger: "1"
+    E:
+      SecretUnsignedInteger: "1"
   public_variables: {}
 expected_outputs:
   out_0_0:
-    SecretInteger: "65536"
+    SecretInteger: "294912"
   out_1_0:
-    SecretInteger: "0"
+    SecretInteger: "294912"
   out_2_0:
-    SecretInteger: "131072"
+    SecretInteger: "78643"
   out_3_0:
-    SecretInteger: "196608"
+    SecretInteger: "78643"
   out_4_0:
-    SecretInteger: "131072"
+    SecretInteger: "1"
   out_5_0:
-    SecretInteger: "65536"
+    SecretInteger: "1"
   out_6_0:
-    SecretInteger: "65536"
+    SecretInteger: "1"
   out_7_0:
-    SecretInteger: "65536"
+    SecretInteger: "1"
+  out_8_0:
+    Integer: "131072"
+  out_9_0:
+    Integer: "65536"
+  out_10_0:
+    Integer: "1"
+  out_11_0:
+    SecretInteger: "1"
+  out_12_0:
+    SecretUnsignedInteger: "1"
