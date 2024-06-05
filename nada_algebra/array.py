@@ -515,6 +515,7 @@ class NadaArray:
         Returns:
             Type: Inner data type.
         """
+        # TODO: account for mixed typed NadaArrays due to e.g. padding
         if self.empty:
             return NoneType
         return type(self.inner.item(0))
