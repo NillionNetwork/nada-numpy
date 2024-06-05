@@ -17,10 +17,6 @@ def nada_main():
     with pytest.raises(ValueError):
         b + na.rational(2)  # scale 32 rational + scale 16 rational
 
-    # Error will be raised as RationalConfig is a singleton
-    with pytest.raises(RuntimeError):
-        na.rational_config.__RationalConfig(_default_log_scale=40)
-
     with pytest.warns():
         na.set_log_scale(2**16)  # extremely high - most likely a mistake
 

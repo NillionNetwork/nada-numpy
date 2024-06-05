@@ -1,34 +1,12 @@
 """Contains rational config logic"""
 
 import warnings
-from dataclasses import dataclass
 
+class __MetaRationalConfig(type):
+    """Rational config metaclass that defines classproperties"""
 
-@dataclass
-class __RationalConfig:
-    """Rational config data class"""
-
-    _instance: "__RationalConfig" = None
-
-    _default_log_scale: int = 16
-    _log_scale: int = _default_log_scale
-
-    def __new__(cls, *args, **kwargs) -> "__RationalConfig":
-        """
-        Ensures this class is a singleton and is instantiated only once.
-
-        Raises:
-            RuntimeError: Raised when this class is attempted to be initialized more than once.
-
-        Returns:
-            __RationalConfig: New instance of class.
-        """
-        if cls._instance is not None:
-            raise RuntimeError(
-                f"{cls.__name__} class is a singleton and has already been instantiated"
-            )
-        cls._instance = super().__new__(cls, *args, **kwargs)
-        return cls._instance
+    _log_scale: int
+    _default_log_scale: int
 
     @property
     def log_scale(self) -> int:
@@ -73,8 +51,11 @@ class __RationalConfig:
 
         self._log_scale = new_log_scale
 
+class __RationalConfig(object, metaclass=__MetaRationalConfig):
+    """Rational config data class"""
 
-RATIONAL_CONFIG = __RationalConfig()
+    _default_log_scale: int = 16
+    _log_scale: int = _default_log_scale
 
 
 def set_log_scale(new_log_scale: int) -> None:
@@ -90,7 +71,7 @@ def set_log_scale(new_log_scale: int) -> None:
             "Cannot set log scale to type `%s`. Expected `int`."
             % type(new_log_scale).__name__
         )
-    RATIONAL_CONFIG.log_scale = new_log_scale
+    __RationalConfig.log_scale = new_log_scale
 
 
 def get_log_scale() -> int:
@@ -101,9 +82,9 @@ def get_log_scale() -> int:
     Returns:
         int: Current log scale in use.
     """
-    return RATIONAL_CONFIG.log_scale
+    return __RationalConfig.log_scale
 
 
 def reset_log_scale() -> None:
     """Resets the Rational log scaling factor to the original default value"""
-    RATIONAL_CONFIG.log_scale = RATIONAL_CONFIG.default_log_scale
+    __RationalConfig.log_scale = __RationalConfig.default_log_scale
