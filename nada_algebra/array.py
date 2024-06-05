@@ -584,16 +584,6 @@ class NadaArray:
         return len(self.inner)
 
     @property
-    def ndim(self) -> int:
-        """
-        Number of dimensions that the NadaArray holds.
-
-        Returns:
-            int: Number of dimenions.
-        """
-        return len(self.shape)
-
-    @property
     def empty(self) -> bool:
         """
         Whether or not the NadaArray contains any elements.
