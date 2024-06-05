@@ -40,7 +40,9 @@ def nada_main():
     assert isinstance(out_11, SecretInteger), type(out_11).__name__
     out_12 = (na.rational(0) <= na.rational(1)).if_else(UnsignedInteger(1), e)
     assert isinstance(out_12, SecretUnsignedInteger), type(out_12).__name__
-    out_13 = (na.rational(0) <= na.rational(1)).if_else(UnsignedInteger(1), UnsignedInteger(0))
+    out_13 = (na.rational(0) <= na.rational(1)).if_else(
+        UnsignedInteger(1), UnsignedInteger(0)
+    )
     assert isinstance(out_13, PublicUnsignedInteger), type(out_13).__name__
 
     # Incompatible input types
