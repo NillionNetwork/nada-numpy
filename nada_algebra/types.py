@@ -35,7 +35,13 @@ _NadaType = Union[
 class SecretBoolean(dsl.SecretBoolean):
     """SecretBoolean rational wrapper"""
 
-    def __init__(self, value: dsl.SecretBoolean):
+    def __init__(self, value: dsl.SecretBoolean) -> None:
+        """
+        Initialization.
+
+        Args:
+            value (dsl.SecretBoolean): SecretBoolean value.
+        """
         super().__init__(value.inner)
 
     def if_else(
@@ -43,7 +49,8 @@ class SecretBoolean(dsl.SecretBoolean):
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[SecretInteger, SecretUnsignedInteger]:
-        """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+        """
+        If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
         Args:
             arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
@@ -84,7 +91,13 @@ class SecretBoolean(dsl.SecretBoolean):
 class PublicBoolean(dsl.PublicBoolean):
     """PublicBoolean rational wrapper"""
 
-    def __init__(self, value: dsl.PublicBoolean):
+    def __init__(self, value: dsl.PublicBoolean) -> None:
+        """
+        Initialization.
+
+        Args:
+            value (dsl.PublicBoolean): PublicBoolean value.
+        """
         super().__init__(value.inner)
 
     def if_else(
@@ -92,7 +105,8 @@ class PublicBoolean(dsl.PublicBoolean):
         arg_0: Union[_NadaType, "SecretRational", "Rational"],
         arg_1: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[SecretInteger, SecretUnsignedInteger]:
-        """If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+        """
+        If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
 
         Args:
             arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
@@ -219,9 +233,27 @@ class Rational:
             return Rational(self.value + other.value, self.log_scale, is_scaled=True)
 
     def __add__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Add two rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.add(other)
 
     def __iadd__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Add two rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.add(other)
 
     def sub(
@@ -259,9 +291,27 @@ class Rational:
             return Rational(self.value - other.value, self.log_scale, is_scaled=True)
 
     def __sub__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Subtract two rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.sub(other)
 
     def __isub__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Subtract two rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.sub(other)
 
     def mul_no_rescale(
@@ -327,9 +377,27 @@ class Rational:
         return d
 
     def __mul__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Multiply two rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.mul(other)
 
     def __imul__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Multiply two rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.mul(other)
 
     def divide_no_rescale(
@@ -391,9 +459,27 @@ class Rational:
         return c
 
     def __truediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Divide two rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.divide(other)
 
     def __itruediv__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
+        """
+        Divide two rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.divide(other)
 
     def __pow__(self, other: int) -> "Rational":
@@ -670,9 +756,27 @@ class SecretRational:
         return SecretRational(self.value + other.value, self.log_scale)
 
     def __add__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Add two secret rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.add(other)
 
     def __iadd__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Add two secret rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.add(other)
 
     def sub(self, other: _NadaRational, ignore_scale: bool = False) -> "SecretRational":
@@ -702,9 +806,27 @@ class SecretRational:
         return SecretRational(self.value - other.value, self.log_scale)
 
     def __sub__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Subtract two secret rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.sub(other)
 
     def __isub__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Subtract two secret rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.sub(other)
 
     def mul_no_rescale(
@@ -757,9 +879,27 @@ class SecretRational:
         return d
 
     def __mul__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Multiply two secret rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.mul(other)
 
     def __imul__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Multiply two secret rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.mul(other)
 
     def divide_no_rescale(
@@ -816,9 +956,27 @@ class SecretRational:
         return c
 
     def __truediv__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Divide two secret rational numbers.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.divide(other)
 
     def __itruediv__(self, other: _NadaRational) -> "SecretRational":
+        """
+        Divide two secret rational numbers inplace.
+
+        Args:
+            other (_NadaRational): Other rational number to add.
+
+        Returns:
+            Union[Rational, SecretRational]: Result of the addition.
+        """
         return self.divide(other)
 
     def __pow__(self, other: int) -> Union["Rational", "SecretRational"]:

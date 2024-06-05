@@ -117,9 +117,27 @@ class NadaArray:
         return NadaArray(self.inner + other)
 
     def __add__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise addition with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise addition result.
+        """
         return self.add(other)
 
     def __iadd__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise inplace addition with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise addition result.
+        """
         return self.add(other)
 
     def sub(self, other: Any) -> "NadaArray":
@@ -137,9 +155,27 @@ class NadaArray:
         return NadaArray(self.inner - other)
 
     def __sub__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise subtraction with broadcasting.
+
+        Args:
+            other (Any): The object to subtract.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise subtraction result.
+        """
         return self.sub(other)
 
     def __isub__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise inplace subtraction with broadcasting.
+
+        Args:
+            other (Any): The object to subtract.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise subtraction result.
+        """
         return self.sub(other)
 
     def mul(self, other: Any) -> "NadaArray":
@@ -157,9 +193,27 @@ class NadaArray:
         return NadaArray(self.inner * other)
 
     def __mul__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise multiplication with broadcasting.
+
+        Args:
+            other (Any): The object to multiply.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise multiplication result.
+        """
         return self.mul(other)
 
     def __imul__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise inplace multiplication with broadcasting.
+
+        Args:
+            other (Any): The object to multiply.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise multiplication result.
+        """
         return self.mul(other)
 
     def __pow__(self, other: int) -> "NadaArray":
@@ -189,9 +243,27 @@ class NadaArray:
         return NadaArray(self.inner / other)
 
     def __truediv__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise division with broadcasting.
+
+        Args:
+            other (Any): The object to divide.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise division result.
+        """
         return self.divide(other)
 
     def __itruediv__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise inplace division with broadcasting.
+
+        Args:
+            other (Any): The object to divide.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise division result.
+        """
         return self.divide(other)
 
     def matmul(self, other: "NadaArray") -> "NadaArray":
@@ -209,14 +281,28 @@ class NadaArray:
         return NadaArray(np.array(self.inner @ other))
 
     def __matmul__(self, other: Any) -> "NadaArray":
+        """
+        Perform matrix multiplication with another NadaArray.
+
+        Args:
+            other (NadaArray): The NadaArray to perform matrix multiplication with.
+
+        Returns:
+            NadaArray: A new NadaArray representing the result of matrix multiplication.
+        """
         return self.matmul(other)
 
     def __imatmul__(self, other: Any) -> "NadaArray":
-        return self.matmul(other)
+        """
+        Perform inplace matrix multiplication with another NadaArray.
 
-    @property
-    def ndim(self) -> int:
-        return len(self.shape)
+        Args:
+            other (NadaArray): The NadaArray to perform matrix multiplication with.
+
+        Returns:
+            NadaArray: A new NadaArray representing the result of matrix multiplication.
+        """
+        return self.matmul(other)
 
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
@@ -498,8 +584,19 @@ class NadaArray:
         return len(self.inner)
 
     @property
+    def ndim(self) -> int:
+        """
+        Number of dimensions that the NadaArray holds.
+
+        Returns:
+            int: Number of dimenions.
+        """
+        return len(self.shape)
+
+    @property
     def empty(self) -> bool:
-        """Whether or not the NadaArray contains any elements.
+        """
+        Whether or not the NadaArray contains any elements.
 
         Returns:
             bool: Bool result.
