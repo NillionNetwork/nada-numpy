@@ -1,0 +1,18 @@
+---
+program: rational_scaling
+inputs:
+  secrets:
+    A_1:
+      SecretInteger: "12884901888"  # = 3 * 2^32
+    A_2:
+      SecretInteger: "12884901888"
+    A_0:
+      SecretInteger: "12884901888"
+  public_variables: {}
+expected_outputs:
+  my_output_0:
+    SecretInteger: "21474836480"  # = 5 * 2^32
+  my_output_1:
+    SecretInteger: "21474836480"
+  my_output_2:
+    SecretInteger: "21474836480"

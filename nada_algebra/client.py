@@ -3,7 +3,7 @@ This module provides functions to work with the Python Nillion Client for handli
 secret and public variable integers and generating named party objects and input dictionaries.
 """
 
-from typing import Union
+from typing import Dict, List, Union
 from py_nillion_client import (
     SecretInteger,
     SecretUnsignedInteger,
@@ -11,10 +11,10 @@ from py_nillion_client import (
     PublicVariableUnsignedInteger,
 )
 import numpy as np
-from nada_algebra import types
+from nada_algebra.types import Rational, SecretRational, get_log_scale
 
 
-def parties(num: int, prefix: str = "Party") -> list:
+def parties(num: int, prefix: str = "Party") -> List:
     """
     Creates a list of party name strings.
 
@@ -23,7 +23,7 @@ def parties(num: int, prefix: str = "Party") -> list:
         prefix (str, optional): The prefix to use for party names. Defaults to "Party".
 
     Returns:
-        list: A list of party name strings in the format "{prefix}{i}".
+        List: A list of party name strings in the format "{prefix}{i}".
     """
     return [f"{prefix}{i}" for i in range(num)]
 
@@ -36,10 +36,10 @@ def array(
         SecretUnsignedInteger,
         PublicVariableInteger,
         PublicVariableUnsignedInteger,
-        types.Rational,
-        types.SecretRational,
-    ] = SecretInteger,
-) -> dict:
+        Rational,
+        SecretRational,
+    ],
+) -> Dict:
     """
     Recursively generates a dictionary of Nillion input objects for each element
     in the given array.
@@ -47,21 +47,21 @@ def array(
     Args:
         arr (np.ndarray): The input array.
         prefix (str): The prefix to be added to the output names.
-        nada_type (type, optional): The type of the values introduced. Defaults to SecretInteger.
+        nada_type (type): The type of the values introduced.
 
     Returns:
-        dict: A dictionary mapping generated names to Nillion input objects.
+        Dict: A dictionary mapping generated names to Nillion input objects.
     """
     # TODO: remove check for zero values when pushing zero secrets is supported
     if len(arr.shape) == 1:
-        if nada_type == types.Rational:
+        if nada_type == Rational:
             return {
-                f"{prefix}_{i}": (PublicRational(arr[i])) for i in range(arr.shape[0])
+                f"{prefix}_{i}": (public_rational(arr[i])) for i in range(arr.shape[0])
             }
-        if nada_type == types.SecretRational:
+        if nada_type == SecretRational:
             return {
                 f"{prefix}_{i}": (
-                    SecretRational(arr[i]) if arr[i] != 0 else SecretInteger(1)
+                    secret_rational(arr[i]) if arr[i] != 0 else SecretInteger(1)
                 )
                 for i in range(arr.shape[0])
             }
@@ -83,17 +83,17 @@ def array(
     }
 
 
-def concat(list_dict: list[dict]) -> dict:
+def concat(list_dict: List[Dict]) -> Dict:
     """
     Combines a list of dictionaries into a single dictionary.
 
     Note: This function will overwrite values for duplicate keys.
 
     Args:
-        list_dict (list[dict]): A list of dictionaries.
+        list_dict (List[Dict]): A list of dictionaries.
 
     Returns:
-        dict: A single merged dictionary.
+        Dict: A single merged dictionary.
     """
     return {k: v for d in list_dict for k, v in d.items()}
 
@@ -108,10 +108,10 @@ def __rational(value: Union[float, int]) -> int:
     Returns:
         int: The integer representation of the input value.
     """
-    return round(value * (1 << types.RationalConfig.LOG_SCALE))
+    return round(value * (1 << get_log_scale()))
 
 
-def PublicRational(value: Union[float, int]) -> PublicVariableInteger:
+def public_rational(value: Union[float, int]) -> PublicVariableInteger:
     """
     Returns the integer representation of the given float value.
 
@@ -124,7 +124,7 @@ def PublicRational(value: Union[float, int]) -> PublicVariableInteger:
     return PublicVariableInteger(__rational(value))
 
 
-def SecretRational(value: Union[float, int]) -> SecretInteger:
+def secret_rational(value: Union[float, int]) -> SecretInteger:
     """
     Returns the integer representation of the given float value.
 

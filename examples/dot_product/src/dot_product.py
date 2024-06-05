@@ -9,10 +9,10 @@ def nada_main():
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3, ) with name "A"
-    a = na.array([3], parties[0], "A")
+    a = na.array([3], parties[0], "A", SecretInteger)
 
     # Step 3: Party1 creates an array of dimension (3, ) with name "B"
-    b = na.array([3], parties[1], "B")
+    b = na.array([3], parties[1], "B", SecretInteger)
 
     # Step 4: The result is of computing the dot product between the two
     result = a.dot(b)

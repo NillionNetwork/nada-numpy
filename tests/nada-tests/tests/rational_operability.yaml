@@ -1,0 +1,24 @@
+---
+program: rational_operability
+inputs:
+  secrets:
+    A_1:
+      SecretInteger: "196608"  # = 3 * 2^16
+    A_2:
+      SecretInteger: "196608"
+    A_0:
+      SecretInteger: "196608"
+  public_variables:
+    B_1:
+      Integer: "131072"  # = 2 * 2^16
+    B_2:
+      Integer: "131072"
+    B_0:
+      Integer: "131072"
+expected_outputs:
+  my_output_0:
+    SecretInteger: "327680"  # = 5 * 2^16
+  my_output_1:
+    SecretInteger: "327680"
+  my_output_2:
+    SecretInteger: "327680"

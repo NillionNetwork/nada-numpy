@@ -4,9 +4,9 @@ inputs:
   secrets:
     my_input_0:
       SecretInteger: "78643"
+  public_variables:
     my_input_1:
-      SecretInteger: "294912"
-  public_variables: {}
+      Integer: "209715"
 expected_outputs:
   my_output_0:
     Boolean: true

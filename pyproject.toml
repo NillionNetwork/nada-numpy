@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nada-algebra"
-version = "0.2.2"
-description = ""
+version = "0.3.0"
+description = "Nada-Algebra is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network."
 authors = ["José Cabrero-Holgueras <jose.cabrero@nillion.com>"]
 readme = "README.md"
 

@@ -2,11 +2,11 @@
 program: rational_arithmetic
 inputs:
   secrets:
-    my_input_0:
-      SecretInteger: "78643"
     my_input_1:
-      SecretInteger: "294912"
-  public_variables: {}
+      SecretInteger: "78643"
+  public_variables:
+    my_input_0:
+      Integer: "294912"
 expected_outputs:
   my_output_0:
     Integer: "504627"
@@ -26,3 +26,7 @@ expected_outputs:
     SecretInteger: "174762"
   my_output_8:
     Integer: "720568878"
+  my_output_9:
+    Integer: "65536"
+  my_output_10:
+    Integer: "2000"
