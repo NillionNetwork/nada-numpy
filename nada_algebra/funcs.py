@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Iterable, Union
+from typing import Any, Iterable, Tuple, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -17,6 +17,7 @@ from nada_dsl import (
 import numpy as np
 from nada_algebra.array import NadaArray
 from nada_algebra.types import Rational, SecretRational, rational
+from nada_algebra.utils import copy_metadata
 
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
@@ -260,3 +261,140 @@ def hstack(arr_list: list) -> NadaArray:
         NadaArray: The stacked NadaArray.
     """
     return NadaArray(np.hstack(arr_list))
+
+
+def empty(arr: NadaArray) -> bool:
+    """
+    Returns whether provided array is empty or not.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Whether array is empty or not.
+    """
+    return arr.empty
+
+
+def ndim(arr: NadaArray) -> int:
+    """
+    Returns number of array dimensions.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array dimensions.
+    """
+    return arr.ndim
+
+
+def shape(arr: NadaArray) -> Tuple[int]:
+    """
+    Returns Array shape.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array shape.
+    """
+    return arr.shape
+
+
+def size(arr: NadaArray) -> int:
+    """
+    Returns array size.
+
+    Args:
+        arr (NadaArray): Input array.
+
+    Returns:
+        bool: Array size.
+    """
+    return arr.size
+
+
+@copy_metadata(np.compress)
+def compress(a: NadaArray, *args, **kwargs):
+    return a.compress(*args, **kwargs)
+
+
+@copy_metadata(np.copy)
+def copy(a: NadaArray, *args, **kwargs):
+    return a.copy(*args, **kwargs)
+
+
+@copy_metadata(np.cumprod)
+def cumprod(a: NadaArray, *args, **kwargs):
+    return a.cumprod(*args, **kwargs)
+
+
+@copy_metadata(np.cumsum)
+def cumsum(a: NadaArray, *args, **kwargs):
+    return a.cumsum(*args, **kwargs)
+
+
+@copy_metadata(np.diagonal)
+def diagonal(a: NadaArray, *args, **kwargs):
+    return a.diagonal(*args, **kwargs)
+
+
+@copy_metadata(np.prod)
+def prod(a: NadaArray, *args, **kwargs):
+    return a.prod(*args, **kwargs)
+
+
+@copy_metadata(np.put)
+def put(a: NadaArray, *args, **kwargs):
+    return a.put(*args, **kwargs)
+
+
+@copy_metadata(np.ravel)
+def ravel(a: NadaArray, *args, **kwargs):
+    return a.ravel(*args, **kwargs)
+
+
+@copy_metadata(np.repeat)
+def repeat(a: NadaArray, *args, **kwargs):
+    return a.repeat(*args, **kwargs)
+
+
+@copy_metadata(np.reshape)
+def reshape(a: NadaArray, *args, **kwargs):
+    return a.reshape(*args, **kwargs)
+
+
+@copy_metadata(np.resize)
+def resize(a: NadaArray, *args, **kwargs):
+    return a.resize(*args, **kwargs)
+
+
+@copy_metadata(np.squeeze)
+def squeeze(a: NadaArray, *args, **kwargs):
+    return a.squeeze(*args, **kwargs)
+
+
+@copy_metadata(np.sum)
+def sum(a: NadaArray, *args, **kwargs):
+    return a.sum(*args, **kwargs)
+
+
+@copy_metadata(np.swapaxes)
+def swapaxes(a: NadaArray, *args, **kwargs):
+    return a.swapaxes(*args, **kwargs)
+
+
+@copy_metadata(np.take)
+def take(a: NadaArray, *args, **kwargs):
+    return a.take(*args, **kwargs)
+
+
+@copy_metadata(np.trace)
+def trace(a: NadaArray, *args, **kwargs):
+    return a.trace(*args, **kwargs)
+
+
+@copy_metadata(np.transpose)
+def transpose(a: NadaArray, *args, **kwargs):
+    return a.transpose(*args, **kwargs)
