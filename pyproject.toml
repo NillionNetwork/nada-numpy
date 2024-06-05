@@ -1,6 +1,10 @@
 [tool.poetry]
 name = "nada-algebra"
+<<<<<<< feature/major-rescaling
 version = "0.3.0"
+=======
+version = "0.2.2"
+>>>>>>> main
 description = ""
 authors = ["José Cabrero-Holgueras <jose.cabrero@nillion.com>"]
 readme = "README.md"
