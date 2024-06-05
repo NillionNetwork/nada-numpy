@@ -26,6 +26,7 @@ from nada_algebra.types import (
     secret_rational,
     get_log_scale,
 )
+from nada_algebra.utils import copy_metadata
 
 
 @dataclass
@@ -38,42 +39,6 @@ class NadaArray:
     """
 
     inner: np.ndarray
-
-    SUPPORTED_OPERATIONS = {
-        "base",
-        "compress",
-        "copy",
-        "cumprod",
-        "cumsum",
-        "data",
-        "diagonal",
-        "fill",
-        "flags",
-        "flat",
-        "flatten",
-        "item",
-        "itemset",
-        "itemsize",
-        "nbytes",
-        "ndim",
-        "prod",
-        "put",
-        "ravel",
-        "repeat",
-        "reshape",
-        "resize",
-        "shape",
-        "size",
-        "squeeze",
-        "strides",
-        "sum",
-        "swapaxes",
-        "T",
-        "take",
-        "tolist",
-        "trace",
-        "transpose",
-    }
 
     def __getitem__(self, item):
         """
@@ -523,57 +488,6 @@ class NadaArray:
 
         return NadaArray(np.array(NadaArray.create_list(dims, None, None, generator)))
 
-    def __getattr__(self, name: str) -> Any:
-        """
-        Routes other attributes to the inner NumPy array.
-
-        Args:
-            name (str): Attribute name.
-
-        Raises:
-            AttributeError: Raised if attribute not supported.
-
-        Returns:
-            Any: Result of attribute.
-        """
-        if name not in self.SUPPORTED_OPERATIONS:
-            raise AttributeError(
-                "NumPy method `%s` is not (currently) supported by NadaArrays." % name
-            )
-
-        attr = getattr(self.inner, name)
-
-        if callable(attr):
-
-            def wrapper(*args, **kwargs):
-                result = attr(*args, **kwargs)
-                if isinstance(result, np.ndarray):
-                    return NadaArray(result)
-                return result
-
-            return wrapper
-
-        if isinstance(attr, np.ndarray):
-            attr = NadaArray(attr)
-
-        return attr
-
-    def __setattr__(self, name: str, value: Any):
-        """
-        Overrides the default behavior of setting attributes.
-
-        If the attribute name is "inner", it sets the attribute value directly.
-        Otherwise, it sets the attribute value on the inner object.
-
-        Args:
-            name (str): The name of the attribute.
-            value: The value to set for the attribute.
-        """
-        if name == "inner":
-            super().__setattr__(name, value)
-        else:
-            setattr(self.inner, name, value)
-
     def __len__(self):
         """
         Overrides the default behavior of returning the length of the object.
@@ -614,3 +528,146 @@ class NadaArray:
             bool: Boolean output.
         """
         return self.dtype in (Rational, SecretRational)
+
+    @copy_metadata(np.ndarray.compress)
+    def compress(self, *args, **kwargs):
+        return self.inner.compress(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.copy)
+    def copy(self, *args, **kwargs):
+        return self.inner.copy(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.cumprod)
+    def cumprod(self, *args, **kwargs):
+        return self.inner.cumprod(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.cumsum)
+    def cumsum(self, *args, **kwargs):
+        return self.inner.cumsum(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.diagonal)
+    def diagonal(self, *args, **kwargs):
+        return self.inner.diagonal(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.fill)
+    def fill(self, *args, **kwargs):
+        return self.inner.fill(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.flatten)
+    def flatten(self, *args, **kwargs):
+        return self.inner.flatten(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.item)
+    def item(self, *args, **kwargs):
+        return self.inner.item(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.itemset)
+    def itemset(self, *args, **kwargs):
+        return self.inner.itemset(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.prod)
+    def prod(self, *args, **kwargs):
+        return self.inner.prod(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.put)
+    def put(self, *args, **kwargs):
+        return self.inner.put(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.ravel)
+    def ravel(self, *args, **kwargs):
+        return self.inner.ravel(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.repeat)
+    def repeat(self, *args, **kwargs):
+        return self.inner.repeat(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.reshape)
+    def reshape(self, *args, **kwargs):
+        return self.inner.reshape(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.resize)
+    def resize(self, *args, **kwargs):
+        return self.inner.resize(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.squeeze)
+    def squeeze(self, *args, **kwargs):
+        return self.inner.squeeze(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.sum)
+    def sum(self, *args, **kwargs):
+        return self.inner.sum(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.swapaxes)
+    def swapaxes(self, *args, **kwargs):
+        return self.inner.swapaxes(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.take)
+    def take(self, *args, **kwargs):
+        return self.inner.take(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.tolist)
+    def tolist(self, *args, **kwargs):
+        return self.inner.tolist(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.trace)
+    def trace(self, *args, **kwargs):
+        return self.inner.trace(*args, **kwargs)
+
+    @copy_metadata(np.ndarray.transpose)
+    def transpose(self, *args, **kwargs):
+        return self.inner.transpose(*args, **kwargs)
+
+    @property
+    @copy_metadata(np.ndarray.base)
+    def base(self):
+        return self.inner.base
+
+    @property
+    @copy_metadata(np.ndarray.data)
+    def data(self):
+        return self.inner.data
+
+    @property
+    @copy_metadata(np.ndarray.flags)
+    def flags(self):
+        return self.inner.flags
+
+    @property
+    @copy_metadata(np.ndarray.flat)
+    def flat(self):
+        return self.inner.flat
+
+    @property
+    @copy_metadata(np.ndarray.itemsize)
+    def itemsize(self):
+        return self.inner.itemsize
+
+    @property
+    @copy_metadata(np.ndarray.nbytes)
+    def nbytes(self):
+        return self.inner.nbytes
+
+    @property
+    @copy_metadata(np.ndarray.ndim)
+    def ndim(self):
+        return self.inner.ndim
+
+    @property
+    @copy_metadata(np.ndarray.shape)
+    def shape(self):
+        return self.inner.shape
+
+    @property
+    @copy_metadata(np.ndarray.size)
+    def size(self):
+        return self.inner.size
+
+    @property
+    @copy_metadata(np.ndarray.strides)
+    def strides(self):
+        return self.inner.strides
+
+    @property
+    @copy_metadata(np.ndarray.T)
+    def T(self):
+        return self.inner.T

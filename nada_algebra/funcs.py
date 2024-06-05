@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Callable, Iterable, Tuple, Union
+from typing import Any, Iterable, Tuple, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -17,75 +17,10 @@ from nada_dsl import (
 import numpy as np
 from nada_algebra.array import NadaArray
 from nada_algebra.types import Rational, SecretRational, rational
+from nada_algebra.utils import copy_metadata
 
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
-
-
-# These functions take at least a NadaArray argument and
-# get referred to the NadaArray method with the same name
-SUPPORTED_FUNCTIONAL_OPS = [
-    "compress",
-    "copy",
-    "cumprod",
-    "cumsum",
-    "diagonal",
-    "prod",
-    "put",
-    "ravel",
-    "repeat",
-    "reshape",
-    "resize",
-    "squeeze",
-    "sum",
-    "swapaxes",
-    "take",
-    "trace",
-    "transpose",
-]
-
-
-def __create_func(func_name: str) -> Callable[..., Any]:
-    """
-    Creates a function with a given name.
-
-    Args:
-        func_name (str): Given function name.
-
-    Returns:
-        Callable[..., Any]: Created function object.
-    """
-
-    def func(a: NadaArray, *args, **kwargs) -> Any:
-        """
-        Function that takes at least a NadaArray input and returns whatever output
-        the NadaArray method with the same name would have returned.
-
-        E.g.,: `some_func(nada_array, arg_0, arg1=arg_1)` is made equivalent to
-        `nada_array.some_func(arg_0, arg_1=arg_1)` as is the case in NumPy.
-
-        Args:
-            a (NadaArray): NadaArray input.
-
-        Raises:
-            TypeError: Raised when input array is not of type `NadaArray`.
-
-        Returns:
-            Any: Some output.
-        """
-        if not isinstance(a, NadaArray):
-            raise TypeError(
-                "Function operations %s requires input array of type NadaArray but received `%s`"
-                % (func_name, type(a).__name__)
-            )
-        return getattr(a, func_name)(*args, **kwargs)
-
-    return func
-
-
-# Refers any functional call to the corresponding method call
-for func_name in SUPPORTED_FUNCTIONAL_OPS:
-    globals()[func_name] = __create_func(func_name)
 
 
 def parties(num: int, prefix: str = "Party") -> list:
@@ -380,8 +315,86 @@ def size(arr: NadaArray) -> int:
     return arr.size
 
 
-__all__ = [
-    name
-    for name, obj in globals().items()
-    if callable(obj) and not name.startswith("_")
-] + SUPPORTED_FUNCTIONAL_OPS
+@copy_metadata(np.compress)
+def compress(a: NadaArray, *args, **kwargs):
+    return a.compress(*args, **kwargs)
+
+
+@copy_metadata(np.copy)
+def copy(a: NadaArray, *args, **kwargs):
+    return a.copy(*args, **kwargs)
+
+
+@copy_metadata(np.cumprod)
+def cumprod(a: NadaArray, *args, **kwargs):
+    return a.cumprod(*args, **kwargs)
+
+
+@copy_metadata(np.cumsum)
+def cumsum(a: NadaArray, *args, **kwargs):
+    return a.cumsum(*args, **kwargs)
+
+
+@copy_metadata(np.diagonal)
+def diagonal(a: NadaArray, *args, **kwargs):
+    return a.diagonal(*args, **kwargs)
+
+
+@copy_metadata(np.prod)
+def prod(a: NadaArray, *args, **kwargs):
+    return a.prod(*args, **kwargs)
+
+
+@copy_metadata(np.put)
+def put(a: NadaArray, *args, **kwargs):
+    return a.put(*args, **kwargs)
+
+
+@copy_metadata(np.ravel)
+def ravel(a: NadaArray, *args, **kwargs):
+    return a.ravel(*args, **kwargs)
+
+
+@copy_metadata(np.repeat)
+def repeat(a: NadaArray, *args, **kwargs):
+    return a.repeat(*args, **kwargs)
+
+
+@copy_metadata(np.reshape)
+def reshape(a: NadaArray, *args, **kwargs):
+    return a.reshape(*args, **kwargs)
+
+
+@copy_metadata(np.resize)
+def resize(a: NadaArray, *args, **kwargs):
+    return a.resize(*args, **kwargs)
+
+
+@copy_metadata(np.squeeze)
+def squeeze(a: NadaArray, *args, **kwargs):
+    return a.squeeze(*args, **kwargs)
+
+
+@copy_metadata(np.sum)
+def sum(a: NadaArray, *args, **kwargs):
+    return a.sum(*args, **kwargs)
+
+
+@copy_metadata(np.swapaxes)
+def swapaxes(a: NadaArray, *args, **kwargs):
+    return a.swapaxes(*args, **kwargs)
+
+
+@copy_metadata(np.take)
+def take(a: NadaArray, *args, **kwargs):
+    return a.take(*args, **kwargs)
+
+
+@copy_metadata(np.trace)
+def trace(a: NadaArray, *args, **kwargs):
+    return a.trace(*args, **kwargs)
+
+
+@copy_metadata(np.transpose)
+def transpose(a: NadaArray, *args, **kwargs):
+    return a.transpose(*args, **kwargs)
