@@ -24,7 +24,7 @@ _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
 
 # These functions take at least a NadaArray argument and
 # get referred to the NadaArray method with the same name
-SUPPORTED_FUNCTIONAL_OPS = {
+SUPPORTED_FUNCTIONAL_OPS = [
     "compress",
     "copy",
     "cumprod",
@@ -45,7 +45,7 @@ SUPPORTED_FUNCTIONAL_OPS = {
     "take",
     "trace",
     "transpose",
-}
+]
 
 
 def __create_func(func_name: str) -> Callable[..., Any]:
@@ -328,3 +328,8 @@ def hstack(arr_list: list) -> NadaArray:
         NadaArray: The stacked NadaArray.
     """
     return NadaArray(np.hstack(arr_list))
+
+__all__ = [
+    name for name, obj in globals().items()
+    if callable(obj) and not name.startswith('_')
+] + SUPPORTED_FUNCTIONAL_OPS
