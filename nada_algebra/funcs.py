@@ -340,6 +340,7 @@ def empty(arr: NadaArray) -> bool:
     """
     return arr.empty
 
+
 def shape(arr: NadaArray) -> Tuple[int]:
     """
     Returns Array shape.
@@ -351,6 +352,7 @@ def shape(arr: NadaArray) -> Tuple[int]:
         bool: Array shape.
     """
     return arr.shape
+
 
 def size(arr: NadaArray) -> int:
     """
