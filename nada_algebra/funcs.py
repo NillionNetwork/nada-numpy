@@ -343,7 +343,9 @@ def pad(
     **kwargs,
 ) -> NadaArray:
     if mode not in {"constant", "edge", "reflect", "symmetric", "wrap"}:
-        raise NotImplementedError("Not currently possible to pad NadaArray in mode `%s`" % mode)
+        raise NotImplementedError(
+            "Not currently possible to pad NadaArray in mode `%s`" % mode
+        )
 
     # Override python defaults by NadaType defaults
     overriden_kwargs = {}
@@ -355,7 +357,9 @@ def pad(
         else:
             nada_type = Integer
 
-        overriden_kwargs["constant_values"] = kwargs.get("constant_values", nada_type(0))
+        overriden_kwargs["constant_values"] = kwargs.get(
+            "constant_values", nada_type(0)
+        )
 
     padded_inner = np.pad(
         arr,

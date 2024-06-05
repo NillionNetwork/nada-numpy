@@ -31,7 +31,7 @@ def nada_main():
     _ = na.pad(a, 2, mode="reflect")
     _ = na.pad(a, 2, mode="symmetric")
     _ = na.pad(a, 2, mode="wrap")
-    _ = na.split(a, (1,2))
+    _ = na.split(a, (1, 2))
 
     # Test all for a Rational type
     _ = na.sum(b)
@@ -56,7 +56,7 @@ def nada_main():
     _ = na.pad(b, 2, mode="reflect")
     _ = na.pad(b, 2, mode="symmetric")
     _ = na.pad(b, 2, mode="wrap")
-    _ = na.split(b, (1,2))
+    _ = na.split(b, (1, 2))
 
     # Generative functions
     _ = na.eye(3, nada_type=na.Rational)
