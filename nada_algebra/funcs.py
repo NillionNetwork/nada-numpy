@@ -350,12 +350,15 @@ def pad(
     # Override python defaults by NadaType defaults
     overriden_kwargs = {}
     if mode == "constant":
-        if arr.is_rational:
+        dtype = arr.dtype
+        if dtype in (Rational, SecretRational):
             nada_type = rational
-        elif isinstance(arr.dtype, _NadaCleartextType):
-            nada_type = arr.dtype
-        else:
+        elif dtype in (PublicInteger, SecretInteger):
             nada_type = Integer
+        elif dtype == (PublicUnsignedInteger, SecretUnsignedInteger):
+            nada_type = UnsignedInteger
+        else:
+            nada_type = dtype
 
         overriden_kwargs["constant_values"] = kwargs.get(
             "constant_values", nada_type(0)
