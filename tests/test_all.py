@@ -34,6 +34,7 @@ TESTS = [
     "rational_if_else",
     "random_array",
     "rational_advanced",
+    "array_attributes",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"

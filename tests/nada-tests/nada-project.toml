@@ -133,3 +133,7 @@ prime_size = 128
 [[programs]]
 path = "src/rational_advanced.py"
 prime_size = 128
+
+[[programs]]
+path = "src/array_attributes.py"
+prime_size = 128
