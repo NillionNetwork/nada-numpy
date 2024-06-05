@@ -102,7 +102,7 @@ class NadaArray:
         else:
             self.inner[key] = value
 
-    def __add__(self, other: Any) -> "NadaArray":
+    def add(self, other: Any) -> "NadaArray":
         """
         Perform element-wise addition with broadcasting.
 
@@ -116,7 +116,13 @@ class NadaArray:
             return NadaArray(self.inner + other.inner)
         return NadaArray(self.inner + other)
 
-    def __sub__(self, other: Any) -> "NadaArray":
+    def __add__(self, other: Any) -> "NadaArray":
+        return self.add(other)
+
+    def __iadd__(self, other: Any) -> "NadaArray":
+        return self.add(other)
+
+    def sub(self, other: Any) -> "NadaArray":
         """
         Perform element-wise subtraction with broadcasting.
 
@@ -130,7 +136,13 @@ class NadaArray:
             return NadaArray(self.inner - other.inner)
         return NadaArray(self.inner - other)
 
-    def __mul__(self, other: Any) -> "NadaArray":
+    def __sub__(self, other: Any) -> "NadaArray":
+        return self.sub(other)
+
+    def __isub__(self, other: Any) -> "NadaArray":
+        return self.sub(other)
+
+    def mul(self, other: Any) -> "NadaArray":
         """
         Perform element-wise multiplication with broadcasting.
 
@@ -144,6 +156,12 @@ class NadaArray:
             return NadaArray(self.inner * other.inner)
         return NadaArray(self.inner * other)
 
+    def __mul__(self, other: Any) -> "NadaArray":
+        return self.mul(other)
+
+    def __imul__(self, other: Any) -> "NadaArray":
+        return self.mul(other)
+
     def __pow__(self, other: int) -> "NadaArray":
         """
         Raises NadaArray to a power.
@@ -156,7 +174,7 @@ class NadaArray:
         """
         return self.apply(lambda x: x**other)
 
-    def __truediv__(self, other: Any) -> "NadaArray":
+    def divide(self, other: Any) -> "NadaArray":
         """
         Perform element-wise division with broadcasting.
 
@@ -170,7 +188,13 @@ class NadaArray:
             return NadaArray(self.inner / other.inner)
         return NadaArray(self.inner / other)
 
-    def __matmul__(self, other: "NadaArray") -> "NadaArray":
+    def __truediv__(self, other: Any) -> "NadaArray":
+        return self.divide(other)
+
+    def __itruediv__(self, other: Any) -> "NadaArray":
+        return self.divide(other)
+
+    def matmul(self, other: "NadaArray") -> "NadaArray":
         """
         Perform matrix multiplication with another NadaArray.
 
@@ -183,6 +207,12 @@ class NadaArray:
         if isinstance(other, NadaArray):
             return NadaArray(np.array(self.inner @ other.inner))
         return NadaArray(np.array(self.inner @ other))
+
+    def __matmul__(self, other: Any) -> "NadaArray":
+        return self.matmul(other)
+
+    def __imatmul__(self, other: Any) -> "NadaArray":
+        return self.matmul(other)
 
     @property
     def ndim(self) -> int:
