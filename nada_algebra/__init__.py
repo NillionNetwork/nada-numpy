@@ -8,5 +8,7 @@ from nada_algebra.types import (
     public_rational,
     rational,
     secret_rational,
+    get_log_scale,
+    reset_log_scale,
+    set_log_scale,
 )
-from nada_algebra.rational_config import get_log_scale, reset_log_scale, set_log_scale

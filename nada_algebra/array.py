@@ -24,8 +24,8 @@ from nada_algebra.types import (
     SecretRational,
     public_rational,
     secret_rational,
+    get_log_scale,
 )
-from nada_algebra.rational_config import get_log_scale
 
 
 @dataclass
