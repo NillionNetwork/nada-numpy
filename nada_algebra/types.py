@@ -1306,6 +1306,9 @@ def rational(
     Returns:
         Rational: Instantiated Rational object.
     """
+    if value == 0:  # no use in rescaling 0
+        return Rational(Integer(0), is_scaled=True)
+
     if log_scale is None:
         log_scale = get_log_scale()
 
