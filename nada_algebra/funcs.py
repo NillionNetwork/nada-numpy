@@ -419,6 +419,11 @@ def diagonal(a: NadaArray, *args, **kwargs):
     return a.diagonal(*args, **kwargs)
 
 
+@copy_metadata(np.diagonal)
+def mean(a: NadaArray, *args, **kwargs):
+    return a.mean(*args, **kwargs)
+
+
 @copy_metadata(np.prod)
 def prod(a: NadaArray, *args, **kwargs):
     return a.prod(*args, **kwargs)
