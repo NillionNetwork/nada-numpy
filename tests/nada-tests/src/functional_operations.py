@@ -26,6 +26,12 @@ def nada_main():
     _ = na.take(a, 1)
     _ = na.trace(a)
     _ = na.transpose(a)
+    _ = na.pad(a, 2)
+    _ = na.pad(a, 2, mode="edge")
+    _ = na.pad(a, 2, mode="reflect")
+    _ = na.pad(a, 2, mode="symmetric")
+    _ = na.pad(a, 2, mode="wrap")
+    _ = na.split(a, (1, 2))
 
     # Test all for a Rational type
     _ = na.sum(b)
@@ -45,5 +51,19 @@ def nada_main():
     _ = na.take(b, 1)
     _ = na.trace(b)
     _ = na.transpose(b)
+    _ = na.pad(b, 2)
+    _ = na.pad(b, 2, mode="edge")
+    _ = na.pad(b, 2, mode="reflect")
+    _ = na.pad(b, 2, mode="symmetric")
+    _ = na.pad(b, 2, mode="wrap")
+    _ = na.split(b, (1, 2))
+
+    # Generative functions
+    _ = na.eye(3, nada_type=na.Rational)
+    _ = na.eye(3, nada_type=Integer)
+    _ = na.arange(3, nada_type=na.Rational)
+    _ = na.arange(3, nada_type=UnsignedInteger)
+    _ = na.linspace(1, 4, 2, nada_type=na.Rational)
+    _ = na.linspace(1, 4, 2, nada_type=Integer)
 
     return a.output(parties[1], "my_output_A") + b.output(parties[1], "my_output_B")
