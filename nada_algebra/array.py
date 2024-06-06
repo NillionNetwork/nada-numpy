@@ -356,7 +356,6 @@ class NadaArray:
             return NadaArray(mean_arr)
         return mean_arr
 
-
     @staticmethod
     def output_array(array: np.ndarray, party: Party, prefix: str) -> list:
         """
