@@ -328,11 +328,10 @@ def to_nada(arr: np.ndarray, nada_type: _NadaCleartextType) -> NadaArray:
         NadaArray: Output NadaArray.
     """
     if nada_type == Rational:
-        generator = rational
+        nada_type = rational
     else:
         arr = arr.astype(int)
-        generator = nada_type
-    return NadaArray(np.frompyfunc(generator, 1, 1)(arr))
+    return NadaArray(np.frompyfunc(nada_type, 1, 1)(arr))
 
 
 @copy_metadata(np.pad)
