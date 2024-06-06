@@ -141,3 +141,7 @@ prime_size = 128
 [[programs]]
 path = "src/functional_operations.py"
 prime_size = 128
+
+[[programs]]
+path = "src/array_statistics.py"
+prime_size = 128
