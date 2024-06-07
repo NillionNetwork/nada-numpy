@@ -264,12 +264,15 @@ class NadaArray:
             raise ValueError(
                 f"Matrices are not aligned for multiplication: {self.inner.shape} and {other.inner.shape}"
             )
-        
-        # Since both have the same number of dimensions, we now check if they are 2D matrices. 
+
+        # Since both have the same number of dimensions, we now check if they are 2D matrices.
         # If they are not, they will pass this check and execute normally.
         # Otherwise, we will do matrix contraction (i.e., compute matrix multiplication dimension by dimension).
         if self.ndim > 2:
-            a = [self[i].rational_matmul(other[i], last=False) for i in range(self.shape[0])] # We remove one dimension here.
+            a = [
+                self[i].rational_matmul(other[i], last=False)
+                for i in range(self.shape[0])
+            ]  # We remove one dimension here.
             if last:
                 return NadaArray(np.array(a))
             return a

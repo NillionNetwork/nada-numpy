@@ -137,14 +137,17 @@ def secret_rational(value: Union[float, int]) -> SecretInteger:
     return SecretInteger(__rational(value))
 
 
-def float_from_rational(value: int) -> float:
+def float_from_rational(value: int, log_scale: int = None) -> float:
     """
     Returns the float representation of the given rational value.
 
     Args:
         value (int): The output Rational value to convert.
+        log_scale (int, optional): The log scale to use for conversion. Defaults to None.
 
     Returns:
         float: The float representation of the input value.
     """
-    return value / (1 << get_log_scale())
+    if log_scale is not None:
+        log_scale = get_log_scale()
+    return value / (1 << log_scale)
