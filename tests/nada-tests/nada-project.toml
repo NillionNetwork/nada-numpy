@@ -145,3 +145,7 @@ prime_size = 128
 [[programs]]
 path = "src/array_statistics.py"
 prime_size = 128
+
+[[programs]]
+path = "src/matrix_multiplication_rational.py"
+prime_size = 128

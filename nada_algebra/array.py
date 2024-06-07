@@ -243,8 +243,44 @@ class NadaArray:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
         if isinstance(other, NadaArray):
+            if self.is_rational or other.is_rational:
+                return self.rational_matmul(other)
             return NadaArray(np.array(self.inner @ other.inner))
         return NadaArray(np.array(self.inner @ other))
+
+    def rational_matmul(self, other: "NadaArray") -> "NadaArray":
+        """
+        Perform matrix multiplication with another NadaArray when one of both has Rational Numbers.
+        It improves the number of truncations to be needed from mxnxn to nxn.
+
+        Args:
+            other (NadaArray): The NadaArray to perform matrix multiplication with.
+
+        Returns:
+            NadaArray: A new NadaArray representing the result of matrix multiplication.
+        """
+        # Get the dimensions of the matrices
+        (m, n) = self.inner.shape
+        (n_, p) = other.inner.shape
+        if n != n_:
+            raise ValueError(
+                f"Matrices are not aligned for multiplication: {self.inner.shape} and {other.inner.shape}"
+            )
+
+        # Initialize the result matrix C with zeros
+        C = np.zeros((m, p), dtype=object)
+
+        # Perform matrix multiplication
+        for i in range(m):
+            for j in range(p):
+                for k in range(n):
+                    if k == 0:
+                        C[i][j] = self[i][k].mul_no_rescale(other[k][j])
+                    else:
+                        C[i][j] += self[i][k].mul_no_rescale(other[k][j])
+                C[i][j] = C[i][j].rescale_down()
+
+        return NadaArray(C)
 
     def __matmul__(self, other: Any) -> "NadaArray":
         """
