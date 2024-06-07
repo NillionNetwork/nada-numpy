@@ -248,10 +248,10 @@ class NadaArray:
             return NadaArray(np.array(self.inner @ other.inner))
         return NadaArray(np.array(self.inner @ other))
 
-    def rational_matmul(self, other: "NadaArray") -> "NadaArray":
+    def rational_matmul(self, other: "NadaArray", last: bool = True) -> "NadaArray":
         """
-        Perform matrix multiplication with another NadaArray when one of both has Rational Numbers.
-        It improves the number of truncations to be needed from mxnxn to nxn.
+        Perform matrix multiplication with another NadaArray when both have Rational Numbers.
+        It improves the number of truncations to be needed to the resulting matrix dimensions mxp.
 
         Args:
             other (NadaArray): The NadaArray to perform matrix multiplication with.
@@ -259,9 +259,25 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
+        # We check that both have same number of dimensions.
+        if self.ndim != other.ndim:
+            raise ValueError(
+                f"Matrices are not aligned for multiplication: {self.inner.shape} and {other.inner.shape}"
+            )
+        
+        # Since both have the same number of dimensions, we now check if they are 2D matrices. 
+        # If they are not, they will pass this check and execute normally.
+        # Otherwise, we will do matrix contraction (i.e., compute matrix multiplication dimension by dimension).
+        if self.ndim > 2:
+            a = [self[i].rational_matmul(other[i], last=False) for i in range(self.shape[0])] # We remove one dimension here.
+            if last:
+                return NadaArray(np.array(a))
+            return a
+
         # Get the dimensions of the matrices
-        (m, n) = self.inner.shape
-        (n_, p) = other.inner.shape
+        (m, n) = self.shape
+        (n_, p) = other.shape
+
         if n != n_:
             raise ValueError(
                 f"Matrices are not aligned for multiplication: {self.inner.shape} and {other.inner.shape}"
@@ -280,7 +296,9 @@ class NadaArray:
                         C[i][j] += self[i][k].mul_no_rescale(other[k][j])
                 C[i][j] = C[i][j].rescale_down()
 
-        return NadaArray(C)
+        if last:
+            return NadaArray(C)
+        return C
 
     def __matmul__(self, other: Any) -> "NadaArray":
         """
