@@ -33,6 +33,30 @@ def nada_main():
     _ = na.pad(a, 2, mode="wrap")
     _ = na.split(a, (1, 2))
 
+    pyfunc_out_1 = na.frompyfunc(lambda x: x + Integer(1), 1, 1)(a)
+    assert isinstance(pyfunc_out_1, na.NadaArray), type(pyfunc_out_1).__name__
+
+    pyfunc_out_2, pyfunc_out_3 = na.frompyfunc(
+        lambda x: (x + Integer(1), x + Integer(2)), 1, 2
+    )(a)
+    assert isinstance(pyfunc_out_2, na.NadaArray), type(pyfunc_out_2).__name__
+    assert isinstance(pyfunc_out_3, na.NadaArray), type(pyfunc_out_3).__name__
+
+    pyfunc_out_4 = na.frompyfunc(lambda x, y: x + y, 2, 1)(a, a)
+    assert isinstance(pyfunc_out_4, na.NadaArray), type(pyfunc_out_4).__name__
+
+    vectorize_out_1 = na.vectorize(lambda x: x + Integer(1))(a)
+    assert isinstance(vectorize_out_1, na.NadaArray), type(vectorize_out_1).__name__
+
+    vectorize_out_2, vectorize_out_3 = na.vectorize(
+        lambda x: (x + Integer(1), x + Integer(2))
+    )(a)
+    assert isinstance(vectorize_out_2, na.NadaArray), type(vectorize_out_2).__name__
+    assert isinstance(vectorize_out_3, na.NadaArray), type(vectorize_out_3).__name__
+
+    vectorize_out_4 = na.vectorize(lambda x, y: x + y)(a, a)
+    assert isinstance(vectorize_out_4, na.NadaArray), type(vectorize_out_4).__name__
+
     # Test all for a Rational type
     _ = na.sum(b)
     _ = na.compress(b, [True, True, False], axis=0)
@@ -41,7 +65,7 @@ def nada_main():
     _ = na.cumsum(b, axis=0)
     _ = na.diagonal(b.reshape(1, 3))
     _ = na.prod(b)
-    _ = na.put(b, 2, Integer(20))
+    _ = na.put(b, 2, na.rational(20, is_scaled=True))
     _ = na.ravel(b)
     _ = na.repeat(b, 12)
     _ = na.reshape(b, (1, 3))
@@ -57,6 +81,30 @@ def nada_main():
     _ = na.pad(b, 2, mode="symmetric")
     _ = na.pad(b, 2, mode="wrap")
     _ = na.split(b, (1, 2))
+
+    pyfunc_out_5 = na.frompyfunc(lambda x: x + na.rational(1), 1, 1)(b)
+    assert isinstance(pyfunc_out_5, na.NadaArray), type(pyfunc_out_4).__name__
+
+    pyfunc_out_6, pyfunc_out_7 = na.frompyfunc(
+        lambda x: (x + na.rational(1), x + na.rational(2)), 1, 2
+    )(b)
+    assert isinstance(pyfunc_out_6, na.NadaArray), type(pyfunc_out_6).__name__
+    assert isinstance(pyfunc_out_7, na.NadaArray), type(pyfunc_out_7).__name__
+
+    pyfunc_out_8 = na.frompyfunc(lambda x, y: x + y, 2, 1)(b, b)
+    assert isinstance(pyfunc_out_8, na.NadaArray), type(pyfunc_out_8).__name__
+
+    vectorize_out_5 = na.vectorize(lambda x: x + na.rational(1))(b)
+    assert isinstance(vectorize_out_5, na.NadaArray), type(pyfunc_out_4).__name__
+
+    vectorize_out_6, vectorize_out_7 = na.vectorize(
+        lambda x: (x + na.rational(1), x + na.rational(2))
+    )(b)
+    assert isinstance(vectorize_out_6, na.NadaArray), type(vectorize_out_6).__name__
+    assert isinstance(vectorize_out_7, na.NadaArray), type(vectorize_out_7).__name__
+
+    vectorize_out_8 = na.vectorize(lambda x, y: x + y)(b, b)
+    assert isinstance(vectorize_out_8, na.NadaArray), type(vectorize_out_8).__name__
 
     # Generative functions
     _ = na.eye(3, nada_type=na.Rational)
