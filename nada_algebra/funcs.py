@@ -374,7 +374,7 @@ def pad(
     return NadaArray(padded_inner)
 
 
-class nada_callable:
+class NadaCallable:
     """Class that wraps a vectorized function to ensure all NumPy outputs are converted to NadaArray"""
 
     def __init__(self, vfunc: Callable) -> None:
@@ -406,13 +406,13 @@ class nada_callable:
 
 
 @copy_metadata(np.frompyfunc)
-def frompyfunc(*args, **kwargs) -> nada_callable:
-    return nada_callable(np.frompyfunc(*args, **kwargs))
+def frompyfunc(*args, **kwargs) -> NadaCallable:
+    return NadaCallable(np.frompyfunc(*args, **kwargs))
 
 
 @copy_metadata(np.vectorize)
-def vectorize(*args, **kwargs) -> nada_callable:
-    return nada_callable(np.vectorize(*args, **kwargs))
+def vectorize(*args, **kwargs) -> NadaCallable:
+    return NadaCallable(np.vectorize(*args, **kwargs))
 
 
 @copy_metadata(np.eye)
