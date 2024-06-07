@@ -1,0 +1,60 @@
+---
+program: matrix_multiplication_rational
+inputs:
+  secrets:
+    A_0_0:
+      SecretInteger: "65536"
+    A_0_1:
+      SecretInteger: "131072"
+    A_0_2:
+      SecretInteger: "196608"
+    A_1_0:
+      SecretInteger: "262144"
+    A_1_1:
+      SecretInteger: "327680"
+    A_1_2:
+      SecretInteger: "393216"
+    A_2_0:
+      SecretInteger: "458752"
+    A_2_1:
+      SecretInteger: "524288"
+    A_2_2:
+      SecretInteger: "589824"
+    B_0_0:
+      SecretInteger: "65536"
+    B_0_1:
+      SecretInteger: "131072"
+    B_0_2:
+      SecretInteger: "196608"
+    B_1_0:
+      SecretInteger: "262144"
+    B_1_1:
+      SecretInteger: "327680"
+    B_1_2:
+      SecretInteger: "393216"
+    B_2_0:
+      SecretInteger: "458752"
+    B_2_1:
+      SecretInteger: "524288"
+    B_2_2:
+      SecretInteger: "589824"
+  public_variables: {}
+expected_outputs:
+    my_output_0_0:
+      SecretInteger: "1966080"
+    my_output_0_1:
+      SecretInteger: "2359296"
+    my_output_0_2:
+      SecretInteger: "2752512"
+    my_output_1_0:
+      SecretInteger: "4325376"
+    my_output_1_1:
+      SecretInteger: "5308416"
+    my_output_1_2:
+      SecretInteger: "6291456"
+    my_output_2_0:
+      SecretInteger: "6684672"
+    my_output_2_1:
+      SecretInteger: "8257536"
+    my_output_2_2:
+      SecretInteger: "9830400"
