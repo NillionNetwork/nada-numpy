@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Iterable, Tuple, Union
+from typing import Any, Callable, Iterable, Sequence, Tuple, Union
 from nada_dsl import (
     Party,
     SecretInteger,
@@ -372,6 +372,49 @@ def pad(
     )
 
     return NadaArray(padded_inner)
+
+
+class nada_callable:
+    """Class that wraps a vectorized function to ensure all NumPy outputs are converted to NadaArray"""
+
+    def __init__(self, vfunc: Callable) -> None:
+        """
+        Initialization.
+
+        Args:
+            vfunc (Callable): Vectorized function to wrap.
+        """
+        self.vfunc = vfunc
+
+    def __call__(self, *args, **kwargs) -> Any:
+        """
+        Routes function call to wrapped vectorized function while
+        ensuring any resulting NumPy arrays are converted to NadaArrays.
+
+        Returns:
+            Any: Function result.
+        """
+        result = self.vfunc(*args, **kwargs)
+        if isinstance(result, np.ndarray):
+            return NadaArray(result)
+        if isinstance(result, Sequence):
+            return type(result)(
+                [
+                    NadaArray(value) if isinstance(value, np.ndarray) else value
+                    for value in result
+                ]
+            )
+        return result
+
+
+@copy_metadata(np.frompyfunc)
+def frompyfunc(*args, **kwargs) -> nada_callable:
+    return nada_callable(np.frompyfunc(*args, **kwargs))
+
+
+@copy_metadata(np.vectorize)
+def vectorize(*args, **kwargs) -> nada_callable:
+    return nada_callable(np.vectorize(*args, **kwargs))
 
 
 @copy_metadata(np.eye)
