@@ -1,0 +1,54 @@
+---
+program: array_statistics
+inputs:
+  secrets:
+    A_0_0:
+      SecretInteger: "1"
+    A_0_1:
+      SecretInteger: "2"
+    A_1_0:
+      SecretInteger: "4"
+    A_1_1:
+      SecretInteger: "5"
+    A_2_0:
+      SecretInteger: "4"
+    A_2_1:
+      SecretInteger: "5"
+    B_0_0:
+      SecretInteger: "1"
+    B_0_1:
+      SecretInteger: "2"
+    B_1_0:
+      SecretInteger: "4"
+    B_1_1:
+      SecretInteger: "5"
+    B_2_0:
+      SecretInteger: "4"
+    B_2_1:
+      SecretInteger: "5"
+  public_variables: {}
+expected_outputs:
+  a_mean_arr_1:
+    SecretInteger: "4"
+  b_mean_arr_0:
+    SecretInteger: "3"
+  b_sum:
+    SecretInteger: "21"
+  b_mean:
+    SecretInteger: "3"
+  a_mean_arr_0:
+    SecretInteger: "3"
+  b_mean_arr_1:
+    SecretInteger: "4"
+  b_sum_arr_0:
+    SecretInteger: "9"
+  a_sum:
+    SecretInteger: "21"
+  a_sum_arr_0:
+    SecretInteger: "9"
+  b_sum_arr_1:
+    SecretInteger: "12"
+  a_mean:
+    SecretInteger: "3"
+  a_sum_arr_1:
+    SecretInteger: "12"

@@ -22,6 +22,7 @@ from nada_dsl import (
 from nada_algebra.types import (
     Rational,
     SecretRational,
+    rational,
     public_rational,
     secret_rational,
     get_log_scale,
@@ -325,6 +326,34 @@ class NadaArray:
             NadaArray: A new NadaArray with the function applied to each element.
         """
         return NadaArray(np.frompyfunc(func, 1, 1)(self.inner))
+
+    @copy_metadata(np.ndarray.mean)
+    def mean(self, axis=None, dtype=None, out=None, keepdims=False) -> Any:
+        sum_arr = self.inner.sum(axis=axis, dtype=dtype, keepdims=keepdims)
+
+        if self.dtype in (Rational, SecretRational):
+            nada_type = rational
+        else:
+            nada_type = Integer
+
+        if axis is None:
+            count = nada_type(self.size)
+        else:
+            if keepdims:
+                count = np.expand_dims(count, axis=axis)
+                count = np.frompyfunc(nada_type, 1, 1)(count)
+            else:
+                count = nada_type(self.shape[axis])
+
+        mean_arr = sum_arr / count
+
+        if out is not None:
+            out[...] = mean_arr
+            return out
+
+        if isinstance(mean_arr, np.ndarray):
+            return NadaArray(mean_arr)
+        return mean_arr
 
     @staticmethod
     def output_array(array: np.ndarray, party: Party, prefix: str) -> list:

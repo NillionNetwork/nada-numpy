@@ -36,6 +36,7 @@ TESTS = [
     "rational_advanced",
     "array_attributes",
     "functional_operations",
+    "array_statistics",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"
