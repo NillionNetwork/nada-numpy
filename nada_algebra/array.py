@@ -331,7 +331,6 @@ class NadaArray:
     def mean(self, axis=None, dtype=None, out=None, keepdims=False) -> Any:
         sum_arr = self.inner.sum(axis=axis, dtype=dtype, keepdims=keepdims)
 
-        nada_type = Integer
         if self.dtype in (Rational, SecretRational):
             nada_type = rational
         else:
