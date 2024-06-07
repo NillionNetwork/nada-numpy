@@ -399,10 +399,8 @@ class nada_callable:
             return NadaArray(result)
         if isinstance(result, Sequence):
             return type(result)(
-                [
-                    NadaArray(value) if isinstance(value, np.ndarray) else value
-                    for value in result
-                ]
+                NadaArray(value) if isinstance(value, np.ndarray) else value
+                for value in result
             )
         return result
 
