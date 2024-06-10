@@ -66,6 +66,10 @@ inputs:
       SecretInteger: "196608"
     B_1_0_0_1_1_1:
       SecretInteger: "262144"
+    C_0:
+      SecretInteger: "65536"
+    C_1:
+      SecretInteger: "0"
   public_variables: {}
 expected_outputs:
   my_output_0_0_0_0_0_0:
@@ -100,3 +104,67 @@ expected_outputs:
     SecretInteger: "983040"
   my_output_1_0_0_1_1_1:
     SecretInteger: "1441792"
+  my_output_b_0_0_0_0_0:
+    SecretInteger: "65536"
+  my_output_b_0_0_0_0_1:
+    SecretInteger: "196608"
+  my_output_b_0_0_0_1_0:
+    SecretInteger: "65536"
+  my_output_b_0_0_0_1_1:
+    SecretInteger: "196608"
+  my_output_b_1_0_0_0_0:
+    SecretInteger: "65536"
+  my_output_b_1_0_0_0_1:
+    SecretInteger: "196608"
+  my_output_b_1_0_0_1_0:
+    SecretInteger: "65536"
+  my_output_b_1_0_0_1_1:
+    SecretInteger: "196608"
+  my_output_c_0_0_0_0_0_0:
+    SecretInteger: "196608"
+  my_output_c_0_0_0_0_0_1:
+    SecretInteger: "196608"
+  my_output_c_0_0_0_0_1_0:
+    SecretInteger: "458752"
+  my_output_c_0_0_0_0_1_1:
+    SecretInteger: "458752"
+  my_output_c_0_0_0_1_0_0:
+    SecretInteger: "196608"
+  my_output_c_0_0_0_1_0_1:
+    SecretInteger: "196608"
+  my_output_c_0_0_0_1_1_0:
+    SecretInteger: "458752"
+  my_output_c_0_0_0_1_1_1:
+    SecretInteger: "458752"
+  my_output_c_1_0_0_0_0_0:
+    SecretInteger: "196608"
+  my_output_c_1_0_0_0_0_1:
+    SecretInteger: "196608"
+  my_output_c_1_0_0_0_1_0:
+    SecretInteger: "458752"
+  my_output_c_1_0_0_0_1_1:
+    SecretInteger: "458752"
+  my_output_c_1_0_0_1_0_0:
+    SecretInteger: "196608"
+  my_output_c_1_0_0_1_0_1:
+    SecretInteger: "196608"
+  my_output_c_1_0_0_1_1_0:
+    SecretInteger: "458752"
+  my_output_c_1_0_0_1_1_1:
+    SecretInteger: "458752"
+  my_output_d_0_0_0_1_0_0:
+    SecretInteger: "262144"
+  my_output_d_0_0_0_1_0_1:
+    SecretInteger: "393216"
+  my_output_d_0_0_0_1_1_0:
+    SecretInteger: "262144"
+  my_output_d_0_0_0_1_1_1:
+    SecretInteger: "393216"
+  my_output_d_1_0_0_1_0_0:
+    SecretInteger: "262144"
+  my_output_d_1_0_0_1_0_1:
+    SecretInteger: "393216"
+  my_output_d_1_0_0_1_1_0:
+    SecretInteger: "262144"
+  my_output_d_1_0_0_1_1_1:
+    SecretInteger: "393216"

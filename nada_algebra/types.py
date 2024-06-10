@@ -1,6 +1,7 @@
 """Additional special data types"""
 
 import warnings
+from functools import partial
 import numpy as np
 
 import nada_dsl as dsl

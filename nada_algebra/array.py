@@ -19,6 +19,7 @@ from nada_dsl import (
     Integer,
     UnsignedInteger,
 )
+
 from nada_algebra.types import (
     Rational,
     SecretRational,
@@ -27,6 +28,9 @@ from nada_algebra.types import (
     secret_rational,
     get_log_scale,
 )
+
+from nada_algebra.context import UnsafeArithmeticSession
+
 from nada_algebra.utils import copy_metadata
 
 
@@ -270,58 +274,10 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
-        return NadaArray(NadaArray.rational_matmul_recursive(self, other))
-
-    @staticmethod
-    def rational_matmul_recursive(A: "NadaArray", B: "NadaArray") -> "NadaArray":
-        """
-        Perform matrix multiplication with another NadaArray when both have Rational Numbers.
-        It improves the number of truncations to be needed to the resulting matrix dimensions mxp.
-
-        Args:
-            other (NadaArray): The NadaArray to perform matrix multiplication with.
-
-        Returns:
-            NadaArray: A new NadaArray representing the result of matrix multiplication.
-        """
-        # We check that both have same number of dimensions.
-        if A.ndim != B.ndim:
-            raise ValueError(
-                f"Matrices are not aligned for multiplication: {A.inner.shape} and {B.inner.shape}"
+        with UnsafeArithmeticSession():
+            return NadaArray(np.array(self.inner @ other.inner)).apply(
+                lambda x: x.rescale_down()
             )
-
-        # Since both have the same number of dimensions, we now check if they are 2D matrices.
-        # If they are not, they will pass this check and execute normally.
-        # Otherwise, we will do matrix contraction (i.e., compute matrix multiplication dimension by dimension).
-        if A.ndim > 2:
-            a = [
-                NadaArray.rational_matmul_recursive(A[i], B[i])
-                for i in range(A.shape[0])
-            ]  # We remove one dimension here.
-            return np.array(a)
-
-        # Get the dimensions of the matrices
-        (m, n) = A.shape
-        (n_, p) = B.shape
-
-        if n != n_:
-            raise ValueError(
-                f"Matrices are not aligned for multiplication: {A.inner.shape} and {B.inner.shape}"
-            )
-
-        # Initialize the result matrix C with zeros
-        C = np.zeros((m, p), dtype=object)
-
-        # Perform matrix multiplication
-        for i in range(m):
-            for j in range(p):
-                for k in range(n):
-                    if k == 0:
-                        C[i][j] = A[i][k].mul_no_rescale(B[k][j])
-                    else:
-                        C[i][j] += A[i][k].mul_no_rescale(B[k][j])
-                C[i][j] = C[i][j].rescale_down()
-        return C
 
     def __matmul__(self, other: Any) -> "NadaArray":
         """
@@ -357,6 +313,9 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the dot product result.
         """
+        if self.is_rational or other.is_rational:
+            return self.rational_matmul(other)
+
         return NadaArray(self.inner.dot(other.inner))
 
     def hstack(self, other: "NadaArray") -> "NadaArray":
