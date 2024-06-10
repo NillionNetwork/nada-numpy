@@ -1,5 +1,6 @@
 from nada_algebra.types import SecretRational, Rational, _NadaRational
 
+
 class UnsafeArithmeticSession:
     """
     A context manager that temporarily modifies the behavior of arithmetic operations
@@ -14,7 +15,7 @@ class UnsafeArithmeticSession:
 
     def __init__(self):
         """
-        Initializes the UnsafeArithmeticSession by storing the original 
+        Initializes the UnsafeArithmeticSession by storing the original
         multiplication and division methods of Rational and SecretRational.
         """
         self.mul_rational = Rational.__mul__
@@ -25,7 +26,7 @@ class UnsafeArithmeticSession:
 
     def __enter__(self):
         """
-        Enters the context, temporarily replacing the multiplication and division 
+        Enters the context, temporarily replacing the multiplication and division
         methods of Rational and SecretRational to disable rescaling.
         """
 
@@ -68,7 +69,9 @@ class UnsafeArithmeticSession:
             """
             return Rational.divide_no_rescale(self, other, ignore_scale=True)
 
-        def secret_divide_no_rescale_wrapper(self: SecretRational, other: _NadaRational):
+        def secret_divide_no_rescale_wrapper(
+            self: SecretRational, other: _NadaRational
+        ):
             """
             Wrapper for SecretRational.__truediv__ that disables rescaling.
 
@@ -90,7 +93,7 @@ class UnsafeArithmeticSession:
         """
         Exits the context, restoring the original multiplication and division methods
         of Rational and SecretRational.
-        
+
         Args:
             exc_type (type): Exception type if an exception occurred, else None.
             exc_val (Exception): Exception instance if an exception occurred, else None.
