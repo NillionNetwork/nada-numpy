@@ -19,15 +19,18 @@ from nada_dsl import (
     Integer,
     UnsignedInteger,
 )
+
 from nada_algebra.types import (
     Rational,
     SecretRational,
-    RationalNoRescale,
     rational,
     public_rational,
     secret_rational,
     get_log_scale,
 )
+
+from nada_algebra.context import UnsafeArithmeticSession
+
 from nada_algebra.utils import copy_metadata
 
 
@@ -260,7 +263,7 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
         """
-        with RationalNoRescale():
+        with UnsafeArithmeticSession():
             return NadaArray(np.array(self.inner @ other.inner)).apply(
                 lambda x: x.rescale_down()
             )
