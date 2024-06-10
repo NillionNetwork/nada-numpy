@@ -1,6 +1,7 @@
 """Additional special data types"""
 
 import warnings
+from functools import partial
 import numpy as np
 
 import nada_dsl as dsl
@@ -1373,6 +1374,43 @@ class __MetaRationalConfig(type):
             )
 
         self._log_scale = new_log_scale
+
+
+class RationalNoRescale:
+    def __init__(self):
+        self.mul_rational = Rational.__mul__
+        self.mul_secret_rational = SecretRational.__mul__
+
+        self.truediv_rational = Rational.__truediv__
+        self.truediv_secret_rational = SecretRational.__truediv__
+
+    def __enter__(self):
+        def mul_no_rescale_wrapper(self: Rational, other: _NadaRational):
+            return Rational.mul_no_rescale(self, other, ignore_scale=True)
+
+        def secret_mul_no_rescale_wrapper(self: SecretRational, other: _NadaRational):
+            return SecretRational.mul_no_rescale(self, other, ignore_scale=True)
+
+        def divide_no_rescale_wrapper(self: Rational, other: _NadaRational):
+            return Rational.divide_no_rescale(self, other, ignore_scale=True)
+
+        def secret_divide_no_rescale_wrapper(
+            self: SecretRational, other: _NadaRational
+        ):
+            return SecretRational.divide_no_rescale(self, other, ignore_scale=True)
+
+        Rational.__mul__ = mul_no_rescale_wrapper
+        SecretRational.__mul__ = secret_mul_no_rescale_wrapper
+        Rational.__truediv__ = divide_no_rescale_wrapper
+        SecretRational.__truediv__ = secret_divide_no_rescale_wrapper
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # Restore the original __mul__ method
+        Rational.__mul__ = self.mul_rational
+        SecretRational.__mul__ = self.mul_secret_rational
+
+        Rational.__truediv__ = self.truediv_rational
+        SecretRational.__truediv__ = self.truediv_secret_rational
 
 
 class __RationalConfig(object, metaclass=__MetaRationalConfig):

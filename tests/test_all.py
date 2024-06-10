@@ -39,6 +39,7 @@ TESTS = [
     "array_statistics",
     "matrix_multiplication_rational",
     "matrix_multiplication_rational_multidim",
+    "dot_product_rational",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"

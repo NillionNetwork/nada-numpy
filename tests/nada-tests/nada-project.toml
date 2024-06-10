@@ -153,3 +153,7 @@ prime_size = 128
 [[programs]]
 path = "src/matrix_multiplication_rational_multidim.py"
 prime_size = 128
+
+[[programs]]
+path = "src/dot_product_rational.py"
+prime_size = 128
