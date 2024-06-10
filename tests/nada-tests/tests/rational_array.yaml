@@ -64,3 +64,9 @@ expected_outputs:
     SecretInteger: "65536"
   out_7_2:
     SecretInteger: "131072"
+  out_8_0:
+    SecretInteger: "0"
+  out_8_1:
+    SecretInteger: "-65536"
+  out_8_2:
+    SecretInteger: "-131072"

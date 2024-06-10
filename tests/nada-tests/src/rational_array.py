@@ -19,6 +19,8 @@ def nada_main():
     out_6 = a * c
     out_7 = a / c
 
+    out_8 = -a
+
     return (
         out_0.output(parties[1], "out_0")
         + out_1.output(parties[1], "out_1")
@@ -28,4 +30,5 @@ def nada_main():
         + out_5.output(parties[1], "out_5")
         + out_6.output(parties[1], "out_6")
         + out_7.output(parties[1], "out_7")
+        + out_8.output(parties[1], "out_8")
     )
