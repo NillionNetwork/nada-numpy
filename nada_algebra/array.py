@@ -182,6 +182,17 @@ class NadaArray:
         """
         return self.mul(other)
 
+    def __neg__(self) -> "NadaArray":
+        """
+        Performs negation operation.
+
+        Returns:
+            NadaArray: Negated NadaArray.
+        """
+        if self.is_rational:
+            return self.apply(lambda x: x * rational(-1))
+        return self.apply(lambda x: x * Integer(-1))
+
     def __pow__(self, other: int) -> "NadaArray":
         """
         Raises NadaArray to a power.
