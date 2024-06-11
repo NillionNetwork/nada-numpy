@@ -83,8 +83,8 @@ class NadaArray:
             NadaArray: A new NadaArray representing the element-wise addition result.
         """
         if isinstance(other, NadaArray):
-            return NadaArray(self.inner + other.inner)
-        return NadaArray(self.inner + other)
+            other = other.inner
+        return NadaArray(np.array(self.inner + other))
 
     def __add__(self, other: Any) -> "NadaArray":
         """
@@ -121,8 +121,8 @@ class NadaArray:
             NadaArray: A new NadaArray representing the element-wise subtraction result.
         """
         if isinstance(other, NadaArray):
-            return NadaArray(self.inner - other.inner)
-        return NadaArray(self.inner - other)
+            other = other.inner
+        return NadaArray(np.array(self.inner - other))
 
     def __sub__(self, other: Any) -> "NadaArray":
         """
@@ -159,8 +159,8 @@ class NadaArray:
             NadaArray: A new NadaArray representing the element-wise multiplication result.
         """
         if isinstance(other, NadaArray):
-            return NadaArray(self.inner * other.inner)
-        return NadaArray(self.inner * other)
+            other = other.inner
+        return NadaArray(np.array(self.inner * other))
 
     def __mul__(self, other: Any) -> "NadaArray":
         """
@@ -220,8 +220,8 @@ class NadaArray:
             NadaArray: A new NadaArray representing the element-wise division result.
         """
         if isinstance(other, NadaArray):
-            return NadaArray(self.inner / other.inner)
-        return NadaArray(self.inner / other)
+            other = other.inner
+        return NadaArray(np.array(self.inner / other))
 
     def __truediv__(self, other: Any) -> "NadaArray":
         """
@@ -316,7 +316,7 @@ class NadaArray:
         if self.is_rational or other.is_rational:
             return self.rational_matmul(other)
 
-        return NadaArray(self.inner.dot(other.inner))
+        return NadaArray(np.array(self.inner.dot(other.inner)))
 
     def hstack(self, other: "NadaArray") -> "NadaArray":
         """
@@ -361,7 +361,7 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray with the function applied to each element.
         """
-        return NadaArray(np.frompyfunc(func, 1, 1)(self.inner))
+        return NadaArray(np.array(np.frompyfunc(func, 1, 1)(self.inner)))
 
     @copy_metadata(np.ndarray.mean)
     def mean(self, axis=None, dtype=None, out=None, keepdims=False) -> Any:
@@ -419,7 +419,10 @@ class NadaArray:
         elif isinstance(array, (Rational, SecretRational)):
             return [Output(array.value, f"{prefix}_0", party)]
 
-        if len(array.shape) == 1:
+        if len(array.shape) == 0:
+            return NadaArray.output_array(array.item(), party, prefix)
+
+        elif len(array.shape) == 1:
             return [
                 (
                     Output(array[i].value, f"{prefix}_{i}", party)
@@ -598,241 +601,175 @@ class NadaArray:
     @copy_metadata(np.ndarray.compress)
     def compress(self, *args, **kwargs):
         result = self.inner.compress(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.copy)
     def copy(self, *args, **kwargs):
         result = self.inner.copy(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.cumprod)
     def cumprod(self, *args, **kwargs):
         result = self.inner.cumprod(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.cumsum)
     def cumsum(self, *args, **kwargs):
         result = self.inner.cumsum(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.diagonal)
     def diagonal(self, *args, **kwargs):
         result = self.inner.diagonal(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.fill)
     def fill(self, *args, **kwargs):
         result = self.inner.fill(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @copy_metadata(np.ndarray.flatten)
     def flatten(self, *args, **kwargs):
         result = self.inner.flatten(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.item)
     def item(self, *args, **kwargs):
         result = self.inner.item(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @copy_metadata(np.ndarray.itemset)
     def itemset(self, *args, **kwargs):
         result = self.inner.itemset(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @copy_metadata(np.ndarray.prod)
     def prod(self, *args, **kwargs):
         result = self.inner.prod(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.put)
     def put(self, *args, **kwargs):
         result = self.inner.put(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @copy_metadata(np.ndarray.ravel)
     def ravel(self, *args, **kwargs):
         result = self.inner.ravel(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.repeat)
     def repeat(self, *args, **kwargs):
         result = self.inner.repeat(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.reshape)
     def reshape(self, *args, **kwargs):
         result = self.inner.reshape(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.resize)
     def resize(self, *args, **kwargs):
         result = self.inner.resize(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.squeeze)
     def squeeze(self, *args, **kwargs):
         result = self.inner.squeeze(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.sum)
     def sum(self, *args, **kwargs):
         result = self.inner.sum(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.swapaxes)
     def swapaxes(self, *args, **kwargs):
         result = self.inner.swapaxes(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.take)
     def take(self, *args, **kwargs):
         result = self.inner.take(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.tolist)
     def tolist(self, *args, **kwargs):
         result = self.inner.tolist(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @copy_metadata(np.ndarray.trace)
     def trace(self, *args, **kwargs):
         result = self.inner.trace(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @copy_metadata(np.ndarray.transpose)
     def transpose(self, *args, **kwargs):
         result = self.inner.transpose(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @property
     @copy_metadata(np.ndarray.base)
     def base(self):
         result = self.inner.base
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @property
     @copy_metadata(np.ndarray.data)
     def data(self):
         result = self.inner.data
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.flags)
     def flags(self):
         result = self.inner.flags
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.flat)
     def flat(self):
         result = self.inner.flat
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))
 
     @property
     @copy_metadata(np.ndarray.itemsize)
     def itemsize(self):
         result = self.inner.itemsize
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.nbytes)
     def nbytes(self):
         result = self.inner.nbytes
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.ndim)
     def ndim(self):
         result = self.inner.ndim
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.shape)
     def shape(self):
         result = self.inner.shape
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.size)
     def size(self):
         result = self.inner.size
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.strides)
     def strides(self):
         result = self.inner.strides
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
         return result
 
     @property
     @copy_metadata(np.ndarray.T)
     def T(self):
         result = self.inner.T
-        if isinstance(result, np.ndarray):
-            result = NadaArray(result)
-        return result
+        return NadaArray(np.array(result))

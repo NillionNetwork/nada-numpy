@@ -20,12 +20,12 @@ def nada_main():
     a_mean_arr = a.mean(axis=0)
     b_mean_arr = b.mean(axis=0)
 
-    output_1 = [
-        Output(a_sum, "a_sum", parties[1]),
-        Output(a_mean, "a_mean", parties[1]),
-        Output(b_sum.value, "b_sum", parties[1]),
-        Output(b_mean.value, "b_mean", parties[1]),
-    ]
+    output_1 = (
+        na.output(a_sum, parties[1], "a_sum")
+        + na.output(a_mean, parties[1], "a_mean")
+        + na.output(b_sum, parties[1], "b_sum")
+        + na.output(b_mean, parties[1], "b_mean")
+    )
     output_2 = (
         a_sum_arr.output(parties[1], "a_sum_arr")
         + b_sum_arr.output(parties[1], "b_sum_arr")

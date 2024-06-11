@@ -1,5 +1,5 @@
 ---
-program: supported_operations
+program: supported_operations_return_types
 inputs:
   secrets:
     A_0_0:
