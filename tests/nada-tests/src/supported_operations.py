@@ -4,7 +4,7 @@ import nada_algebra as na
 
 
 def nada_main():
-    parties = na.parties(1)
+    parties = na.parties(2)
 
     a = na.array([3, 3], parties[0], "A", SecretInteger)
 
@@ -57,11 +57,11 @@ def nada_main():
     f.itemset(0, f.item(0) + Integer(2))
     f = f.tolist()[0]
 
-    return [
-        Output(a, "out_0", parties[0]),
-        Output(b, "out_1", parties[0]),
-        Output(c, "out_2", parties[0]),
-        Output(d, "out_3", parties[0]),
-        Output(e, "out_4", parties[0]),
-        Output(f, "out_5", parties[0]),
-    ]
+    return (
+        na.output(a, parties[1], "out_0")
+        + na.output(b, parties[1], "out_1")
+        + na.output(c, parties[1], "out_2")
+        + na.output(d, parties[1], "out_3")
+        + na.output(e, parties[1], "out_4")
+        + na.output(f, parties[1], "out_5")
+    )
