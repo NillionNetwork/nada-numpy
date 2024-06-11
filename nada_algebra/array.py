@@ -626,7 +626,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.fill)
     def fill(self, *args, **kwargs):
         result = self.inner.fill(*args, **kwargs)
-        return NadaArray(np.array(result))
+        return result
 
     @copy_metadata(np.ndarray.flatten)
     def flatten(self, *args, **kwargs):
