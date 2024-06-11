@@ -641,7 +641,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.itemset)
     def itemset(self, *args, **kwargs):
         result = self.inner.itemset(*args, **kwargs)
-        return NadaArray(np.array(result))
+        return result
 
     @copy_metadata(np.ndarray.prod)
     def prod(self, *args, **kwargs):
@@ -651,7 +651,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.put)
     def put(self, *args, **kwargs):
         result = self.inner.put(*args, **kwargs)
-        return NadaArray(np.array(result))
+        return result
 
     @copy_metadata(np.ndarray.ravel)
     def ravel(self, *args, **kwargs):
@@ -696,7 +696,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.tolist)
     def tolist(self, *args, **kwargs):
         result = self.inner.tolist(*args, **kwargs)
-        return NadaArray(np.array(result))
+        return result
 
     @copy_metadata(np.ndarray.trace)
     def trace(self, *args, **kwargs):
@@ -712,7 +712,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.base)
     def base(self):
         result = self.inner.base
-        return result
+        return NadaArray(np.array(result))
 
     @property
     @copy_metadata(np.ndarray.data)
@@ -730,7 +730,7 @@ class NadaArray:
     @copy_metadata(np.ndarray.flat)
     def flat(self):
         result = self.inner.flat
-        return result
+        return NadaArray(np.array(result))
 
     @property
     @copy_metadata(np.ndarray.itemsize)
