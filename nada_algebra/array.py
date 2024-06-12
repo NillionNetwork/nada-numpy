@@ -348,18 +348,17 @@ class NadaArray:
             TypeError: Raised if the other object is not a NadaArray.
         """
 
-        if isinstance(other, NadaArray):
-
-            if self.is_rational or other.is_rational:
-                return self.rational_matmul(other)
-
-            res = self.inner @ other.inner
-
-            if isinstance(res, np.ndarray):
-                return NadaArray(res)
-            return res
-        else:
+        if not isinstance(other, NadaArray):
             raise TypeError(f"other must be a NadaArray and is: {type(other)}")
+
+        if self.is_rational or other.is_rational:
+            return self.rational_matmul(other)
+
+        res = self.inner @ other.inner
+
+        if isinstance(res, np.ndarray):
+            return NadaArray(res)
+        return res
 
     def rational_matmul(self, other: "NadaArray") -> "NadaArray":
         """
@@ -413,17 +412,17 @@ class NadaArray:
         Returns:
             NadaArray: A new NadaArray representing the dot product result.
         """
-        if isinstance(other, NadaArray):
-            if self.is_rational or other.is_rational:
-                return self.rational_matmul(other)
-
-            result = self.inner.dot(other.inner)
-
-            if isinstance(result, np.ndarray):
-                return NadaArray(result)
-            return result
-        else:
+        if not isinstance(other, NadaArray):
             raise TypeError(f"other must be a NadaArray and is: {type(other)}")
+
+        if self.is_rational or other.is_rational:
+            return self.rational_matmul(other)
+
+        result = self.inner.dot(other.inner)
+
+        if isinstance(result, np.ndarray):
+            return NadaArray(result)
+        return result
 
     def hstack(self, other: "NadaArray") -> "NadaArray":
         """
