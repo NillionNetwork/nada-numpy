@@ -224,11 +224,10 @@ class Rational:
 
         Raises:
             TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation + not allowed between types {type(self)} + {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot add values with different scales.")
@@ -282,11 +281,10 @@ class Rational:
 
         Raises:
             TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation - not allowed between types {type(self)} - {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot substract values with different scales.")
@@ -342,11 +340,10 @@ class Rational:
 
         Raises:
             TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation * not allowed between types {type(self)} * {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot multiply values with different scales.")
@@ -422,11 +419,10 @@ class Rational:
 
         Raises:
             TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation / not allowed between types {type(self)} / {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale + get_log_scale():
             raise ValueError(
@@ -760,15 +756,14 @@ class SecretRational:
                 to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
-            TypeError: If the other value is not a Rational or SecretRational.
+            TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
 
         Returns:
             SecretRational: Result of the addition.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation + not allowed between types {type(self)} + {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot add values with different scales.")
@@ -811,15 +806,15 @@ class SecretRational:
                 to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
-            TypeError: If the other value is not a Rational or SecretRational.
+            TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
 
         Returns:
             SecretRational: Result of the subtraction.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation - not allowed between types {type(self)} - {type(other)}"
-            )
+            return NotImplemented
+
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot substract values with different scales.")
 
@@ -863,15 +858,14 @@ class SecretRational:
                 to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
-            TypeError: If the other value is not a Rational or SecretRational.
+            TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
 
         Returns:
             SecretRational: Result of the multiplication.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation * not allowed between types {type(self)} * {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot multiply values with different scales.")
@@ -895,6 +889,11 @@ class SecretRational:
             SecretRational: Result of the multiplication, rescaled.
         """
         c = self.mul_no_rescale(other, ignore_scale=ignore_scale)
+        if c is NotImplemented:
+            # Note that, because this function would be executed under a NadaArray, the NotImplemented value will be handled by the caller (in principle NadaArray)
+            # The caller will then call the mul function of the NadaArray
+            # The broadcasting will execute element-wise multiplication, so rescale_down will be taken care by that function
+            return c
         d = c.rescale_down()
         return d
 
@@ -936,15 +935,14 @@ class SecretRational:
                 to unexpected results if used incorrectly. Defaults to False.
 
         Raises:
-            TypeError: If the other value is not a Rational or SecretRational.
+            TypeError: If the other value is of an incompatible type.
+            ValueError: If the log scales of the two values are different.
 
         Returns:
             SecretRational: Result of the division.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            raise TypeError(
-                f"Operation / not allowed between types {type(self)} / {type(other)}"
-            )
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale + get_log_scale():
             raise ValueError(
@@ -971,6 +969,11 @@ class SecretRational:
         Returns:
             SecretRational: Result of the division, rescaled.
         """
+        # Note: If the other value is a NadaArray, the divide-no-rescale function will return NotImplemented
+        # This will cause that the divide function will return NotImplemented as well
+        # The NotImplemented value will be handled by the caller (in principle NadaArray)
+        # The caller will then call the divide function of the NadaArray
+        # The rescale up, because there is no follow up, will not be taken into consideration.
         a = self.rescale_up()
         c = a.divide_no_rescale(other, ignore_scale=ignore_scale)
         return c

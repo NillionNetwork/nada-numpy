@@ -49,7 +49,7 @@ class NadaArray:
 
         Args:
             inner (np.ndarray): The underlying NumPy array.
-        
+
         Raises:
             ValueError: Raised if the inner object is not a NumPy array.
         """
@@ -99,7 +99,7 @@ class NadaArray:
         """
         if isinstance(other, NadaArray):
             other = other.inner
-        
+
         ret = self.inner + other
 
         if isinstance(ret, np.ndarray):
@@ -130,6 +130,19 @@ class NadaArray:
         """
         return self.add(other)
 
+    def __radd__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise addition with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise addition result.
+        """
+        other = NadaArray(np.array(other))
+        return other.add(self)
+
     def sub(self, other: Any) -> "NadaArray":
         """
         Perform element-wise subtraction with broadcasting.
@@ -142,7 +155,7 @@ class NadaArray:
         """
         if isinstance(other, NadaArray):
             other = other.inner
-        
+
         ret = self.inner - other
 
         if isinstance(ret, np.ndarray):
@@ -173,6 +186,19 @@ class NadaArray:
         """
         return self.sub(other)
 
+    def __rsub__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise subtraction with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise subtraction result.
+        """
+        other = NadaArray(np.array(other))
+        return other.sub(self)
+
     def mul(self, other: Any) -> "NadaArray":
         """
         Perform element-wise multiplication with broadcasting.
@@ -185,7 +211,7 @@ class NadaArray:
         """
         if isinstance(other, NadaArray):
             other = other.inner
-        
+
         ret = self.inner * other
 
         if isinstance(ret, np.ndarray):
@@ -215,6 +241,19 @@ class NadaArray:
             NadaArray: A new NadaArray representing the element-wise multiplication result.
         """
         return self.mul(other)
+
+    def __rmul__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise multiplication with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise multiplication result.
+        """
+        other = NadaArray(np.array(other))
+        return other.mul(self)
 
     def __neg__(self) -> "NadaArray":
         """
@@ -251,7 +290,7 @@ class NadaArray:
         """
         if isinstance(other, NadaArray):
             other = other.inner
-        
+
         ret = self.inner / other
 
         if isinstance(ret, np.ndarray):
@@ -282,6 +321,19 @@ class NadaArray:
         """
         return self.divide(other)
 
+    def __rtruediv__(self, other: Any) -> "NadaArray":
+        """
+        Perform element-wise division with broadcasting.
+
+        Args:
+            other (Any): The object to add.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise division result.
+        """
+        other = NadaArray(np.array(other))
+        return other.divide(self)
+
     def matmul(self, other: "NadaArray") -> "NadaArray":
         """
         Perform matrix multiplication with another NadaArray.
@@ -291,7 +343,7 @@ class NadaArray:
 
         Returns:
             NadaArray: A new NadaArray representing the result of matrix multiplication.
-        
+
         Raises:
             TypeError: Raised if the other object is not a NadaArray.
         """
@@ -300,7 +352,7 @@ class NadaArray:
 
             if self.is_rational or other.is_rational:
                 return self.rational_matmul(other)
-            
+
             res = self.inner @ other.inner
 
             if isinstance(res, np.ndarray):
@@ -308,7 +360,7 @@ class NadaArray:
             return res
         else:
             raise TypeError(f"other must be a NadaArray and is: {type(other)}")
-        
+
     def rational_matmul(self, other: "NadaArray") -> "NadaArray":
         """
         Perform matrix multiplication with another NadaArray when both have Rational Numbers.
@@ -373,7 +425,6 @@ class NadaArray:
         else:
             raise TypeError(f"other must be a NadaArray and is: {type(other)}")
 
-
     def hstack(self, other: "NadaArray") -> "NadaArray":
         """
         Horizontally stack two NadaArray objects.
@@ -422,7 +473,7 @@ class NadaArray:
         if isinstance(res, np.ndarray):
             return NadaArray(res)
         return res
-    
+
     @copy_metadata(np.ndarray.mean)
     def mean(self, axis=None, dtype=None, out=None, keepdims=False) -> Any:
         sum_arr = self.inner.sum(axis=axis, dtype=dtype, keepdims=keepdims)
@@ -687,21 +738,29 @@ class NadaArray:
             PublicInteger: "(PI)",
             PublicUnsignedInteger: "(PUI)",
             Rational: "(R)",
-            SecretRational: "(SR)"
+            SecretRational: "(SR)",
         }
-        
+
         # Check for specific types
         for type_class, type_str in type_mapping.items():
             if isinstance(array, type_class):
                 return type_str
-        
+
         # Handle different shapes
         if len(array.shape) == 0:
             return NadaArray.debug(array.item())
         elif len(array.shape) == 1:
-            return "[" + ", ".join(NadaArray.debug(array[i]) for i in range(array.shape[0])) + "]"
-        return "[" + "\n".join(NadaArray.debug(array[i]) for i in range(array.shape[0])) + "]"
-    
+            return (
+                "["
+                + ", ".join(NadaArray.debug(array[i]) for i in range(array.shape[0]))
+                + "]"
+            )
+        return (
+            "["
+            + "\n".join(NadaArray.debug(array[i]) for i in range(array.shape[0]))
+            + "]"
+        )
+
     @copy_metadata(np.ndarray.compress)
     def compress(self, *args, **kwargs):
         result = self.inner.compress(*args, **kwargs)
@@ -715,51 +774,56 @@ class NadaArray:
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-    
+
     @copy_metadata(np.ndarray.cumprod)
     def cumprod(self, *args, **kwargs):
         result = self.inner.cumprod(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-        
+
     @copy_metadata(np.ndarray.cumsum)
     def cumsum(self, *args, **kwargs):
         result = self.inner.cumsum(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
     @copy_metadata(np.ndarray.diagonal)
     def diagonal(self, *args, **kwargs):
         result = self.inner.diagonal(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
     @copy_metadata(np.ndarray.fill)
     def fill(self, *args, **kwargs):
         result = self.inner.fill(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
     @copy_metadata(np.ndarray.flatten)
     def flatten(self, *args, **kwargs):
         result = self.inner.flatten(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
     @copy_metadata(np.ndarray.item)
     def item(self, *args, **kwargs):
         result = self.inner.item(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
     @copy_metadata(np.ndarray.itemset)
     def itemset(self, *args, **kwargs):
         result = self.inner.itemset(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-    
+
     @copy_metadata(np.ndarray.prod)
     def prod(self, *args, **kwargs):
         result = self.inner.prod(*args, **kwargs)
@@ -874,7 +938,7 @@ class NadaArray:
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-    
+
     @property
     @copy_metadata(np.ndarray.itemsize)
     def itemsize(self):

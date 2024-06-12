@@ -169,3 +169,11 @@ prime_size = 128
 [[programs]]
 path = "src/logistic_regression.py"
 prime_size = 128
+
+[[programs]]
+path = "src/logistic_regression_rational.py"
+prime_size = 128
+
+[[programs]]
+path = "src/broadcasting_rationals.py"
+prime_size = 128

@@ -22,7 +22,6 @@ TESTS = [
     "set_item",
     "gauss_jordan",
     "generate_array",
-    "supported_operations",
     "rational_arithmetic",
     "rational_comparison",
     "secret_rational_arithmetic",
@@ -41,6 +40,8 @@ TESTS = [
     "matrix_multiplication_rational_multidim",
     "dot_product_rational",
     "supported_operations_return_types",
+    "logistic_regression",
+    "logistic_regression_rational",
     # Not supported yet
     # "unsigned_matrix_inverse",
     # "private_inverse"
