@@ -43,8 +43,7 @@ def nada_main():
     check_array(b)
     b = b.flatten()
     check_array(b)
-    b = b.prod()
-    check_array(b)
+    b = b.prod()  # Not an array
 
     c = na.array([3, 3], parties[0], "C", SecretInteger)
     _ = c.put(3, Integer(20))
@@ -55,8 +54,7 @@ def nada_main():
     check_array(c)
     c = c.sum(axis=1)
     check_array(c)
-    c = c.take(1)
-    check_array(c)
+    c = c.take(1)  # Not an array
 
     d = na.array([1], parties[0], "D", SecretInteger)
     check_array(d)
@@ -78,10 +76,8 @@ def nada_main():
     five = Integer(sum(e.shape))
     e = e.transpose()
     check_array(e)
-    e = e.trace()
-    check_array(e)
-    e = e + five
-    check_array(e)
+    e = e.trace()  # Not an array
+    e = e + five  # Not an array either
 
     f = na.array([1], parties[0], "F", SecretInteger)
     check_array(f)

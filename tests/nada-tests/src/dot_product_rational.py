@@ -18,8 +18,8 @@ def nada_main():
     result_d = a @ c
 
     return (
-        result.output(parties[1], "my_output_a")
-        + result_b.output(parties[1], "my_output_b")
-        + result_c.output(parties[1], "my_output_c")
-        + result_d.output(parties[1], "my_output_d")
+        na.output(result, parties[1], "my_output_a")
+        + na.output(result_b, parties[1], "my_output_b")
+        + na.output(result_c, parties[1], "my_output_c")
+        + na.output(result_d, parties[1], "my_output_d")
     )

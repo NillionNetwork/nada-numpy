@@ -432,7 +432,7 @@ def linspace(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
 
 @copy_metadata(np.split)
 def split(a: NadaArray, *args, **kwargs) -> NadaArray:
-    return NadaArray(np.split(a.inner, *args, **kwargs))
+    return [NadaArray(arr) for arr in np.split(a.inner, *args, **kwargs)]
 
 
 @copy_metadata(np.compress)
