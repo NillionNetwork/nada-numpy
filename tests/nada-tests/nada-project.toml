@@ -161,3 +161,11 @@ prime_size = 128
 [[programs]]
 path = "src/supported_operations_return_types.py"
 prime_size = 128
+
+[[programs]]
+path = "src/new_array.py"
+prime_size = 128
+
+[[programs]]
+path = "src/logistic_regression.py"
+prime_size = 128

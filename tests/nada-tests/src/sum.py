@@ -9,4 +9,4 @@ def nada_main():
 
     result = a.sum()
 
-    return result.output(parties[1], "my_output")
+    return na.output(result, parties[1], "my_output")

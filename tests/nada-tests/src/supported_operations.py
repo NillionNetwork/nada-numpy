@@ -10,7 +10,6 @@ def nada_main():
 
     assert isinstance(a.data, memoryview)
     assert a.flags["WRITEABLE"]
-    assert isinstance(na.NadaArray(a.flat), na.NadaArray)
     assert a.itemsize == 8
     assert a.nbytes == 72
     assert a.ndim == 2

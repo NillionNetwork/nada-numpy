@@ -4,6 +4,7 @@ This tutorial shows how to efficiently program a dot product in Nada using Nada 
 
 ```python
 from nada_dsl import *
+
 # Step 0: Nada Algebra is imported with this line
 import nada_algebra as na
 
@@ -13,16 +14,16 @@ def nada_main():
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3, ) with name "A"
-    a = na.array([3], parties[0], "A")
+    a = na.array([3], parties[0], "A", SecretInteger)
 
     # Step 3: Party1 creates an array of dimension (3, ) with name "B"
-    b = na.array([3], parties[1], "B")
+    b = na.array([3], parties[1], "B", SecretInteger)
 
     # Step 4: The result is of computing the dot product between the two
     result = a.dot(b)
 
     # Step 5: We can use result.output() to produce the output for Party2 and variable name "my_output"
-    return result.output(parties[1], "my_output")
+    return na.output(result, parties[1], "my_output")
 
 ```
 
