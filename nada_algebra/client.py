@@ -148,6 +148,6 @@ def float_from_rational(value: int, log_scale: int = None) -> float:
     Returns:
         float: The float representation of the input value.
     """
-    if log_scale is not None:
+    if log_scale is None:
         log_scale = get_log_scale()
     return value / (1 << log_scale)
