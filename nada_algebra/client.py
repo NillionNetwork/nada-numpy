@@ -3,14 +3,14 @@ This module provides functions to work with the Python Nillion Client for handli
 secret and public variable integers and generating named party objects and input dictionaries.
 """
 
-from typing import Dict, List, Union
-from py_nillion_client import (
-    SecretInteger,
-    SecretUnsignedInteger,
-    PublicVariableInteger,
-    PublicVariableUnsignedInteger,
-)
+from typing import Dict, List, Optional, Union
+
 import numpy as np
+# pylint:disable=no-name-in-module
+from py_nillion_client import (PublicVariableInteger,
+                               PublicVariableUnsignedInteger, SecretInteger,
+                               SecretUnsignedInteger)
+
 from nada_algebra.types import Rational, SecretRational, get_log_scale
 
 
@@ -67,12 +67,12 @@ def array(
             }
         return {
             f"{prefix}_{i}": (
-                nada_type(int(arr[i]))
+                nada_type(int(arr[i]))  # type: ignore
                 if (
                     nada_type in (PublicVariableInteger, PublicVariableUnsignedInteger)
                     or int(arr[i]) != 0
                 )
-                else nada_type(1)
+                else nada_type(1)  # type: ignore
             )
             for i in range(arr.shape[0])
         }
@@ -137,7 +137,7 @@ def secret_rational(value: Union[float, int]) -> SecretInteger:
     return SecretInteger(__rational(value))
 
 
-def float_from_rational(value: int, log_scale: int = None) -> float:
+def float_from_rational(value: int, log_scale: Optional[int] = None) -> float:
     """
     Returns the float representation of the given rational value.
 

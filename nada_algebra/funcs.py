@@ -3,22 +3,15 @@ This module provides common functions to work with Nada Algebra, including the c
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Callable, Iterable, Sequence, Tuple, Union
-from nada_dsl import (
-    Party,
-    SecretInteger,
-    SecretUnsignedInteger,
-    PublicInteger,
-    PublicUnsignedInteger,
-    Integer,
-    UnsignedInteger,
-)
+from typing import Any, Callable, List, Sequence, Tuple, Union
 
 import numpy as np
+from nada_dsl import (Integer, Party, PublicInteger, PublicUnsignedInteger,
+                      SecretInteger, SecretUnsignedInteger, UnsignedInteger)
+
 from nada_algebra.array import NadaArray
 from nada_algebra.types import Rational, SecretRational, rational
 from nada_algebra.utils import copy_metadata
-
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
 
@@ -50,17 +43,19 @@ def __from_numpy(arr: np.ndarray, nada_type: _NadaCleartextType) -> list:
     """
     if len(arr.shape) == 1:
         if isinstance(nada_type, Rational):
-            return [nada_type(elem) for elem in arr]
-        return [nada_type(int(elem)) for elem in arr]
+            return [nada_type(elem) for elem in arr]  # type: ignore
+        return [nada_type(int(elem)) for elem in arr]  # type: ignore
     return [__from_numpy(arr[i], nada_type) for i in range(arr.shape[0])]
 
 
-def from_list(lst: list, nada_type: _NadaCleartextType = Integer) -> NadaArray:
+def from_list(
+    lst: Union[List, np.ndarray], nada_type: _NadaCleartextType = Integer
+) -> NadaArray:
     """
     Create a cleartext NadaArray from a list of integers.
 
     Args:
-        lst (list): A list of integers representing the elements of the array.
+        lst (Union[List, np.ndarray]): A list of integers representing the elements of the array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
@@ -68,17 +63,16 @@ def from_list(lst: list, nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     if nada_type == Rational:
         nada_type = rational
-    if not isinstance(lst, np.ndarray):
-        lst = np.array(lst)
-    return NadaArray(np.array(__from_numpy(lst, nada_type)))
+    lst_np = np.array(lst)
+    return NadaArray(np.array(__from_numpy(lst_np, nada_type)))
 
 
-def ones(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
+def ones(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with ones.
 
     Args:
-        dims (Iterable[int]): A list of integers representing the dimensions of the array.
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
@@ -109,12 +103,12 @@ def ones_like(
     return from_list(np.ones_like(a), nada_type)
 
 
-def zeros(dims: Iterable[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
+def zeros(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
 
     Args:
-        dims (Iterable[int]): A list of integers representing the dimensions of the array.
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
 
     Returns:
@@ -145,12 +139,12 @@ def zeros_like(
     return from_list(np.zeros_like(a), nada_type)
 
 
-def alphas(dims: Iterable[int], alpha: Any) -> NadaArray:
+def alphas(dims: Sequence[int], alpha: Any) -> NadaArray:
     """
     Create a NadaArray filled with a certain constant value.
 
     Args:
-        dims (Iterable[int]): A list of integers representing the dimensions of the array.
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
         alpha (Any): Some constant value.
 
     Returns:
@@ -162,7 +156,8 @@ def alphas(dims: Iterable[int], alpha: Any) -> NadaArray:
 
 def alphas_like(a: np.ndarray | NadaArray, alpha: Any) -> NadaArray:
     """
-    Create a NadaArray filled with a certain constant value with the same shape and type as a given array.
+    Create a NadaArray filled with a certain constant value
+    with the same shape and type as a given array.
 
     Args:
         a (np.ndarray | NadaArray): Reference array.
@@ -178,7 +173,7 @@ def alphas_like(a: np.ndarray | NadaArray, alpha: Any) -> NadaArray:
 
 
 def array(
-    dims: Iterable[int],
+    dims: Sequence[int],
     party: Party,
     prefix: str,
     nada_type: Union[
@@ -194,7 +189,7 @@ def array(
     Create a NadaArray with the specified dimensions and elements of the given type.
 
     Args:
-        dims (Iterable[int]): A list of integers representing the dimensions of the array.
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
         party (Party): The party object.
         prefix (str): A prefix for naming the array elements.
         nada_type (type): The type of elements to create.
@@ -206,14 +201,14 @@ def array(
 
 
 def random(
-    dims: Iterable[int],
+    dims: Sequence[int],
     nada_type: SecretInteger | SecretUnsignedInteger | SecretRational = SecretInteger,
 ) -> NadaArray:
     """
     Create a random NadaArray with the specified dimensions.
 
     Args:
-        dims (Iterable[int]): A list of integers representing the dimensions of the array.
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
         nada_type (type, optional): The type of elements to create. Defaults to SecretInteger.
 
     Returns:
@@ -234,7 +229,7 @@ def output(arr: NadaArray, party: Party, prefix: str):
     Returns:
         list: A list of Output objects.
     """
-    return NadaArray.output_array(arr, party, prefix)
+    return NadaArray.output_array(arr.inner, party, prefix)
 
 
 def vstack(arr_list: list) -> NadaArray:
@@ -331,19 +326,20 @@ def to_nada(arr: np.ndarray, nada_type: _NadaCleartextType) -> NadaArray:
         nada_type = rational
     else:
         arr = arr.astype(int)
-    return NadaArray(np.frompyfunc(nada_type, 1, 1)(arr))
+    return NadaArray(np.frompyfunc(nada_type, 1, 1)(arr))  # type: ignore
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.pad)
 def pad(
     arr: NadaArray,
-    pad_width: Union[Iterable[int], int],
+    pad_width: Union[Sequence[int], int],
     mode: str = "constant",
     **kwargs,
 ) -> NadaArray:
     if mode not in {"constant", "edge", "reflect", "symmetric", "wrap"}:
         raise NotImplementedError(
-            "Not currently possible to pad NadaArray in mode `%s`" % mode
+            f"Not currently possible to pad NadaArray in mode `{mode}`"
         )
 
     # Override python defaults by NadaType defaults
@@ -363,8 +359,8 @@ def pad(
             "constant_values", nada_type(0)
         )
 
-    padded_inner = np.pad(
-        arr,
+    padded_inner = np.pad(  # type: ignore
+        arr.inner,
         pad_width,
         mode,
         **overriden_kwargs,
@@ -374,8 +370,9 @@ def pad(
     return NadaArray(padded_inner)
 
 
+# pylint:disable=too-few-public-methods
 class NadaCallable:
-    """Class that wraps a vectorized function to ensure all NumPy outputs are converted to NadaArray"""
+    """Class that wraps a vectorized NumPy function"""
 
     def __init__(self, vfunc: Callable) -> None:
         """
@@ -398,128 +395,152 @@ class NadaCallable:
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         if isinstance(result, Sequence):
-            return type(result)(
+            return type(result)(  # type: ignore
                 NadaArray(value) if isinstance(value, np.ndarray) else value
                 for value in result
             )
         return result
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.frompyfunc)
 def frompyfunc(*args, **kwargs) -> NadaCallable:
     return NadaCallable(np.frompyfunc(*args, **kwargs))
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.vectorize)
 def vectorize(*args, **kwargs) -> NadaCallable:
     return NadaCallable(np.vectorize(*args, **kwargs))
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.eye)
 def eye(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
     return to_nada(np.eye(*args, **kwargs), nada_type)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.arange)
 def arange(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
     return to_nada(np.arange(*args, **kwargs), nada_type)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.linspace)
 def linspace(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
     return to_nada(np.linspace(*args, **kwargs), nada_type)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.split)
-def split(a: NadaArray, *args, **kwargs) -> NadaArray:
+def split(a: NadaArray, *args, **kwargs) -> List[NadaArray]:
     return [NadaArray(arr) for arr in np.split(a.inner, *args, **kwargs)]
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.compress)
 def compress(a: NadaArray, *args, **kwargs):
     return a.compress(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.copy)
 def copy(a: NadaArray, *args, **kwargs):
     return a.copy(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.cumprod)
 def cumprod(a: NadaArray, *args, **kwargs):
     return a.cumprod(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.cumsum)
 def cumsum(a: NadaArray, *args, **kwargs):
     return a.cumsum(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.diagonal)
 def diagonal(a: NadaArray, *args, **kwargs):
     return a.diagonal(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.diagonal)
 def mean(a: NadaArray, *args, **kwargs):
     return a.mean(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.prod)
 def prod(a: NadaArray, *args, **kwargs):
     return a.prod(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.put)
 def put(a: NadaArray, *args, **kwargs):
     return a.put(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.ravel)
 def ravel(a: NadaArray, *args, **kwargs):
     return a.ravel(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.repeat)
 def repeat(a: NadaArray, *args, **kwargs):
     return a.repeat(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.reshape)
 def reshape(a: NadaArray, *args, **kwargs):
     return a.reshape(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.resize)
 def resize(a: NadaArray, *args, **kwargs):
     return a.resize(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.squeeze)
 def squeeze(a: NadaArray, *args, **kwargs):
     return a.squeeze(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring,redefined-builtin
 @copy_metadata(np.sum)
 def sum(a: NadaArray, *args, **kwargs):
     return a.sum(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.swapaxes)
 def swapaxes(a: NadaArray, *args, **kwargs):
     return a.swapaxes(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.take)
 def take(a: NadaArray, *args, **kwargs):
     return a.take(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.trace)
 def trace(a: NadaArray, *args, **kwargs):
     return a.trace(*args, **kwargs)
 
 
+# pylint:disable=missing-function-docstring
 @copy_metadata(np.transpose)
 def transpose(a: NadaArray, *args, **kwargs):
     return a.transpose(*args, **kwargs)
