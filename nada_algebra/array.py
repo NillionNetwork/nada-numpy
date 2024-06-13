@@ -483,12 +483,12 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         return mean_arr
 
     @staticmethod
-    def output_array(array: np.ndarray, party: Party, prefix: str) -> list:
+    def output_array(array: Any, party: Party, prefix: str) -> list:
         """
         Generate a list of Output objects for each element in the input array.
 
         Args:
-            array (np.ndarray): The input array.
+            array (Any): The input array.
             party (Party): The party object.
             prefix (str): The prefix to be added to the Output names.
 
