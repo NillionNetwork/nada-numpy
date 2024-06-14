@@ -1200,17 +1200,17 @@ class SecretRational:
         """
         return Rational(self.value.reveal(), self.log_scale)
 
-    def trunc_pr(self, true: _NadaRational) -> "SecretRational":
+    def trunc_pr(self, arg_0: _NadaRational) -> "SecretRational":
         """
         Truncate the SecretRational value.
 
         Args:
-            true (_NadaRational): The value to truncate by.
+            arg_0 (_NadaRational): The value to truncate by.
 
         Returns:
             SecretRational: Truncated SecretRational value.
         """
-        return SecretRational(self.value.trunc_pr(true), self.log_scale)
+        return SecretRational(self.value.trunc_pr(arg_0), self.log_scale)
 
     def rescale_up(self, log_scale: Optional[int] = None) -> "SecretRational":
         """
