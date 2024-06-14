@@ -1,5 +1,6 @@
 import pytest
 from nada_dsl import *
+
 import nada_algebra as na
 
 

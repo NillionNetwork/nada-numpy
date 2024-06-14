@@ -1,6 +1,7 @@
 import os
-import pytest
 import subprocess
+
+import pytest
 
 TESTS = [
     "base",
@@ -91,9 +92,10 @@ class TestSuite:
 
 
 def test_client():
-    import nada_algebra.client as na_client  # For use with Python Client
-    import py_nillion_client as nillion
     import numpy as np
+    import py_nillion_client as nillion
+
+    import nada_algebra.client as na_client  # For use with Python Client
 
     parties = na_client.parties(3)
 
@@ -125,8 +127,9 @@ def test_client():
 
 
 def test_rational_client():
-    import nada_algebra.client as na_client  # For use with Python Client
     import py_nillion_client as nillion
+
+    import nada_algebra.client as na_client  # For use with Python Client
 
     secret_rational = na_client.secret_rational(3.2)
 

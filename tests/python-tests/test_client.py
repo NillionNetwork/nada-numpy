@@ -1,10 +1,11 @@
 """Nada algebra client unit tests"""
 
-import pytest
 import numpy as np
-import nada_algebra.client as na_client
-import nada_algebra as na
 import py_nillion_client as nillion
+import pytest
+
+import nada_algebra as na
+import nada_algebra.client as na_client
 
 
 class TestClient:

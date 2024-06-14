@@ -1,6 +1,8 @@
 from types import NoneType
+
 import numpy as np
 from nada_dsl import *
+
 import nada_algebra as na
 
 

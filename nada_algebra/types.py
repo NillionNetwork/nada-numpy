@@ -1,25 +1,15 @@
 """Additional special data types"""
 
+# pylint:disable=too-many-lines
+
 import warnings
-from functools import partial
-import numpy as np
+from typing import Optional, Union
 
 import nada_dsl as dsl
-
-from nada_dsl import (
-    UnsignedInteger,
-    Integer,
-    SecretInteger,
-    SecretUnsignedInteger,
-    PublicInteger,
-    PublicUnsignedInteger,
-    Input,
-    Party,
-)
-
-
-from typing import Union
-
+import numpy as np
+from nada_dsl import (Input, Integer, Party, PublicInteger,
+                      PublicUnsignedInteger, SecretInteger,
+                      SecretUnsignedInteger, UnsignedInteger)
 
 _NadaRational = Union["Rational", "SecretRational"]
 
@@ -47,15 +37,15 @@ class SecretBoolean(dsl.SecretBoolean):
 
     def if_else(
         self,
-        arg_0: Union[_NadaType, "SecretRational", "Rational"],
-        arg_1: Union[_NadaType, "SecretRational", "Rational"],
+        true: Union[_NadaType, "SecretRational", "Rational"],
+        false: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[SecretInteger, SecretUnsignedInteger, "SecretRational"]:
         """
-        If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+        If-else logic. If the boolean is True, true is returned. If not, false is returned.
 
         Args:
-            arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
-            arg_1 (Union[_NadaType, SecretRational, Rational]): Second argument.
+            true (Union[_NadaType, SecretRational, Rational]): First argument.
+            false (Union[_NadaType, SecretRational, Rational]): Second argument.
 
         Raises:
             ValueError: Raised when incompatibly-scaled values are passed.
@@ -64,27 +54,28 @@ class SecretBoolean(dsl.SecretBoolean):
         Returns:
             Union[SecretInteger, SecretUnsignedInteger, "SecretRational"]: Return value.
         """
-        first_arg = arg_0
-        second_arg = arg_1
-        if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
-            arg_1, (SecretRational, Rational)
+        first_arg = true
+        second_arg = false
+        if isinstance(true, (SecretRational, Rational)) and isinstance(
+            false, (SecretRational, Rational)
         ):
             # Both are SecretRational or Rational objects
-            if arg_0.log_scale != arg_1.log_scale:
+            if true.log_scale != false.log_scale:
                 raise ValueError("Cannot output values with different scales.")
-            first_arg = arg_0.value
-            second_arg = arg_1.value
-        elif isinstance(arg_0, (Rational, SecretRational)) or isinstance(
-            arg_1, (Rational, SecretRational)
+            first_arg = true.value
+            second_arg = false.value
+        elif isinstance(true, (Rational, SecretRational)) or isinstance(
+            false, (Rational, SecretRational)
         ):
             # Both are SecretRational or Rational objects
-            raise TypeError(f"Invalid operation: {self}.IfElse({arg_0}, {arg_1})")
+            raise TypeError(f"Invalid operation: {self}.IfElse({true}, {false})")
 
         result = super().if_else(first_arg, second_arg)
 
-        if isinstance(arg_0, (SecretRational, Rational)):
-            # If we have a SecretBoolean, the return type will be SecretInteger, thus promoted to SecretRational
-            return SecretRational(result, arg_0.log_scale, is_scaled=True)
+        if isinstance(true, (SecretRational, Rational)):
+            # If we have a SecretBoolean, the return type will be SecretInteger,
+            # thus promoted to SecretRational
+            return SecretRational(result, true.log_scale, is_scaled=True)
         return result
 
 
@@ -102,8 +93,8 @@ class PublicBoolean(dsl.PublicBoolean):
 
     def if_else(
         self,
-        arg_0: Union[_NadaType, "SecretRational", "Rational"],
-        arg_1: Union[_NadaType, "SecretRational", "Rational"],
+        true: Union[_NadaType, "SecretRational", "Rational"],
+        false: Union[_NadaType, "SecretRational", "Rational"],
     ) -> Union[
         PublicInteger,
         PublicUnsignedInteger,
@@ -113,11 +104,11 @@ class PublicBoolean(dsl.PublicBoolean):
         "SecretRational",
     ]:
         """
-        If-else logic. If the boolean is True, arg_0 is returned. If not, arg_1 is returned.
+        If-else logic. If the boolean is True, true is returned. If not, false is returned.
 
         Args:
-            arg_0 (Union[_NadaType, SecretRational, Rational]): First argument.
-            arg_1 (Union[_NadaType, SecretRational, Rational]): Second argument.
+            true (Union[_NadaType, SecretRational, Rational]): First argument.
+            false (Union[_NadaType, SecretRational, Rational]): Second argument.
 
         Raises:
             ValueError: Raised when incompatibly-scaled values are passed.
@@ -127,28 +118,28 @@ class PublicBoolean(dsl.PublicBoolean):
             Union[PublicInteger, PublicUnsignedInteger, SecretInteger,
                 SecretUnsignedInteger, "Rational", "SecretRational"]: Return value.
         """
-        first_arg = arg_0
-        second_arg = arg_1
-        if isinstance(arg_0, (SecretRational, Rational)) and isinstance(
-            arg_1, (SecretRational, Rational)
+        first_arg = true
+        second_arg = false
+        if isinstance(true, (SecretRational, Rational)) and isinstance(
+            false, (SecretRational, Rational)
         ):
             # Both are SecretRational or Rational objects
-            if arg_0.log_scale != arg_1.log_scale:
+            if true.log_scale != false.log_scale:
                 raise ValueError("Cannot output values with different scales.")
-            first_arg = arg_0.value
-            second_arg = arg_1.value
-        elif isinstance(arg_0, (Rational, SecretRational)) or isinstance(
-            arg_1, (Rational, SecretRational)
+            first_arg = true.value
+            second_arg = false.value
+        elif isinstance(true, (Rational, SecretRational)) or isinstance(
+            false, (Rational, SecretRational)
         ):
             # Both are SecretRational or Rational objects but of different type
-            raise TypeError(f"Invalid operation: {self}.IfElse({arg_0}, {arg_1})")
+            raise TypeError(f"Invalid operation: {self}.IfElse({true}, {false})")
 
         result = super().if_else(first_arg, second_arg)
 
-        if isinstance(arg_0, SecretRational) or isinstance(arg_1, SecretRational):
-            return SecretRational(result, arg_0.log_scale, is_scaled=True)
-        elif isinstance(arg_0, Rational) and isinstance(arg_1, Rational):
-            return Rational(result, arg_0.log_scale, is_scaled=True)
+        if isinstance(true, SecretRational) or isinstance(false, SecretRational):
+            return SecretRational(result, true.log_scale, is_scaled=True)
+        if isinstance(true, Rational) and isinstance(false, Rational):
+            return Rational(result, true.log_scale, is_scaled=True)
         return result
 
 
@@ -158,15 +149,16 @@ class Rational:
     def __init__(
         self,
         value: Union[Integer, PublicInteger],
-        log_scale: int = None,
+        log_scale: Optional[int] = None,
         is_scaled: bool = True,
     ) -> None:
         """
         Initializes wrapper around Integer object.
 
         Args:
-            value (Union[Integer, PublicInteger]): The value to be represented as a Rational.
-            log_scale (int, optional): Quantization scaling factor. Defaults to RationalConfig.log_scale.
+            value (Union[Integer, PublicInteger]): The value to be representedas a Rational.
+            log_scale (int, optional): Quantization scaling factor.
+                Defaults to RationalConfig.log_scale.
             is_scaled (bool, optional): Flag that represents whether the value is already scaled.
                 Defaults to True.
 
@@ -174,7 +166,7 @@ class Rational:
             TypeError: If value is of an incompatible type.
         """
         if not isinstance(value, (Integer, PublicInteger)):
-            raise TypeError("Cannot instantiate Rational from type `%s`." % type(value))
+            raise TypeError(f"Cannot instantiate Rational from type `{type(value)}`.")
 
         if log_scale is None:
             log_scale = get_log_scale()
@@ -236,8 +228,7 @@ class Rational:
             return SecretRational(
                 other.value + self.value, self.log_scale, is_scaled=True
             )
-        else:
-            return Rational(self.value + other.value, self.log_scale, is_scaled=True)
+        return Rational(self.value + other.value, self.log_scale, is_scaled=True)
 
     def __add__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
         """
@@ -293,8 +284,7 @@ class Rational:
             return SecretRational(
                 self.value - other.value, self.log_scale, is_scaled=True
             )
-        else:
-            return Rational(self.value - other.value, self.log_scale, is_scaled=True)
+        return Rational(self.value - other.value, self.log_scale, is_scaled=True)
 
     def __sub__(self, other: _NadaRational) -> Union["Rational", "SecretRational"]:
         """
@@ -354,12 +344,11 @@ class Rational:
                 self.log_scale + other.log_scale,
                 is_scaled=True,
             )
-        else:
-            return Rational(
-                self.value * other.value,
-                self.log_scale + other.log_scale,
-                is_scaled=True,
-            )
+        return Rational(
+            self.value * other.value,
+            self.log_scale + other.log_scale,
+            is_scaled=True,
+        )
 
     def mul(
         self, other: _NadaRational, ignore_scale: bool = False
@@ -426,7 +415,8 @@ class Rational:
 
         if not ignore_scale and self.log_scale != other.log_scale + get_log_scale():
             raise ValueError(
-                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}. Required scale: {self.log_scale}  / {other.log_scale + get_log_scale()}"
+                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}."
+                f"Required scale: {self.log_scale}  / {other.log_scale + get_log_scale()}"
             )
 
         if isinstance(other, SecretRational):
@@ -435,12 +425,11 @@ class Rational:
                 self.log_scale - other.log_scale,
                 is_scaled=True,
             )
-        else:
-            return Rational(
-                self.value / other.value,
-                self.log_scale - other.log_scale,
-                is_scaled=True,
-            )
+        return Rational(
+            self.value / other.value,
+            self.log_scale - other.log_scale,
+            is_scaled=True,
+        )
 
     def divide(
         self, other: _NadaRational, ignore_scale: bool = False
@@ -500,9 +489,7 @@ class Rational:
             TypeError: If the exponent is not an integer.
         """
         if not isinstance(other, int):
-            raise TypeError(
-                "Cannot raise Rational to a power of type `%s`" % type(other)
-            )
+            raise TypeError(f"Cannot raise Rational to a power of type `{type(other)}`")
 
         result = Rational(Integer(1), self.log_scale, is_scaled=False)
 
@@ -514,12 +501,12 @@ class Rational:
         exponent = abs(other)
         while exponent > 0:
             if exponent % 2 == 1:
-                result = result * base
-            base *= base
+                result = result * base  # type: ignore
+            base *= base  # type: ignore
             exponent //= 2
 
         if other < 0:
-            return rational(1) / Rational(
+            return rational(1) / Rational(  # type: ignore
                 result.value, result.log_scale, is_scaled=True
             )
 
@@ -610,7 +597,7 @@ class Rational:
             return SecretBoolean(self.value >= other.value)
         return PublicBoolean(self.value >= other.value)
 
-    def __eq__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
+    def __eq__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:  # type: ignore
         """
         Check if this Rational is equal to another.
 
@@ -629,7 +616,7 @@ class Rational:
             return SecretBoolean(self.value == other.value)
         return PublicBoolean(self.value == other.value)
 
-    def __ne__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:
+    def __ne__(self, other: _NadaRational) -> Union[PublicBoolean, SecretBoolean]:  # type: ignore
         """
         Check if this Rational is not equal to another.
 
@@ -648,14 +635,15 @@ class Rational:
             return SecretBoolean(self.value != other.value)
         return PublicBoolean(self.value != other.value)
 
-    def rescale_up(self, log_scale: int = None) -> "Rational":
+    def rescale_up(self, log_scale: Optional[int] = None) -> "Rational":
         """
         Rescale the value in the upward direction by a scaling factor.
 
         This is equivalent to multiplying the value by `2**(log_scale)`.
 
         Args:
-            log_scale (int, optional): Scaling factor to rescale the value. Defaults to RationalConfig.log_scale.
+            log_scale (int, optional): Scaling factor to rescale the value.
+                Defaults to RationalConfig.log_scale.
 
         Returns:
             Rational: Rescaled Rational value.
@@ -670,14 +658,15 @@ class Rational:
             is_scaled=True,
         )
 
-    def rescale_down(self, log_scale: int = None) -> "Rational":
+    def rescale_down(self, log_scale: Optional[int] = None) -> "Rational":
         """
         Rescale the value in the downward direction by a scaling factor.
 
         This is equivalent to dividing the value by `2**(log_scale)`.
 
         Args:
-            log_scale (int, optional): Scaling factor to rescale the value. Defaults to RationalConfig.log_scale.
+            log_scale (int, optional): Scaling factor to rescale the value.
+                Defaults to RationalConfig.log_scale.
 
         Returns:
             Rational: Rescaled Rational value.
@@ -697,14 +686,19 @@ class SecretRational:
     """Wrapper class to store scaled SecretInteger values representing a fixed-point number."""
 
     def __init__(
-        self, value: SecretInteger, log_scale: int = None, is_scaled: bool = True
+        self,
+        value: SecretInteger,
+        log_scale: Optional[int] = None,
+        is_scaled: bool = True,
     ) -> None:
         """
-        Initializes wrapper around SecretInteger object. The object should come scaled up by default otherwise precision may be lost.
+        Initializes wrapper around SecretInteger object.
+        The object should come scaled up by default otherwise precision may be lost.
 
         Args:
             value (SecretInteger): SecretInteger input value.
-            log_scale (int, optional): Quantization scaling factor. Defaults to RationalConfig.log_scale.
+            log_scale (int, optional): Quantization scaling factor.
+                Defaults to RationalConfig.log_scale.
             is_scaled (bool, optional): Flag that indicates whether provided value has already been
                 scaled by log_scale factor. Defaults to True.
 
@@ -713,7 +707,7 @@ class SecretRational:
         """
         if not isinstance(value, SecretInteger):
             raise TypeError(
-                "Cannot instantiate SecretRational from type `%s`." % type(value)
+                f"Cannot instantiate SecretRational from type `{type(value)}`."
             )
 
         if log_scale is None:
@@ -890,9 +884,11 @@ class SecretRational:
         """
         c = self.mul_no_rescale(other, ignore_scale=ignore_scale)
         if c is NotImplemented:
-            # Note that, because this function would be executed under a NadaArray, the NotImplemented value will be handled by the caller (in principle NadaArray)
+            # Note that, because this function would be executed under a NadaArray,
+            # the NotImplemented value will be handled by the caller (in principle NadaArray)
             # The caller will then call the mul function of the NadaArray
-            # The broadcasting will execute element-wise multiplication, so rescale_down will be taken care by that function
+            # The broadcasting will execute element-wise multiplication,
+            # so rescale_down will be taken care by that function
             return c
         d = c.rescale_down()
         return d
@@ -946,7 +942,8 @@ class SecretRational:
 
         if not ignore_scale and self.log_scale != other.log_scale + get_log_scale():
             raise ValueError(
-                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}. Required scale: {self.log_scale}  / {other.log_scale + get_log_scale()}"
+                f"Cannot divide values where scale is: {self.log_scale} / {other.log_scale}."
+                f"Required scale: {self.log_scale}  / {other.log_scale + get_log_scale()}"
             )
 
         return SecretRational(
@@ -969,7 +966,8 @@ class SecretRational:
         Returns:
             SecretRational: Result of the division, rescaled.
         """
-        # Note: If the other value is a NadaArray, the divide-no-rescale function will return NotImplemented
+        # Note: If the other value is a NadaArray, the divide-no-rescale function will
+        # return NotImplemented
         # This will cause that the divide function will return NotImplemented as well
         # The NotImplemented value will be handled by the caller (in principle NadaArray)
         # The caller will then call the divide function of the NadaArray
@@ -1017,7 +1015,7 @@ class SecretRational:
         """
         if not isinstance(other, int):
             raise TypeError(
-                "Cannot raise SecretRational to a power of type `%s`" % type(other)
+                f"Cannot raise SecretRational to a power of type `{type(other)}`"
             )
 
         result = Rational(Integer(1), self.log_scale, is_scaled=False)
@@ -1030,12 +1028,12 @@ class SecretRational:
         exponent = abs(other)
         while exponent > 0:
             if exponent % 2 == 1:
-                result = result * base
-            base *= base
+                result = result * base  # type: ignore
+            base *= base  # type: ignore
             exponent //= 2
 
         if other < 0:
-            return rational(1) / SecretRational(
+            return rational(1) / SecretRational(  # type: ignore
                 result.value, result.log_scale, is_scaled=True
             )
 
@@ -1142,7 +1140,7 @@ class SecretRational:
             raise ValueError("Cannot compare values with different scales.")
         return SecretBoolean(self.value >= other.value)
 
-    def __eq__(self, other: _NadaRational) -> SecretBoolean:
+    def __eq__(self, other: _NadaRational) -> SecretBoolean:  # type: ignore
         """
         Check if this SecretRational is equal to another.
 
@@ -1159,7 +1157,7 @@ class SecretRational:
             raise ValueError("Cannot compare values with different scales.")
         return SecretBoolean(self.value == other.value)
 
-    def __ne__(self, other: _NadaRational) -> SecretBoolean:
+    def __ne__(self, other: _NadaRational) -> SecretBoolean:  # type: ignore
         """
         Check if this SecretRational is not equal to another.
 
@@ -1214,7 +1212,7 @@ class SecretRational:
         """
         return SecretRational(self.value.trunc_pr(arg_0), self.log_scale)
 
-    def rescale_up(self, log_scale: int = None) -> "SecretRational":
+    def rescale_up(self, log_scale: Optional[int] = None) -> "SecretRational":
         """
         Rescale the SecretRational value upwards by a scaling factor.
 
@@ -1233,7 +1231,7 @@ class SecretRational:
             is_scaled=True,
         )
 
-    def rescale_down(self, log_scale: int = None) -> "SecretRational":
+    def rescale_down(self, log_scale: Optional[int] = None) -> "SecretRational":
         """
         Rescale the SecretRational value downwards by a scaling factor.
 
@@ -1254,7 +1252,7 @@ class SecretRational:
 
 
 def secret_rational(
-    name: str, party: Party, log_scale: int = None, is_scaled: bool = True
+    name: str, party: Party, log_scale: Optional[int] = None, is_scaled: bool = True
 ) -> SecretRational:
     """
     Creates a SecretRational from a variable in the Nillion network.
@@ -1274,7 +1272,7 @@ def secret_rational(
 
 
 def public_rational(
-    name: str, party: Party, log_scale: int = None, is_scaled: bool = True
+    name: str, party: Party, log_scale: Optional[int] = None, is_scaled: bool = True
 ) -> Rational:
     """
     Creates a Rational from a variable in the Nillion network.
@@ -1295,7 +1293,7 @@ def public_rational(
 
 def rational(
     value: Union[int, float, np.floating],
-    log_scale: int = None,
+    log_scale: Optional[int] = None,
     is_scaled: bool = False,
 ) -> Rational:
     """
@@ -1323,40 +1321,40 @@ def rational(
     if isinstance(value, float):
         assert (
             is_scaled is False
-        ), "Got a value of type `float` with `is_scaled` set to True. This should never occur; only fixed-point numbers can be scaled (i.e., quantized)."
+        ), "Got a value of type `float` with `is_scaled` set to True. This should never occur"
         quantized = round(value * (1 << log_scale))
         return Rational(Integer(quantized), is_scaled=True)
-    raise TypeError("Cannot instantiate Rational from type `%s`." % type(value))
+    raise TypeError(f"Cannot instantiate Rational from type `{type(value)}`.")
 
 
-class __MetaRationalConfig(type):
+class _MetaRationalConfig(type):
     """Rational config metaclass that defines classproperties"""
 
     _log_scale: int
     _default_log_scale: int
 
     @property
-    def log_scale(self) -> int:
-        """
-        Getter method.
-
-        Returns:
-            int: Log scale.
-        """
-        return self._log_scale
-
-    @property
-    def default_log_scale(self) -> int:
+    def default_log_scale(cls) -> int:
         """
         Getter method.
 
         Returns:
             int: Default log scale.
         """
-        return self._default_log_scale
+        return cls._default_log_scale
+
+    @property
+    def log_scale(cls) -> int:
+        """
+        Getter method.
+
+        Returns:
+            int: Log scale.
+        """
+        return cls._log_scale
 
     @log_scale.setter
-    def log_scale(self, new_log_scale: int) -> None:
+    def log_scale(cls, new_log_scale: int) -> None:
         """
         Setter method.
 
@@ -1365,21 +1363,23 @@ class __MetaRationalConfig(type):
         """
         if new_log_scale <= 4:
             warnings.warn(
-                "Provided log scale `%s` is very low. Expected a value higher than 4."
+                f"Provided log scale `{str(new_log_scale)}` is very low."
+                " Expected a value higher than 4."
                 " Using a low quantization scale can lead to poor quantization of rational values"
-                " and thus poor performance & unexpected results." % str(new_log_scale)
+                " and thus poor performance & unexpected results."
             )
         if new_log_scale >= 64:
             warnings.warn(
-                "Provided log scale `%s` is very high. Expected a value lower than 64."
+                f"Provided log scale `{str(new_log_scale)}` is very high."
+                " Expected a value lower than 64."
                 " Using a high quantization scale can lead to overflows & unexpected results."
-                % str(new_log_scale)
             )
 
-        self._log_scale = new_log_scale
+        cls._log_scale = new_log_scale
 
 
-class __RationalConfig(object, metaclass=__MetaRationalConfig):
+# pylint:disable=too-few-public-methods
+class _RationalConfig(metaclass=_MetaRationalConfig):
     """Rational config data class"""
 
     _default_log_scale: int = 16
@@ -1396,10 +1396,9 @@ def set_log_scale(new_log_scale: int) -> None:
     """
     if not isinstance(new_log_scale, int):
         raise TypeError(
-            "Cannot set log scale to type `%s`. Expected `int`."
-            % type(new_log_scale).__name__
+            f"Cannot set log scale to type `{type(new_log_scale)}`. Expected `int`."
         )
-    __RationalConfig.log_scale = new_log_scale
+    _RationalConfig.log_scale = new_log_scale
 
 
 def get_log_scale() -> int:
@@ -1410,9 +1409,9 @@ def get_log_scale() -> int:
     Returns:
         int: Current log scale in use.
     """
-    return __RationalConfig.log_scale
+    return _RationalConfig.log_scale
 
 
 def reset_log_scale() -> None:
     """Resets the Rational log scaling factor to the original default value"""
-    __RationalConfig.log_scale = __RationalConfig.default_log_scale
+    _RationalConfig.log_scale = _RationalConfig.default_log_scale

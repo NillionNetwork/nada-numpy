@@ -26,8 +26,8 @@ def copy_metadata(source_func: Callable) -> Callable:
         Returns:
             Callable: Function with metadata.
         """
-        doc = ""
-        if hasattr(source_func, "__doc__"):
+        doc: str = ""
+        if hasattr(source_func, "__doc__") and source_func.__doc__ is not None:
             doc = source_func.__doc__
             # Replace NumPy references with NadaArray references
             doc = re.sub(r"\b(numpy)\b", "NadaArray", doc, flags=re.IGNORECASE)

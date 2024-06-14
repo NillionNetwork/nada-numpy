@@ -14,7 +14,8 @@ py-nillion-client = "^0.2.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
-black = {extras = ["jupyter"], version = "^24.4.2"}
+pylint = "^3.2.3"
+mypy = "^1.10.0"
 
 [build-system]
 requires = ["poetry-core"]

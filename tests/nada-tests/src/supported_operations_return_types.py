@@ -1,7 +1,8 @@
+import numpy as np
 import pytest
 from nada_dsl import *
+
 import nada_algebra as na
-import numpy as np
 
 
 def check_array(array):
