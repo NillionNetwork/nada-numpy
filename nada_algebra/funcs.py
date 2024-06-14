@@ -348,16 +348,16 @@ def pad(
     overriden_kwargs = {}
     if mode == "constant" and "constant_values" not in kwargs:
         if arr.is_rational:
-            nada_type = rational
+            default = rational(0)
         elif arr.is_integer:
-            nada_type = Integer
+            default = Integer(0)
         elif arr.is_unsigned_integer:
-            nada_type = UnsignedInteger
+            default = UnsignedInteger(0)
         else:
-            nada_type = Boolean
+            default = Boolean(False)
 
         overriden_kwargs["constant_values"] = kwargs.get(
-            "constant_values", nada_type(0)
+            "constant_values", default
         )
 
     padded_inner = np.pad(  # type: ignore
