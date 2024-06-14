@@ -483,7 +483,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         return mean_arr
 
     @staticmethod
-    def output_array(array: Any, party: Party, prefix: str) -> list:
+    def _output_array(array: Any, party: Party, prefix: str) -> list:
         """
         Generate a list of Output objects for each element in the input array.
 
@@ -512,7 +512,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
 
         if len(array.shape) == 0:
             # For compatibility we're leaving this here.
-            return NadaArray.output_array(array.item(), party, prefix)
+            return NadaArray._output_array(array.item(), party, prefix)
         if len(array.shape) == 1:
             return [
                 (
@@ -525,7 +525,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         return [
             v
             for i in range(array.shape[0])
-            for v in NadaArray.output_array(array[i], party, f"{prefix}_{i}")
+            for v in NadaArray._output_array(array[i], party, f"{prefix}_{i}")
         ]
 
     def output(self, party: Party, prefix: str) -> list:
@@ -539,10 +539,10 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         Returns:
             list: A list of Output objects.
         """
-        return NadaArray.output_array(self.inner, party, prefix)
+        return NadaArray._output_array(self.inner, party, prefix)
 
     @staticmethod
-    def create_list(
+    def _create_list(
         dims: Sequence[int],
         party: Optional[Party],
         prefix: Optional[str],
@@ -564,7 +564,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if len(dims) == 1:
             return [generator(f"{prefix}_{i}", party) for i in range(dims[0])]
         return [
-            NadaArray.create_list(
+            NadaArray._create_list(
                 dims[1:],
                 party,
                 f"{prefix}_{i}",
@@ -621,7 +621,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             raise ValueError(f"Unsupported nada_type: {nada_type}")
 
         return NadaArray(
-            np.array(NadaArray.create_list(dims, party, prefix, generator))
+            np.array(NadaArray._create_list(dims, party, prefix, generator))
         )
 
     @staticmethod
@@ -658,7 +658,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         else:
             raise ValueError(f"Unsupported nada_type: {nada_type}")
 
-        return NadaArray(np.array(NadaArray.create_list(dims, None, None, generator)))
+        return NadaArray(np.array(NadaArray._create_list(dims, None, None, generator)))
 
     def __len__(self):
         """

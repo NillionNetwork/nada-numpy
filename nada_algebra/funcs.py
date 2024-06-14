@@ -229,7 +229,8 @@ def output(arr: NadaArray, party: Party, prefix: str):
     Returns:
         list: A list of Output objects.
     """
-    return NadaArray.output_array(arr, party, prefix)
+    # pylint:disable=protected-access
+    return NadaArray._output_array(arr, party, prefix)
 
 
 def vstack(arr_list: list) -> NadaArray:
