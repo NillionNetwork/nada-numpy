@@ -1,3 +1,4 @@
+import pytest
 from nada_dsl import *
 
 import nada_algebra as na
@@ -28,14 +29,51 @@ def nada_main():
     _ = na.trace(a)
     _ = na.transpose(a)
     _ = na.pad(a, 2)
+    _ = na.pad(a, 2, mode="constant", constant_values=Integer(1))
     _ = na.pad(a, 2, mode="edge")
     _ = na.pad(a, 2, mode="reflect")
     _ = na.pad(a, 2, mode="symmetric")
     _ = na.pad(a, 2, mode="wrap")
+    with pytest.raises(TypeError):
+        na.pad(a, 2, constant_values=na.rational(1))
+    _ = na.pad(b, 2)
+    _ = na.pad(b, 2, mode="constant", constant_values=na.rational(1))
+    _ = na.pad(b, 2, mode="edge")
+    _ = na.pad(b, 2, mode="reflect")
+    _ = na.pad(b, 2, mode="symmetric")
+    _ = na.pad(b, 2, mode="wrap")
+    with pytest.raises(TypeError):
+        na.pad(b, 2, constant_values=Integer(1))
     _ = na.split(a, (1, 2))
 
     pyfunc_out_1 = na.frompyfunc(lambda x: x + Integer(1), 1, 1)(a)
     assert isinstance(pyfunc_out_1, na.NadaArray), type(pyfunc_out_1).__name__
+
+    with pytest.raises(TypeError):
+
+        class Counter:
+            count = 0
+
+        def mixed_types():  # generates alternating integers & rationals
+            Counter.count += 1
+            if Counter.count % 2 == 0:
+                return Integer(1)
+            return na.rational(1)
+
+        na.frompyfunc(mixed_types, 1, 1)(a)
+
+    with pytest.raises(TypeError):
+
+        class Counter:
+            count = 0
+
+        def mixed_types():  # generates alternating integers & rationals
+            Counter.count += 1
+            if Counter.count % 2 == 0:
+                return Integer(1)
+            return na.rational(1)
+
+        na.vectorize(mixed_types)(a)
 
     pyfunc_out_2, pyfunc_out_3 = na.frompyfunc(
         lambda x: (x + Integer(1), x + Integer(2)), 1, 2

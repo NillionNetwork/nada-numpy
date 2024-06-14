@@ -2,6 +2,7 @@ import pytest
 from nada_dsl import *
 
 import nada_algebra as na
+from nada_algebra.nada_typing import NadaInteger, NadaRational
 
 
 def nada_main():
@@ -13,10 +14,10 @@ def nada_main():
     c = a.reveal()
     d = b.reveal()
 
-    assert c.dtype == PublicInteger, c.dtype
+    assert c.dtype == NadaInteger, c.dtype
     assert c.shape == a.shape
 
-    assert d.dtype == na.Rational, d.dtype
+    assert d.dtype == NadaRational, d.dtype
     assert d.shape == b.shape
 
     with pytest.raises(Exception):

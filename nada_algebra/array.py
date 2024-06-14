@@ -5,8 +5,7 @@
 
 # pylint:disable=too-many-lines
 
-from types import NoneType
-from typing import Any, Callable, Optional, Sequence, Type, Union
+from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
 
 import numpy as np
 from nada_dsl import (Input, Integer, Output, Party, PublicInteger,
@@ -14,6 +13,8 @@ from nada_dsl import (Input, Integer, Output, Party, PublicInteger,
                       SecretUnsignedInteger, UnsignedInteger)
 
 from nada_algebra.context import UnsafeArithmeticSession
+from nada_algebra.nada_typing import (NadaBoolean, NadaInteger, NadaRational,
+                                      NadaUnsignedInteger)
 from nada_algebra.types import (Rational, SecretRational, get_log_scale,
                                 public_rational, rational, secret_rational)
 from nada_algebra.utils import copy_metadata
@@ -22,9 +23,6 @@ from nada_algebra.utils import copy_metadata
 class NadaArray:  # pylint:disable=too-many-public-methods
     """
     Represents an array-like object with additional functionality.
-
-    Attributes:
-        inner (np.ndarray): The underlying NumPy array.
     """
 
     def __init__(self, inner: np.ndarray):
@@ -41,6 +39,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             raise ValueError(f"inner must be a numpy array and is: {type(inner)}")
         if isinstance(inner, NadaArray):
             inner = inner.inner
+        check_type_conflicts(inner)
         self.inner = inner
 
     def __getitem__(self, item):
@@ -65,7 +64,11 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         Args:
             key: The key to set.
             value: The value to set.
+
+        Raises:
+            ValueError: Raised when value with incompatible type is passed.
         """
+        check_type_compatibility(value, self.dtype)
         if isinstance(value, NadaArray):
             self.inner[key] = value.inner
         else:
@@ -462,7 +465,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
     def mean(self, axis=None, dtype=None, out=None) -> Any:
         sum_arr = self.inner.sum(axis=axis, dtype=dtype)
 
-        if self.dtype in (Rational, SecretRational):
+        if self.is_rational:
             nada_type = rational
         else:
             nada_type = Integer
@@ -680,27 +683,58 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         return len(self.inner) == 0
 
     @property
-    def dtype(self) -> Type:
+    def dtype(
+        self,
+    ) -> Optional[Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]]:
         """
-        Gets inner data type of NadaArray values.
+        Gets data type of array.
 
         Returns:
-            Type: Inner data type.
+            Optional[
+                Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
+            ]: Array data type if applicable.
         """
-        # TODO: account for mixed typed NadaArrays due to e.g. padding
-        if self.empty:
-            return NoneType
-        return type(self.inner.item(0))
+        return get_dtype(self.inner)
 
     @property
     def is_rational(self) -> bool:
         """
-        Returns whether or not the Array's type is a rational.
+        Returns whether or not the Array type contains rationals.
 
         Returns:
             bool: Boolean output.
         """
-        return self.dtype in (Rational, SecretRational)
+        return self.dtype == NadaRational
+
+    @property
+    def is_integer(self) -> bool:
+        """
+        Returns whether or not the Array type contains signed integers.
+
+        Returns:
+            bool: Boolean output.
+        """
+        return self.dtype == NadaInteger
+
+    @property
+    def is_unsigned_integer(self) -> bool:
+        """
+        Returns whether or not the Array type contains unsigned integers.
+
+        Returns:
+            bool: Boolean output.
+        """
+        return self.dtype == NadaUnsignedInteger
+
+    @property
+    def is_boolean(self) -> bool:
+        """
+        Returns whether or not the Array type contains signed integers.
+
+        Returns:
+            bool: Boolean output.
+        """
+        return self.dtype == NadaBoolean
 
     def __str__(self) -> str:
         """
@@ -817,9 +851,23 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             return NadaArray(result)
         return result
 
+    @overload
+    def itemset(self, value: Any): ...
+    @overload
+    def itemset(self, item: Any, value: Any): ...
+
     # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.itemset)
     def itemset(self, *args, **kwargs):
+        value = None
+        if len(args) == 1:
+            value = args[0]
+        elif len(args) == 2:
+            value = args[1]
+        else:
+            value = kwargs["value"]
+
+        check_type_compatibility(value, self.dtype)
         result = self.inner.itemset(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
@@ -835,9 +883,12 @@ class NadaArray:  # pylint:disable=too-many-public-methods
 
     # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.put)
-    def put(self, *args, **kwargs):
-        result = self.inner.put(*args, **kwargs)
-        return result
+    def put(self, ind: Any, v: Any, mode: Any = None) -> None:
+        check_type_compatibility(v, self.dtype)
+        if isinstance(v, NadaArray):
+            self.inner.put(ind, v.inner, mode)
+        else:
+            self.inner.put(ind, v, mode)
 
     # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.ravel)
@@ -1007,3 +1058,76 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
+
+def check_type_compatibility(
+    value: Any,
+    check_type: Optional[
+        Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
+    ],
+) -> None:
+    """
+    Checks type compatibility between a type and a Nada base type.
+
+    Args:
+        value (Any): Value to be type-checked.
+        check_type (Optional[
+            Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
+        ]): Base Nada type to check against.
+
+    Raises:
+        TypeError: Raised when types are not compatible.
+    """
+    if isinstance(value, (NadaArray, np.ndarray)):
+        if isinstance(value, NadaArray):
+            value = value.inner
+        dtype = get_dtype(value)
+        if dtype is None or check_type is None:
+            raise TypeError(f"Type {dtype} is not compatible with {check_type}")
+        if dtype == check_type:
+            return
+    else:
+        dtype = type(value)
+        if dtype in get_args(check_type):
+            return
+    raise TypeError(f"Type {dtype} is not compatible with {check_type}")
+
+
+def check_type_conflicts(array: np.ndarray) -> None:
+    """
+    Checks for type conflicts
+
+    Args:
+        array (np.ndarray): Array to be checked.
+
+    Raises:
+        TypeError: Raised when incompatible dtypes are detected.
+    """
+    _ = get_dtype(array)
+
+
+def get_dtype(
+    array: np.ndarray,
+) -> Optional[Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]]:
+    """
+    Gets all data types present in array.
+
+    Args:
+        array (np.ndarray): Array to be checked.
+
+    Raises:
+        TypeError: Raised when incompatible dtypes are detected.
+
+    Returns:
+        Optional[Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]: Array dtype].
+    """
+    if array.size == 0:
+        return None
+
+    unique_types = set(type(element) for element in array.flat)
+
+    base_dtypes = [NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
+    for base_dtype in base_dtypes:
+        if all(unique_type in get_args(base_dtype) for unique_type in unique_types):
+            return base_dtype
+    raise TypeError(f"Nada-incompatible dtypes detected in `{unique_types}`.")

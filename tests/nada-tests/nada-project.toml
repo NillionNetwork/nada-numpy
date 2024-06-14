@@ -177,3 +177,7 @@ prime_size = 128
 [[programs]]
 path = "src/broadcasting_rationals.py"
 prime_size = 128
+
+[[programs]]
+path = "src/type_guardrails.py"
+prime_size = 128

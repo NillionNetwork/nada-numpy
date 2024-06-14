@@ -4,6 +4,7 @@ import numpy as np
 from nada_dsl import *
 
 import nada_algebra as na
+from nada_algebra.nada_typing import NadaInteger, NadaRational
 
 
 def nada_main():
@@ -17,9 +18,9 @@ def nada_main():
     assert b.empty
     assert not c.empty
 
-    assert a.dtype == SecretInteger, a.dtype
-    assert b.dtype == NoneType, b.dtype
-    assert c.dtype == na.Rational, c.dtype
+    assert a.dtype == NadaInteger, a.dtype
+    assert b.dtype == None, b.dtype
+    assert c.dtype == NadaRational, c.dtype
 
     assert a.ndim == 1, a.ndim
     assert b.ndim == 1, b.ndim
