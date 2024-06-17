@@ -6,8 +6,9 @@ and manipulation of arrays and party objects.
 from typing import Any, Callable, List, Sequence, Tuple, Union
 
 import numpy as np
-from nada_dsl import (Integer, Party, PublicInteger, PublicUnsignedInteger,
-                      SecretInteger, SecretUnsignedInteger, UnsignedInteger)
+from nada_dsl import (Boolean, Integer, Party, PublicInteger,
+                      PublicUnsignedInteger, SecretInteger,
+                      SecretUnsignedInteger, UnsignedInteger)
 
 from nada_algebra.array import NadaArray
 from nada_algebra.types import Rational, SecretRational, rational
@@ -229,7 +230,8 @@ def output(arr: NadaArray, party: Party, prefix: str):
     Returns:
         list: A list of Output objects.
     """
-    return NadaArray.output_array(arr, party, prefix)
+    # pylint:disable=protected-access
+    return NadaArray._output_array(arr, party, prefix)
 
 
 def vstack(arr_list: list) -> NadaArray:
@@ -344,19 +346,18 @@ def pad(
 
     # Override python defaults by NadaType defaults
     overriden_kwargs = {}
-    if mode == "constant":
-        dtype = arr.dtype
-        if dtype in (Rational, SecretRational):
-            nada_type = rational
-        elif dtype in (PublicInteger, SecretInteger):
-            nada_type = Integer
-        elif dtype == (PublicUnsignedInteger, SecretUnsignedInteger):
-            nada_type = UnsignedInteger
+    if mode == "constant" and "constant_values" not in kwargs:
+        if arr.is_rational:
+            default = rational(0)
+        elif arr.is_integer:
+            default = Integer(0)
+        elif arr.is_unsigned_integer:
+            default = UnsignedInteger(0)
         else:
-            nada_type = dtype
+            default = Boolean(False)
 
         overriden_kwargs["constant_values"] = kwargs.get(
-            "constant_values", nada_type(0)
+            "constant_values", default
         )
 
     padded_inner = np.pad(  # type: ignore

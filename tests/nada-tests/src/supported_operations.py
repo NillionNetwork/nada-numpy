@@ -32,6 +32,8 @@ def nada_main():
 
     c = na.array([3, 3], parties[0], "C", SecretInteger)
     _ = c.put(3, Integer(20))
+    with pytest.raises(TypeError):
+        c.put(3, na.rational(1))
     c = c.ravel()
     c = c.reshape((3, 3))
     c = c.sum(axis=1)
@@ -55,6 +57,8 @@ def nada_main():
     f = na.array([1], parties[0], "F", SecretInteger)
     f.fill(Integer(40))
     f.itemset(0, f.item(0) + Integer(2))
+    with pytest.raises(Exception):
+        f.itemset(0, na.rational(1))
     f = f.tolist()[0]
 
     return (
