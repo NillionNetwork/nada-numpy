@@ -19,6 +19,8 @@ from nada_algebra.types import (Rational, SecretRational, get_log_scale,
                                 public_rational, rational, secret_rational)
 from nada_algebra.utils import copy_metadata
 
+__all__ = ["NadaArray"]
+
 
 class NadaArray:  # pylint:disable=too-many-public-methods
     """
@@ -694,7 +696,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
                 Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
             ]: Array data type if applicable.
         """
-        return get_dtype(self.inner)
+        return _get_dtype(self.inner)
 
     @property
     def is_rational(self) -> bool:
@@ -1081,7 +1083,7 @@ def _check_type_compatibility(
     if isinstance(value, (NadaArray, np.ndarray)):
         if isinstance(value, NadaArray):
             value = value.inner
-        dtype = get_dtype(value)
+        dtype = _get_dtype(value)
         if dtype is None or check_type is None:
             raise TypeError(f"Type {dtype} is not compatible with {check_type}")
         if dtype == check_type:
@@ -1103,10 +1105,10 @@ def _check_type_conflicts(array: np.ndarray) -> None:
     Raises:
         TypeError: Raised when incompatible dtypes are detected.
     """
-    _ = get_dtype(array)
+    _ = _get_dtype(array)
 
 
-def get_dtype(
+def _get_dtype(
     array: np.ndarray,
 ) -> Optional[Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]]:
     """
