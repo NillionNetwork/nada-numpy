@@ -1,9 +1,17 @@
+"""Nillion payment helpers"""
+
 import os
 
 import py_nillion_client as nillion
 
 
-def create_payments_config():
+def create_payments_config() -> nillion.PaymentsConfig:
+    """
+    Creates a payment config from environment variables.
+
+    Returns:
+        nillion.PaymentsConfig: Payments config.
+    """
     return nillion.PaymentsConfig(
         os.getenv("NILLION_BLOCKCHAIN_RPC_ENDPOINT"),
         os.getenv("NILLION_WALLET_PRIVATE_KEY"),

@@ -1,33 +1,26 @@
-# Import necessary libraries and modules
+"""Rationals Nada example"""
+
 import asyncio
 import os
-import sys
-import time
-
-import numpy as np
-import py_nillion_client as nillion
-import pytest
-from dotenv import load_dotenv
-
-# Add the parent directory to the system path to import modules from it
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-# Import helper functions for creating nillion client and getting keys
-from dot_product.network.helpers.nillion_client_helper import \
-    create_nillion_client
-from dot_product.network.helpers.nillion_keypath_helper import (
-    getNodeKeyFromFile, getUserKeyFromFile)
 
 import nada_algebra.client as na_client
+import py_nillion_client as nillion
+from dotenv import load_dotenv
+
+# Import helper functions for creating nillion client and getting keys
+from examples.common.nillion_client_helper import create_nillion_client
+from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
+                                                    getUserKeyFromFile)
+from examples.common.utils import compute, store_program
 
 # Load environment variables from a .env file
 load_dotenv()
-from dot_product.config.parameters import DIM
 
 
 # Main asynchronous function to coordinate the process
-async def main():
-    print(f"USING: {DIM}")
+async def main() -> float:
+    """Main nada program script"""
+
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
     userkey = getUserKeyFromFile(os.getenv("NILLION_USERKEY_PATH_PARTY_1"))
     nodekey = getNodeKeyFromFile(os.getenv("NILLION_NODEKEY_PATH_PARTY_1"))
@@ -35,17 +28,16 @@ async def main():
     party_id = client.party_id
     user_id = client.user_id
     party_names = na_client.parties(3)
-    program_name = "main"
+    program_name = "rational_numbers"
     program_mir_path = f"./target/{program_name}.nada.bin"
 
     # Store the program
-    action_id = await client.store_program(cluster_id, program_name, program_mir_path)
-    program_id = f"{user_id}/{program_name}"
-    print("Stored program. action_id:", action_id)
-    print("Stored program_id:", program_id)
+    program_id = await store_program(
+        client, user_id, cluster_id, program_name, program_mir_path
+    )
 
     # Create and store secrets for two parties
-    stored_secret = nillion.Secrets({"my_input_0": na_client.SecretRational(3.2)})
+    stored_secret = nillion.Secrets({"my_input_0": na_client.secret_rational(3.2)})
     secret_bindings = nillion.ProgramBindings(program_id)
     secret_bindings.add_input_party(party_names[0], party_id)
 
@@ -54,7 +46,7 @@ async def main():
         cluster_id, secret_bindings, stored_secret, None
     )
 
-    stored_secret = nillion.Secrets({"my_input_1": na_client.SecretRational(2.3)})
+    stored_secret = nillion.Secrets({"my_input_1": na_client.secret_rational(2.3)})
     secret_bindings = nillion.ProgramBindings(program_id)
     secret_bindings.add_input_party(party_names[1], party_id)
 
@@ -77,23 +69,18 @@ async def main():
     computation_time_secrets = nillion.Secrets({"my_int2": nillion.SecretInteger(10)})
 
     # Perform the computation and return the result
-    compute_id = await client.compute(
+    result = await compute(
+        client,
         cluster_id,
         compute_bindings,
         [A_store_id, B_store_id],
         computation_time_secrets,
-        nillion.PublicVariables({}),
+        verbose=False,
     )
-
-    # Monitor and print the computation result
-    print(f"The computation was sent to the network. compute_id: {compute_id}")
-    while True:
-        compute_event = await client.next_compute_event()
-        if isinstance(compute_event, nillion.ComputeFinishedEvent):
-            print(f"✅  Compute complete for compute_id {compute_event.uuid}")
-            print(f"🖥️  The result is {compute_event.result.value}")
-            return compute_event.result.value
-    return result
+    output = na_client.float_from_rational(result["my_output_0"])
+    print("✅  Compute complete")
+    print("🖥️  The result is", output)
+    return output
 
 
 # Run the main function if the script is executed directly

@@ -356,9 +356,7 @@ def pad(
         else:
             default = Boolean(False)
 
-        overriden_kwargs["constant_values"] = kwargs.get(
-            "constant_values", default
-        )
+        overriden_kwargs["constant_values"] = kwargs.get("constant_values", default)
 
     padded_inner = np.pad(  # type: ignore
         arr.inner,

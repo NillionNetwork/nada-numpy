@@ -59,7 +59,8 @@ def nada_main():
    nada build
    ```
 
-2. Next, ensure that the program functions correctly by testing it with:
+2. (Optional) Next, ensure that the program functions correctly by testing it with:
    ```
    nada test
    ```
+3. Finally, we can call our Nada program via the Nillion python client by running: `python3 main.py`

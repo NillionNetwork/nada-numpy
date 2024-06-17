@@ -1,9 +1,18 @@
-from nada_dsl import *
+"""Main Nada program"""
+
+from typing import List
 
 import nada_algebra as na
+from nada_dsl import Output
 
 
-def nada_main():
+def nada_main() -> List[Output]:
+    """
+    Main dot product Nada program.
+
+    Returns:
+        List[Output]: List of program outputs.
+    """
     # We define the number of parties
     parties = na.parties(3)
 
