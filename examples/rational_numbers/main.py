@@ -11,7 +11,7 @@ import nada_algebra.client as na_client
 from examples.common.nillion_client_helper import create_nillion_client
 from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
                                                     getUserKeyFromFile)
-from examples.common.utils import compute, store_program
+from examples.common.utils import compute, store_program, store_secrets
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -37,22 +37,28 @@ async def main() -> float:
     )
 
     # Create and store secrets for two parties
-    stored_secret = nillion.Secrets({"my_input_0": na_client.secret_rational(3.2)})
-    secret_bindings = nillion.ProgramBindings(program_id)
-    secret_bindings.add_input_party(party_names[0], party_id)
-
-    # Store the secret for the specified party
-    A_store_id = await client.store_secrets(
-        cluster_id, secret_bindings, stored_secret, None
+    A = 3.2
+    A_store_id = await store_secrets(
+        client,
+        cluster_id,
+        program_id,
+        party_id,
+        party_names[0],
+        A,
+        "my_input_0",
+        na_client.secret_rational,
     )
 
-    stored_secret = nillion.Secrets({"my_input_1": na_client.secret_rational(2.3)})
-    secret_bindings = nillion.ProgramBindings(program_id)
-    secret_bindings.add_input_party(party_names[1], party_id)
-
-    # Store the secret for the specified party
-    B_store_id = await client.store_secrets(
-        cluster_id, secret_bindings, stored_secret, None
+    B = 2.3
+    B_store_id = await store_secrets(
+        client,
+        cluster_id,
+        program_id,
+        party_id,
+        party_names[1],
+        B,
+        "my_input_1",
+        na_client.secret_rational,
     )
 
     # Set up the compute bindings for the parties

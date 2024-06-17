@@ -88,8 +88,8 @@ async def store_secrets(
     program_id: str,
     party_id: str,
     party_name: str,
-    secret_array: np.ndarray,
-    prefix: str,
+    secret: Any,
+    name: str,
     nada_type: Any,
 ):
     """
@@ -101,14 +101,18 @@ async def store_secrets(
         program_id (str): Program ID.
         party_id (str): Party ID.
         party_name (str): Party name.
-        secret_array (np.ndarray): Secret array.
-        prefix (str): Secrets name.
+        secret (Any): Secret.
+        name (str): Secrets name.
         nada_type (Any): Nada type.
 
     Returns:
         str: Store ID.
     """
-    stored_secret = nillion.Secrets(na_client.array(secret_array, prefix, nada_type))
+    if isinstance(secret, np.ndarray):
+        secret = na_client.array(secret, name, nada_type)
+    else:
+        secret = {name: nada_type(secret)}
+    stored_secret = nillion.Secrets(secret)
     secret_bindings = nillion.ProgramBindings(program_id)
     secret_bindings.add_input_party(party_name, party_id)
 
