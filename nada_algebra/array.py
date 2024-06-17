@@ -39,7 +39,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             raise ValueError(f"inner must be a numpy array and is: {type(inner)}")
         if isinstance(inner, NadaArray):
             inner = inner.inner
-        check_type_conflicts(inner)
+        _check_type_conflicts(inner)
         self.inner = inner
 
     def __getitem__(self, item):
@@ -68,7 +68,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         Raises:
             ValueError: Raised when value with incompatible type is passed.
         """
-        check_type_compatibility(value, self.dtype)
+        _check_type_compatibility(value, self.dtype)
         if isinstance(value, NadaArray):
             self.inner[key] = value.inner
         else:
@@ -867,7 +867,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         else:
             value = kwargs["value"]
 
-        check_type_compatibility(value, self.dtype)
+        _check_type_compatibility(value, self.dtype)
         result = self.inner.itemset(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
@@ -884,7 +884,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
     # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.put)
     def put(self, ind: Any, v: Any, mode: Any = None) -> None:
-        check_type_compatibility(v, self.dtype)
+        _check_type_compatibility(v, self.dtype)
         if isinstance(v, NadaArray):
             self.inner.put(ind, v.inner, mode)
         else:
@@ -1060,7 +1060,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         return result
 
 
-def check_type_compatibility(
+def _check_type_compatibility(
     value: Any,
     check_type: Optional[
         Union[NadaRational, NadaInteger, NadaUnsignedInteger, NadaBoolean]
@@ -1093,7 +1093,7 @@ def check_type_compatibility(
     raise TypeError(f"Type {dtype} is not compatible with {check_type}")
 
 
-def check_type_conflicts(array: np.ndarray) -> None:
+def _check_type_conflicts(array: np.ndarray) -> None:
     """
     Checks for type conflicts
 
