@@ -13,8 +13,11 @@ from dotenv import load_dotenv
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 # Import helper functions for creating nillion client and getting keys
-from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
-                                    getUserKeyFromFile)
+from nillion_python_helpers import (
+    create_nillion_client,
+    getNodeKeyFromFile,
+    getUserKeyFromFile,
+)
 
 import nada_numpy.client as na_client
 

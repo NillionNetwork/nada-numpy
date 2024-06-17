@@ -4,8 +4,7 @@ from typing import Union
 
 import nada_dsl as dsl
 
-from nada_numpy.types import (PublicBoolean, Rational, SecretBoolean,
-                                SecretRational)
+from nada_numpy.types import PublicBoolean, Rational, SecretBoolean, SecretRational
 
 NadaRational = Union[
     Rational,

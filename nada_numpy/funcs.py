@@ -6,9 +6,16 @@ and manipulation of arrays and party objects.
 from typing import Any, Callable, List, Sequence, Tuple, Union
 
 import numpy as np
-from nada_dsl import (Boolean, Integer, Party, PublicInteger,
-                      PublicUnsignedInteger, SecretInteger,
-                      SecretUnsignedInteger, UnsignedInteger)
+from nada_dsl import (
+    Boolean,
+    Integer,
+    Party,
+    PublicInteger,
+    PublicUnsignedInteger,
+    SecretInteger,
+    SecretUnsignedInteger,
+    UnsignedInteger,
+)
 
 from nada_numpy.array import NadaArray
 from nada_numpy.types import Rational, SecretRational, rational

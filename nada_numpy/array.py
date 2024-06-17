@@ -8,15 +8,33 @@
 from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
 
 import numpy as np
-from nada_dsl import (Input, Integer, Output, Party, PublicInteger,
-                      PublicUnsignedInteger, SecretInteger,
-                      SecretUnsignedInteger, UnsignedInteger)
+from nada_dsl import (
+    Input,
+    Integer,
+    Output,
+    Party,
+    PublicInteger,
+    PublicUnsignedInteger,
+    SecretInteger,
+    SecretUnsignedInteger,
+    UnsignedInteger,
+)
 
 from nada_numpy.context import UnsafeArithmeticSession
-from nada_numpy.nada_typing import (NadaBoolean, NadaInteger, NadaRational,
-                                      NadaUnsignedInteger)
-from nada_numpy.types import (Rational, SecretRational, get_log_scale,
-                                public_rational, rational, secret_rational)
+from nada_numpy.nada_typing import (
+    NadaBoolean,
+    NadaInteger,
+    NadaRational,
+    NadaUnsignedInteger,
+)
+from nada_numpy.types import (
+    Rational,
+    SecretRational,
+    get_log_scale,
+    public_rational,
+    rational,
+    secret_rational,
+)
 from nada_numpy.utils import copy_metadata
 
 
