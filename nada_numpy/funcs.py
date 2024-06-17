@@ -1,5 +1,5 @@
 """
-This module provides common functions to work with Nada Algebra, including the creation
+This module provides common functions to work with Nada Numpy, including the creation
 and manipulation of arrays and party objects.
 """
 
@@ -10,9 +10,9 @@ from nada_dsl import (Boolean, Integer, Party, PublicInteger,
                       PublicUnsignedInteger, SecretInteger,
                       SecretUnsignedInteger, UnsignedInteger)
 
-from nada_algebra.array import NadaArray
-from nada_algebra.types import Rational, SecretRational, rational
-from nada_algebra.utils import copy_metadata
+from nada_numpy.array import NadaArray
+from nada_numpy.types import Rational, SecretRational, rational
+from nada_numpy.utils import copy_metadata
 
 _NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
 

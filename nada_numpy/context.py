@@ -1,6 +1,6 @@
 """Contains useful context managers"""
 
-from nada_algebra.types import Rational, SecretRational, _NadaRational
+from nada_numpy.types import Rational, SecretRational, _NadaRational
 
 
 class UnsafeArithmeticSession:

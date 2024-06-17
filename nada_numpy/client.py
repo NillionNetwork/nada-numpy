@@ -11,7 +11,7 @@ from py_nillion_client import (PublicVariableInteger,
                                PublicVariableUnsignedInteger, SecretInteger,
                                SecretUnsignedInteger)
 
-from nada_algebra.types import Rational, SecretRational, get_log_scale
+from nada_numpy.types import Rational, SecretRational, get_log_scale
 
 __all__ = [
     "parties",

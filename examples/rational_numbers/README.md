@@ -1,6 +1,6 @@
 # Rational Numbers Tutorial
 
-This tutorial shows how to use Nada Algebra Rational datatypes to work with fixed-point numbers in Nada.
+This tutorial shows how to use Nada Numpy Rational datatypes to work with fixed-point numbers in Nada.
 
 ## Notions
 
@@ -18,7 +18,7 @@ Thus, in order to introduce a value with 3 bits of precision, we would be inputi
 
 ```python
 from nada_dsl import *
-import nada_algebra as na
+import nada_numpy as na
 
 
 def nada_main():
@@ -45,12 +45,12 @@ def nada_main():
 
 ```
 
-0. We import Nada algebra using `import nada_algebra as na`.
+0. We import Nada numpy using `import nada_numpy as na`.
 1. We create an array of parties, with our wrapper using `parties = na.parties(3)` which creates an array of parties named: `Party0`, `Party1` and `Party2`.
 2. We create our secret floating point variable `a` as `SecretRational("my_input_0", parties[0])` meaning the variable belongs to `Party0` and the name of the variable is `my_input_0`.
 3. We create our secret floating point variable `b` as `SecretRational("my_input_1", parties[1])` meaning the variable belongs to `Party1` and the name of the variable is `my_input_1`.
-4. Then, we operate normally with this variables, and Nada Algebra will ensure they maintain the consistency of the decimal places.
-5. Finally, we produce the outputs of the array like:  `Output(out_0.value, "my_output_0", parties[2]),` establishing that the output party will be `Party2`and the name of the output variable will be `my_output`. Not the difference between Nada Algebra and classic Nada where we add `out_0`**`.value`**.
+4. Then, we operate normally with this variables, and Nada Numpy will ensure they maintain the consistency of the decimal places.
+5. Finally, we produce the outputs of the array like:  `Output(out_0.value, "my_output_0", parties[2]),` establishing that the output party will be `Party2`and the name of the output variable will be `my_output`. Not the difference between Nada Numpy and classic Nada where we add `out_0`**`.value`**.
 
 # How to Run the Tutorial
 

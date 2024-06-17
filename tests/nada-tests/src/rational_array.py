@@ -1,6 +1,6 @@
 from nada_dsl import *
 
-import nada_algebra as na
+import nada_numpy as na
 
 
 def nada_main():

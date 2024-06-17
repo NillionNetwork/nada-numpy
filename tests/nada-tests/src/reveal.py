@@ -1,8 +1,8 @@
 import pytest
 from nada_dsl import *
 
-import nada_algebra as na
-from nada_algebra.nada_typing import NadaInteger, NadaRational
+import nada_numpy as na
+from nada_numpy.nada_typing import NadaInteger, NadaRational
 
 
 def nada_main():

@@ -4,7 +4,8 @@ from typing import List
 
 from nada_dsl import Output, SecretInteger
 
-import nada_algebra as na
+# Step 0: Nada Numpy is imported with this line
+import nada_numpy as na
 
 
 def nada_main() -> List[Output]:
@@ -14,7 +15,7 @@ def nada_main() -> List[Output]:
     Returns:
         List[Output]: List of program outputs.
     """
-    # Step 1: We use Nada Algebra wrapper to create "Party0", "Party1" and "Party2"
+    # Step 1: We use Nada Numpy wrapper to create "Party0", "Party1" and "Party2"
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3 x 3) with name "A"
