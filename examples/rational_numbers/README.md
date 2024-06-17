@@ -44,7 +44,7 @@ def nada_main():
     ]
 ```
 
-0. We import Nada numpy using `import nada_numpy as na`.
+0. We import Nada Numpy using `import nada_numpy as na`.
 1. We create an array of parties, with our wrapper using `parties = na.parties(3)` which creates an array of parties named: `Party0`, `Party1` and `Party2`.
 2. We create our secret floating point variable `a` as `SecretRational("my_input_0", parties[0])` meaning the variable belongs to `Party0` and the name of the variable is `my_input_0`.
 3. We create our secret floating point variable `b` as `SecretRational("my_input_1", parties[1])` meaning the variable belongs to `Party1` and the name of the variable is `my_input_1`.
