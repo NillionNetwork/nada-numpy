@@ -27,8 +27,16 @@ You can install the nada-numpy library using Poetry:
 
 ```bash
 git clone https://github.com/NillionNetwork/nada-numpy.git
-pip3 install poetry
-poetry install nada-numpy
+pip3 install ./nada-numpy
+```
+
+## Testing
+
+To test that the version installed works as expected, you can use poetry as follows:
+
+```bash
+poetry install
+poetry run pytest
 ```
 
 ## License
