@@ -4,6 +4,7 @@ This tutorial shows how to efficiently program a matrix multiplication in Nada u
 
 ```python
 from nada_dsl import *
+
 # Step 0: Nada Numpy is imported with this line
 import nada_numpy as na
 
@@ -13,10 +14,10 @@ def nada_main():
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3 x 3) with name "A"
-    a = na.array([3, 3], parties[0], "A")
+    a = na.array([3, 3], parties[0], "A", SecretInteger)
 
     # Step 3: Party1 creates an array of dimension (3 x 3) with name "B"
-    b = na.array([3, 3], parties[1], "B")
+    b = na.array([3, 3], parties[1], "B", SecretInteger)
 
     # Step 4: The result is of computing the dot product between the two which is another (3 x 3) matrix
     result = a @ b

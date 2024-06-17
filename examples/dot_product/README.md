@@ -24,7 +24,6 @@ def nada_main():
 
     # Step 5: We can use result.output() to produce the output for Party2 and variable name "my_output"
     return na.output(result, parties[1], "my_output")
-
 ```
 
 0. We import Nada numpy using `import nada_numpy as na`.
