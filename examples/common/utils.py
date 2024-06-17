@@ -4,9 +4,10 @@ import os
 import time
 from typing import Any, Callable, Dict, List, Type
 
-import nada_algebra.client as na_client
 import numpy as np
 import py_nillion_client as nillion
+
+import nada_algebra.client as na_client
 
 
 def async_timer(file_path: os.PathLike) -> Callable:

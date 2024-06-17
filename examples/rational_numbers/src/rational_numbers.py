@@ -2,8 +2,9 @@
 
 from typing import List
 
-import nada_algebra as na
 from nada_dsl import Output
+
+import nada_algebra as na
 
 
 def nada_main() -> List[Output]:
