@@ -43,4 +43,5 @@ def nada_main():
 # How to run the tutorial.
 
 1. First, we need to compile the nada program running: `nada build`.
-2. Then, we can test our program is running with: `nada test`. 
+2. (Optional) Then, we can test our program is running with: `nada test`. 
+3. Finally, we can call our Nada program via the Nillion python client by running: `python3 main.py`
