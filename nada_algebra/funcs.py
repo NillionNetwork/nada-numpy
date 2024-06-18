@@ -13,9 +13,52 @@ from nada_dsl import (Boolean, Integer, Party, PublicInteger,
 from nada_algebra.array import NadaArray
 from nada_algebra.types import Rational, SecretRational, rational
 from nada_algebra.utils import copy_metadata
+from nada_algebra.nada_typing import NadaCleartextNumber
 
-_NadaCleartextType = Union[Integer, UnsignedInteger, Rational]
-
+__all__ = [
+    "parties",
+    "from_list",
+    "ones",
+    "ones_like",
+    "zeros",
+    "zeros_like",
+    "alphas",
+    "alphas_like",
+    "array",
+    "random",
+    "output",
+    "vstack",
+    "hstack",
+    "ndim",
+    "shape",
+    "size",
+    "to_nada_array",
+    "pad",
+    "frompyfunc",
+    "vectorize",
+    "eye",
+    "arange",
+    "linspace",
+    "split",
+    "compress",
+    "copy",
+    "cumprod",
+    "cumsum",
+    "diagonal",
+    "mean",
+    "prod",
+    "put",
+    "ravel",
+    "repeat",
+    "reshape",
+    "resize",
+    "squeeze",
+    "sum",
+    "swapaxes",
+    "take",
+    "trace",
+    "transpose",
+]
 
 def parties(num: int, prefix: str = "Party") -> list:
     """
@@ -31,7 +74,7 @@ def parties(num: int, prefix: str = "Party") -> list:
     return [Party(name=f"{prefix}{i}") for i in range(num)]
 
 
-def __from_numpy(arr: np.ndarray, nada_type: _NadaCleartextType) -> list:
+def __from_numpy(arr: np.ndarray, nada_type: NadaCleartextNumber) -> list:
     """
     Recursively convert a n-dimensional NumPy array to a nested list of NadaInteger objects.
 
@@ -50,7 +93,7 @@ def __from_numpy(arr: np.ndarray, nada_type: _NadaCleartextType) -> list:
 
 
 def from_list(
-    lst: Union[List, np.ndarray], nada_type: _NadaCleartextType = Integer
+    lst: Union[List, np.ndarray], nada_type: NadaCleartextNumber = Integer
 ) -> NadaArray:
     """
     Create a cleartext NadaArray from a list of integers.
@@ -68,7 +111,7 @@ def from_list(
     return NadaArray(np.array(__from_numpy(lst_np, nada_type)))
 
 
-def ones(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
+def ones(dims: Sequence[int], nada_type: NadaCleartextNumber = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with ones.
 
@@ -85,7 +128,7 @@ def ones(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaAr
 
 
 def ones_like(
-    a: np.ndarray | NadaArray, nada_type: _NadaCleartextType = Integer
+    a: np.ndarray | NadaArray, nada_type: NadaCleartextNumber = Integer
 ) -> NadaArray:
     """
     Create a cleartext NadaArray filled with one with the same shape and type as a given array.
@@ -104,7 +147,7 @@ def ones_like(
     return from_list(np.ones_like(a), nada_type)
 
 
-def zeros(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaArray:
+def zeros(dims: Sequence[int], nada_type: NadaCleartextNumber = Integer) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros.
 
@@ -121,7 +164,7 @@ def zeros(dims: Sequence[int], nada_type: _NadaCleartextType = Integer) -> NadaA
 
 
 def zeros_like(
-    a: np.ndarray | NadaArray, nada_type: _NadaCleartextType = Integer
+    a: np.ndarray | NadaArray, nada_type: NadaCleartextNumber = Integer
 ) -> NadaArray:
     """
     Create a cleartext NadaArray filled with zeros with the same shape and type as a given array.
@@ -260,19 +303,6 @@ def hstack(arr_list: list) -> NadaArray:
     return NadaArray(np.hstack(arr_list))
 
 
-def empty(arr: NadaArray) -> bool:
-    """
-    Returns whether provided array is empty or not.
-
-    Args:
-        arr (NadaArray): Input array.
-
-    Returns:
-        bool: Whether array is empty or not.
-    """
-    return arr.empty
-
-
 def ndim(arr: NadaArray) -> int:
     """
     Returns number of array dimensions.
@@ -312,14 +342,14 @@ def size(arr: NadaArray) -> int:
     return arr.size
 
 
-def to_nada(arr: np.ndarray, nada_type: _NadaCleartextType) -> NadaArray:
+def to_nada_array(arr: np.ndarray, nada_type: NadaCleartextNumber) -> NadaArray:
     """
     Converts a plain-text NumPy array to the equivalent NadaArray with
     a specified compatible NadaType.
 
     Args:
         arr (np.ndarray): Input Numpy array.
-        nada_type (_NadaCleartextType): Desired clear-text NadaType.
+        nada_type (NadaCleartextNumber): Desired clear-text NadaType.
 
     Returns:
         NadaArray: Output NadaArray.
@@ -415,20 +445,20 @@ def vectorize(*args, **kwargs) -> NadaCallable:
 
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.eye)
-def eye(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
-    return to_nada(np.eye(*args, **kwargs), nada_type)
+def eye(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
+    return to_nada_array(np.eye(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.arange)
-def arange(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
-    return to_nada(np.arange(*args, **kwargs), nada_type)
+def arange(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
+    return to_nada_array(np.arange(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.linspace)
-def linspace(*args, nada_type: _NadaCleartextType, **kwargs) -> NadaArray:
-    return to_nada(np.linspace(*args, **kwargs), nada_type)
+def linspace(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
+    return to_nada_array(np.linspace(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
