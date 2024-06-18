@@ -32,7 +32,6 @@ __all__ = [
     "ndim",
     "shape",
     "size",
-    "to_nada_array",
     "pad",
     "frompyfunc",
     "vectorize",
@@ -342,25 +341,6 @@ def size(arr: NadaArray) -> int:
     return arr.size
 
 
-def to_nada_array(arr: np.ndarray, nada_type: NadaCleartextNumber) -> NadaArray:
-    """
-    Converts a plain-text NumPy array to the equivalent NadaArray with
-    a specified compatible NadaType.
-
-    Args:
-        arr (np.ndarray): Input Numpy array.
-        nada_type (NadaCleartextNumber): Desired clear-text NadaType.
-
-    Returns:
-        NadaArray: Output NadaArray.
-    """
-    if nada_type == Rational:
-        nada_type = rational
-    else:
-        arr = arr.astype(int)
-    return NadaArray(np.frompyfunc(nada_type, 1, 1)(arr))  # type: ignore
-
-
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.pad)
 def pad(
@@ -446,19 +426,19 @@ def vectorize(*args, **kwargs) -> NadaCallable:
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.eye)
 def eye(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
-    return to_nada_array(np.eye(*args, **kwargs), nada_type)
+    return from_list(np.eye(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.arange)
 def arange(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
-    return to_nada_array(np.arange(*args, **kwargs), nada_type)
+    return from_list(np.arange(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
 @copy_metadata(np.linspace)
 def linspace(*args, nada_type: NadaCleartextNumber, **kwargs) -> NadaArray:
-    return to_nada_array(np.linspace(*args, **kwargs), nada_type)
+    return from_list(np.linspace(*args, **kwargs), nada_type)
 
 
 # pylint:disable=missing-function-docstring
