@@ -148,6 +148,8 @@ def nada_main():
     # Generative functions
     _ = na.eye(3, nada_type=na.Rational)
     _ = na.eye(3, nada_type=Integer)
+    _ = na.empty((3, 3), nada_type=na.Rational)
+    _ = na.empty((3, 3), nada_type=Integer)
     _ = na.arange(3, nada_type=na.Rational)
     _ = na.arange(3, nada_type=UnsignedInteger)
     _ = na.linspace(1, 4, 2, nada_type=na.Rational)

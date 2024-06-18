@@ -20,6 +20,8 @@ __all__ = [
     "from_list",
     "ones",
     "ones_like",
+    "empty",
+    "empty_like",
     "zeros",
     "zeros_like",
     "alphas",
@@ -144,6 +146,42 @@ def ones_like(
     if isinstance(a, NadaArray):
         a = a.inner
     return from_list(np.ones_like(a), nada_type)
+
+
+def empty(dims: Sequence[int], nada_type: NadaCleartextNumber = Integer) -> NadaArray:
+    """
+    Create an empty cleartext NadaArray.
+
+    Args:
+        dims (Sequence[int]): A list of integers representing the dimensions of the array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
+
+    Returns:
+        NadaArray: The created NadaArray filled with ones.
+    """
+    if nada_type == Rational:
+        nada_type = rational
+    return from_list(np.empty(dims), nada_type)
+
+
+def empty_like(
+    a: np.ndarray | NadaArray, nada_type: NadaCleartextNumber = Integer
+) -> NadaArray:
+    """
+    Create an empty cleartext NadaArray with the same shape and type as a given array.
+
+    Args:
+        a (np.ndarray | NadaArray): A reference array.
+        nada_type (type, optional): The type of NadaInteger objects to create. Defaults to Integer.
+
+    Returns:
+        NadaArray: The created NadaArray filled with ones.
+    """
+    if nada_type == Rational:
+        nada_type = rational
+    if isinstance(a, NadaArray):
+        a = a.inner
+    return from_list(np.empty_like(a), nada_type)
 
 
 def zeros(dims: Sequence[int], nada_type: NadaCleartextNumber = Integer) -> NadaArray:
