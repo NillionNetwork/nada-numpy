@@ -31,3 +31,16 @@ NadaBoolean = Union[
     PublicBoolean,
     SecretBoolean,
 ]
+
+NadaCleartextNumber = Union[
+    dsl.Integer,
+    dsl.UnsignedInteger,
+    Rational,
+]
+
+NadaCleartextType = Union[
+    dsl.Integer,
+    dsl.UnsignedInteger,
+    dsl.Boolean,
+    Rational,
+]
