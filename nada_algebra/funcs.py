@@ -260,19 +260,6 @@ def hstack(arr_list: list) -> NadaArray:
     return NadaArray(np.hstack(arr_list))
 
 
-def empty(arr: NadaArray) -> bool:
-    """
-    Returns whether provided array is empty or not.
-
-    Args:
-        arr (NadaArray): Input array.
-
-    Returns:
-        bool: Whether array is empty or not.
-    """
-    return arr.empty
-
-
 def ndim(arr: NadaArray) -> int:
     """
     Returns number of array dimensions.
