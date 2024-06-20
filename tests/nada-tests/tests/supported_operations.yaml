@@ -80,15 +80,15 @@ inputs:
       SecretInteger: "1"
   public_variables: {}
 expected_outputs:
-  out_0_0:
+  out_0:
     SecretInteger: 1
-  out_1_0:
+  out_1:
     SecretInteger: 362880
-  out_2_0:
+  out_2:
     SecretInteger: 31
-  out_3_0:
+  out_3:
     SecretInteger: 13
-  out_4_0:
+  out_4:
     SecretInteger: 21
-  out_5_0:
+  out_5:
     Integer: 42

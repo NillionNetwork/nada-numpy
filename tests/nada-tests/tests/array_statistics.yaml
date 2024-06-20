@@ -32,9 +32,9 @@ expected_outputs:
     SecretInteger: "4"
   b_mean_arr_0:
     SecretInteger: "3"
-  b_sum_0:
+  b_sum:
     SecretInteger: "21"
-  b_mean_0:
+  b_mean:
     SecretInteger: "3"
   a_mean_arr_0:
     SecretInteger: "3"
@@ -42,13 +42,13 @@ expected_outputs:
     SecretInteger: "4"
   b_sum_arr_0:
     SecretInteger: "9"
-  a_sum_0:
+  a_sum:
     SecretInteger: "21"
   a_sum_arr_0:
     SecretInteger: "9"
   b_sum_arr_1:
     SecretInteger: "12"
-  a_mean_0:
+  a_mean:
     SecretInteger: "3"
   a_sum_arr_1:
     SecretInteger: "12"

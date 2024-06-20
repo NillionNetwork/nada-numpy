@@ -44,3 +44,9 @@ NadaCleartextType = Union[
     dsl.Boolean,
     Rational,
 ]
+
+AnyNadaType = Union[
+    dsl.NadaType,
+    Rational,
+    SecretRational,
+]
