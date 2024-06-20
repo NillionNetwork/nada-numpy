@@ -8,33 +8,16 @@
 from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
 
 import numpy as np
-from nada_dsl import (
-    Input,
-    Integer,
-    Output,
-    Party,
-    PublicInteger,
-    PublicUnsignedInteger,
-    SecretInteger,
-    SecretUnsignedInteger,
-    UnsignedInteger,
-)
+from nada_dsl import (Boolean, Input, Integer, Output, Party, PublicInteger,
+                      PublicUnsignedInteger, SecretInteger,
+                      SecretUnsignedInteger, UnsignedInteger)
 
 from nada_numpy.context import UnsafeArithmeticSession
-from nada_numpy.nada_typing import (
-    NadaBoolean,
-    NadaInteger,
-    NadaRational,
-    NadaUnsignedInteger,
-)
-from nada_numpy.types import (
-    Rational,
-    SecretRational,
-    get_log_scale,
-    public_rational,
-    rational,
-    secret_rational,
-)
+from nada_numpy.nada_typing import (NadaBoolean, NadaCleartextType,
+                                    NadaInteger, NadaRational,
+                                    NadaUnsignedInteger)
+from nada_numpy.types import (Rational, SecretRational, get_log_scale,
+                              public_rational, rational, secret_rational)
 from nada_numpy.utils import copy_metadata
 
 
@@ -753,6 +736,24 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             bool: Boolean output.
         """
         return self.dtype == NadaBoolean
+
+    @property
+    def cleartext_nada_type(self) -> NadaCleartextType:
+        """
+        Returns a clear-text Nada type compatible with the Nada array.
+
+        Returns:
+            NadaCleartextType: Compatible cleartext type.
+        """
+        if self.is_rational:
+            return Rational
+        if self.is_integer:
+            return Integer
+        if self.is_unsigned_integer:
+            return UnsignedInteger
+        if self.is_boolean:
+            return Boolean
+        raise TypeError(f"Array {self} is of unknown type {self.dtype}.")
 
     def __str__(self) -> str:
         """

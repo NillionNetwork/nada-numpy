@@ -6,14 +6,10 @@ secret and public variable integers and generating named party objects and input
 from typing import Dict, List, Optional, Union
 
 import numpy as np
-
 # pylint:disable=no-name-in-module
-from py_nillion_client import (
-    PublicVariableInteger,
-    PublicVariableUnsignedInteger,
-    SecretInteger,
-    SecretUnsignedInteger,
-)
+from py_nillion_client import (PublicVariableInteger,
+                               PublicVariableUnsignedInteger, SecretInteger,
+                               SecretUnsignedInteger)
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
 
