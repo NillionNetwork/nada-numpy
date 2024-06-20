@@ -8,11 +8,14 @@ import py_nillion_client as nillion
 from dotenv import load_dotenv
 
 import nada_algebra.client as na_client
+
 # Import helper functions for creating nillion client and getting keys
 from examples.broadcasting.config import DIM
 from examples.common.nillion_client_helper import create_nillion_client
-from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
-                                                    getUserKeyFromFile)
+from examples.common.nillion_keypath_helper import (
+    getNodeKeyFromFile,
+    getUserKeyFromFile,
+)
 from examples.common.utils import compute, store_program, store_secrets
 
 # Load environment variables from a .env file
