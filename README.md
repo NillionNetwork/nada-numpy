@@ -1,10 +1,10 @@
-# Nada-Algebra
+# Nada-Numpy
 
-![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-algebra?style=for-the-badge)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-algebra/test?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-numpy?style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test?style=for-the-badge)
 
 
-Nada-Algebra is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network. It provides a simple and intuitive interface for performing various algebraic computations, including dot products, element-wise operations, and stacking operations, while supporting broadcasting similar to NumPy arrays.
+Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network. It provides a simple and intuitive interface for performing various algebraic computations, including dot products, element-wise operations, and stacking operations, while supporting broadcasting similar to NumPy arrays.
 
 ## Features
 
@@ -19,16 +19,24 @@ Nada-Algebra is a Python library designed for algebraic operations on NumPy-like
 ### Using pip
 
 ```bash
-pip install nada-algebra
+pip install nada-numpy
 ```
 
 ### From Sources
-You can install the nada-algebra library using Poetry:
+You can install the nada-numpy library using Poetry:
 
 ```bash
-git clone https://github.com/NillionNetwork/nada-algebra.git
-pip3 install poetry
-poetry install nada-algebra
+git clone https://github.com/NillionNetwork/nada-numpy.git
+pip3 install ./nada-numpy
+```
+
+## Testing
+
+To test that the version installed works as expected, you can use poetry as follows:
+
+```bash
+poetry install
+poetry run pytest
 ```
 
 ## License

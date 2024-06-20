@@ -1,8 +1,8 @@
 import numpy as np
 from nada_dsl import *
 
-import nada_algebra as na
-from nada_algebra.array import NadaArray
+import nada_numpy as na
+from nada_numpy.array import NadaArray
 
 # from nada_crypto import random_lu_matrix, public_modular_inverse
 

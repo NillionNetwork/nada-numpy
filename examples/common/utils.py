@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Type
 import numpy as np
 import py_nillion_client as nillion
 
-import nada_algebra.client as na_client
+import nada_numpy.client as na_client
 
 
 def async_timer(file_path: os.PathLike) -> Callable:

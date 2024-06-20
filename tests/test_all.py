@@ -96,7 +96,7 @@ def test_client():
     import numpy as np
     import py_nillion_client as nillion
 
-    import nada_algebra.client as na_client  # For use with Python Client
+    import nada_numpy.client as na_client  # For use with Python Client
 
     parties = na_client.parties(3)
 
@@ -130,7 +130,7 @@ def test_client():
 def test_rational_client():
     import py_nillion_client as nillion
 
-    import nada_algebra.client as na_client  # For use with Python Client
+    import nada_numpy.client as na_client  # For use with Python Client
 
     secret_rational = na_client.secret_rational(3.2)
 

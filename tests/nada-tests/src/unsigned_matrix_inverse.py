@@ -1,8 +1,8 @@
 import numpy as np
 from nada_dsl import *
 
-import nada_algebra as na
-from nada_algebra.array import NadaArray
+import nada_numpy as na
+from nada_numpy.array import NadaArray
 
 LOG_SCALE = 16
 SCALE = 1 << LOG_SCALE

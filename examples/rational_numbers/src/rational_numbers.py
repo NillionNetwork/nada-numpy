@@ -4,7 +4,7 @@ from typing import List
 
 from nada_dsl import Output
 
-import nada_algebra as na
+import nada_numpy as na
 
 
 def nada_main() -> List[Output]:
