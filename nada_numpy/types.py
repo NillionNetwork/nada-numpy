@@ -7,16 +7,9 @@ from typing import Optional, Union
 
 import nada_dsl as dsl
 import numpy as np
-from nada_dsl import (
-    Input,
-    Integer,
-    Party,
-    PublicInteger,
-    PublicUnsignedInteger,
-    SecretInteger,
-    SecretUnsignedInteger,
-    UnsignedInteger,
-)
+from nada_dsl import (Input, Integer, Party, PublicInteger,
+                      PublicUnsignedInteger, SecretInteger,
+                      SecretUnsignedInteger, UnsignedInteger)
 
 _NadaRational = Union["Rational", "SecretRational"]
 
