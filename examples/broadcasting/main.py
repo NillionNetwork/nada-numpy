@@ -1,7 +1,11 @@
 """Broadcasting example script"""
 
-import asyncio
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+import asyncio
 
 import numpy as np
 import py_nillion_client as nillion
