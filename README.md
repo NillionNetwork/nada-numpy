@@ -1,7 +1,7 @@
 # Nada-Numpy
 
-![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-numpy?style=for-the-badge&logo=apache&logoColor=white&color=%23D22128&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Fblob%2Fmain%2FLICENSE&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Fblob%2Fmain%2FLICENSE)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test.yml?style=for-the-badge&logo=python&logoColor=white&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml)
+![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-numpy?style=for-the-badge&logo=apache&logoColor=white&color=%23D22128&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Fblob%2Fmain%2FLICENSE)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test.yml?style=for-the-badge&logo=python&logoColor=white&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/NillionNetwork/nada-numpy?sort=date&display_name=release&style=for-the-badge&logo=dependabot&label=LATEST%20RELEASE&color=0000FE&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy)
 
 
