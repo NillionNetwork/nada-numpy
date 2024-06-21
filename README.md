@@ -1,7 +1,8 @@
 # Nada-Numpy
 
-![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-numpy?style=for-the-badge)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test?style=for-the-badge)
+![GitHub License](https://img.shields.io/github/license/NillionNetwork/nada-numpy?style=for-the-badge&logo=apache&logoColor=white&color=%23D22128&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Fblob%2Ffix%2Fbadges%2FLICENSE&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Fblob%2Ffix%2Fbadges%2FLICENSE)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test.yml?style=for-the-badge&logo=python&logoColor=white&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml)
+![GitHub Release](https://img.shields.io/github/v/release/NillionNetwork/nada-numpy?sort=date&display_name=release&style=for-the-badge&logo=dependabot&label=LATEST%20RELEASE&color=0000FE&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy)
 
 
 Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network. It provides a simple and intuitive interface for performing various algebraic computations, including dot products, element-wise operations, and stacking operations, while supporting broadcasting similar to NumPy arrays.
