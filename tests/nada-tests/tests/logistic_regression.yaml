@@ -18,5 +18,5 @@ inputs:
       SecretInteger: "65536"
   public_variables: {}
 expected_outputs:
-  my_output_0:
+  my_output:
     SecretInteger: "12884967424"

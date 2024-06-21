@@ -16,11 +16,11 @@ inputs:
       SecretInteger: "196608"
   public_variables: {}
 expected_outputs:
-  my_output_a_0:
+  my_output_a:
     SecretInteger: "917504"
-  my_output_b_0:
+  my_output_b:
     SecretInteger: "917504"
-  my_output_c_0:
+  my_output_c:
     SecretInteger: "393216"
-  my_output_d_0:
+  my_output_d:
     SecretInteger: "393216"

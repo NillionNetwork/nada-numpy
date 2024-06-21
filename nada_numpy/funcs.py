@@ -6,12 +6,12 @@ and manipulation of arrays and party objects.
 from typing import Any, Callable, List, Sequence, Tuple, Union
 
 import numpy as np
-from nada_dsl import (Boolean, Integer, Party, PublicInteger,
+from nada_dsl import (Boolean, Integer, Output, Party, PublicInteger,
                       PublicUnsignedInteger, SecretInteger,
                       SecretUnsignedInteger, UnsignedInteger)
 
 from nada_numpy.array import NadaArray
-from nada_numpy.nada_typing import NadaCleartextNumber
+from nada_numpy.nada_typing import AnyNadaType, NadaCleartextNumber
 from nada_numpy.types import Rational, SecretRational, rational
 from nada_numpy.utils import copy_metadata
 
@@ -60,7 +60,7 @@ __all__ = [
 ]
 
 
-def parties(num: int, prefix: str = "Party") -> list:
+def parties(num: int, prefix: str = "Party") -> List[Party]:
     """
     Create a list of Party objects with specified names.
 
@@ -69,12 +69,12 @@ def parties(num: int, prefix: str = "Party") -> list:
         prefix (str, optional): The prefix to use for party names. Defaults to "Party".
 
     Returns:
-        list: A list of Party objects with names in the format "{prefix}{i}".
+        List[Party]: A list of Party objects with names in the format "{prefix}{i}".
     """
     return [Party(name=f"{prefix}{i}") for i in range(num)]
 
 
-def __from_numpy(arr: np.ndarray, nada_type: NadaCleartextNumber) -> list:
+def __from_numpy(arr: np.ndarray, nada_type: NadaCleartextNumber) -> List:
     """
     Recursively convert a n-dimensional NumPy array to a nested list of NadaInteger objects.
 
@@ -83,7 +83,7 @@ def __from_numpy(arr: np.ndarray, nada_type: NadaCleartextNumber) -> list:
         nada_type (type): The type of NadaInteger objects to create.
 
     Returns:
-        list: A nested list of NadaInteger objects.
+        List: A nested list of NadaInteger objects.
     """
     if len(arr.shape) == 1:
         if isinstance(nada_type, Rational):
@@ -261,20 +261,24 @@ def random(
     return NadaArray.random(dims, nada_type)
 
 
-def output(arr: NadaArray, party: Party, prefix: str):
+def output(value: Union[NadaArray, AnyNadaType], party: Party, prefix: str) -> List[Output]:
     """
-    Generate a list of Output objects for each element in the input NadaArray.
+    Generate a list of Output objects for some provided value.
 
     Args:
-        arr (NadaArray): The input NadaArray.
+        value (Union[NadaArray, AnyNadaType]): The input NadaArray.
         party (Party): The party object.
         prefix (str): The prefix for naming the Output objects.
 
     Returns:
-        list: A list of Output objects.
+        List[Output]: A list of Output objects.
     """
-    # pylint:disable=protected-access
-    return NadaArray._output_array(arr, party, prefix)
+    if isinstance(value, NadaArray):
+        # pylint:disable=protected-access
+        return NadaArray._output_array(value, party, prefix)
+    if isinstance(value, (Rational, SecretRational)):
+        value = value.value
+    return [Output(value, prefix, party)]
 
 
 def vstack(arr_list: list) -> NadaArray:
