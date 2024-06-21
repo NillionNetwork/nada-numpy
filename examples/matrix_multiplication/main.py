@@ -12,7 +12,7 @@ from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
                                     getUserKeyFromFile)
 
 import nada_numpy.client as na_client
-from examples.common.utils import compute, store_program, store_secrets
+from examples.common.utils import compute, store_program, store_secret_array
 from examples.matrix_multiplication.config import DIM
 
 # Load environment variables from a .env file
@@ -42,7 +42,7 @@ async def main() -> Dict:
 
     # Create and store secrets for two parties
     A = np.ones(DIM)
-    A_store_id = await store_secrets(
+    A_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
@@ -54,7 +54,7 @@ async def main() -> Dict:
     )
 
     B = np.ones(DIM)
-    B_store_id = await store_secrets(
+    B_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
