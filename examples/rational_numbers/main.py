@@ -5,12 +5,11 @@ import os
 
 import py_nillion_client as nillion
 from dotenv import load_dotenv
+# Import helper functions for creating nillion client and getting keys
+from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
+                                    getUserKeyFromFile)
 
 import nada_numpy.client as na_client
-# Import helper functions for creating nillion client and getting keys
-from examples.common.nillion_client_helper import create_nillion_client
-from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
-                                                    getUserKeyFromFile)
 from examples.common.utils import compute, store_program, store_secrets
 
 # Load environment variables from a .env file
@@ -83,7 +82,7 @@ async def main() -> float:
         computation_time_secrets,
         verbose=False,
     )
-    output = na_client.float_from_rational(result["my_output_0"])
+    output = na_client.float_from_rational(result["my_output"])
     print("✅  Compute complete")
     print("🖥️  The result is", output)
     return output

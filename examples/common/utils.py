@@ -2,7 +2,7 @@
 
 import os
 import time
-from typing import Any, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List
 
 import numpy as np
 import py_nillion_client as nillion
