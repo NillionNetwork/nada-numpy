@@ -28,8 +28,6 @@ def nada_main() -> List[Output]:
 
     # The formula below does operations on rational numbers and returns a rational number
     # It's easy to see that (a + b - c) is both on numerator and denominator, so the end result is b
-    out_0 = ((a + b - c) * b) / (a + b - c)
+    out = ((a + b - c) * b) / (a + b - c)
 
-    return [
-        Output(out_0.value, "my_output_0", parties[2]),
-    ]
+    return na.output(out, parties[2], "my_output")

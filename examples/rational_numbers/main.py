@@ -1,17 +1,20 @@
 """Rationals Nada example"""
 
-import asyncio
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+import asyncio
 
 import py_nillion_client as nillion
 from dotenv import load_dotenv
+# Import helper functions for creating nillion client and getting keys
+from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
+                                    getUserKeyFromFile)
 
 import nada_numpy.client as na_client
-# Import helper functions for creating nillion client and getting keys
-from examples.common.nillion_client_helper import create_nillion_client
-from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
-                                                    getUserKeyFromFile)
-from examples.common.utils import compute, store_program, store_secrets
+from examples.common.utils import compute, store_program, store_secret_value
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -38,7 +41,7 @@ async def main() -> float:
 
     # Create and store secrets for two parties
     A = 3.2
-    A_store_id = await store_secrets(
+    A_store_id = await store_secret_value(
         client,
         cluster_id,
         program_id,
@@ -46,11 +49,11 @@ async def main() -> float:
         party_names[0],
         A,
         "my_input_0",
-        na_client.secret_rational,
+        na_client.SecretRational,
     )
 
     B = 2.3
-    B_store_id = await store_secrets(
+    B_store_id = await store_secret_value(
         client,
         cluster_id,
         program_id,
@@ -58,7 +61,7 @@ async def main() -> float:
         party_names[1],
         B,
         "my_input_1",
-        na_client.secret_rational,
+        na_client.SecretRational,
     )
 
     # Set up the compute bindings for the parties
@@ -83,7 +86,7 @@ async def main() -> float:
         computation_time_secrets,
         verbose=False,
     )
-    output = na_client.float_from_rational(result["my_output_0"])
+    output = na_client.float_from_rational(result["my_output"])
     print("✅  Compute complete")
     print("🖥️  The result is", output)
     return output

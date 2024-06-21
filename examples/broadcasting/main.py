@@ -1,19 +1,22 @@
 """Broadcasting example script"""
 
-import asyncio
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+import asyncio
 
 import numpy as np
 import py_nillion_client as nillion
 from dotenv import load_dotenv
+from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
+                                    getUserKeyFromFile)
 
 import nada_numpy.client as na_client
 # Import helper functions for creating nillion client and getting keys
 from examples.broadcasting.config import DIM
-from examples.common.nillion_client_helper import create_nillion_client
-from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
-                                                    getUserKeyFromFile)
-from examples.common.utils import compute, store_program, store_secrets
+from examples.common.utils import compute, store_program, store_secret_array
 
 # Load environment variables from a .env file
 load_dotenv()
@@ -43,7 +46,7 @@ async def main() -> None:
     # Create and store secrets for two parties
     A = np.ones([DIM])
     C = np.ones([DIM])
-    A_store_id = await store_secrets(
+    A_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
@@ -53,7 +56,7 @@ async def main() -> None:
         "A",
         nillion.SecretInteger,
     )
-    C_store_id = await store_secrets(
+    C_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
@@ -66,7 +69,7 @@ async def main() -> None:
 
     B = np.ones([DIM])
     D = np.ones([DIM])
-    B_store_id = await store_secrets(
+    B_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
@@ -76,7 +79,7 @@ async def main() -> None:
         "B",
         nillion.SecretInteger,
     )
-    D_store_id = await store_secrets(
+    D_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,

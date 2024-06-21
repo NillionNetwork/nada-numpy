@@ -2,11 +2,12 @@
 
 import os
 import time
-from typing import Any, Callable, Dict, List, Type
+from typing import Any, Callable, Dict, List
 
 import numpy as np
 import py_nillion_client as nillion
 
+import nada_numpy as na
 import nada_numpy.client as na_client
 
 
@@ -82,18 +83,18 @@ async def store_program(
     return program_id
 
 
-async def store_secrets(
+async def store_secret_array(
     client: nillion.NillionClient,
     cluster_id: str,
     program_id: str,
     party_id: str,
     party_name: str,
-    secret: Any,
+    secret_array: np.ndarray,
     name: str,
     nada_type: Any,
 ):
     """
-    Asynchronous function to store secrets on the nillion client.
+    Asynchronous function to store secret arrays on the nillion client.
 
     Args:
         client (nillion.NillionClient): Nillion client.
@@ -101,24 +102,96 @@ async def store_secrets(
         program_id (str): Program ID.
         party_id (str): Party ID.
         party_name (str): Party name.
-        secret (Any): Secret.
+        secret_array (np.ndarray): Secret array.
         name (str): Secrets name.
         nada_type (Any): Nada type.
 
     Returns:
         str: Store ID.
     """
-    if isinstance(secret, np.ndarray):
-        secret = na_client.array(secret, name, nada_type)
-    else:
-        secret = {name: nada_type(secret)}
-    stored_secret = nillion.Secrets(secret)
+    secret = na_client.array(secret_array, name, nada_type)
+    secrets = nillion.Secrets(secret)
+    store_id = await store_secrets(
+        client,
+        cluster_id,
+        program_id,
+        party_id,
+        party_name,
+        secrets,
+    )
+    return store_id
+
+
+async def store_secret_value(
+    client: nillion.NillionClient,
+    cluster_id: str,
+    program_id: str,
+    party_id: str,
+    party_name: str,
+    secret_value: Any,
+    name: str,
+    nada_type: Any,
+):
+    """
+    Asynchronous function to store secret values on the nillion client.
+
+    Args:
+        client (nillion.NillionClient): Nillion client.
+        cluster_id (str): Cluster ID.
+        program_id (str): Program ID.
+        party_id (str): Party ID.
+        party_name (str): Party name.
+        secret_value (Any): Secret single value.
+        name (str): Secrets name.
+        nada_type (Any): Nada type.
+
+    Returns:
+        str: Store ID.
+    """
+    if nada_type == na.Rational:
+        secret_value = round(secret_value * 2 ** na.get_log_scale())
+        nada_type = nillion.PublicVariableInteger
+    elif nada_type == na.SecretRational:
+        secret_value = round(secret_value * 2 ** na.get_log_scale())
+        nada_type = nillion.SecretInteger
+
+    secrets = nillion.Secrets({name: nada_type(secret_value)})
+    store_id = await store_secrets(
+        client,
+        cluster_id,
+        program_id,
+        party_id,
+        party_name,
+        secrets,
+    )
+    return store_id
+
+
+async def store_secrets(
+    client: nillion.NillionClient,
+    cluster_id: str,
+    program_id: str,
+    party_id: str,
+    party_name: str,
+    secrets: nillion.Secrets,
+):
+    """
+    Asynchronous function to store secret values on the nillion client.
+
+    Args:
+        client (nillion.NillionClient): Nillion client.
+        cluster_id (str): Cluster ID.
+        program_id (str): Program ID.
+        party_id (str): Party ID.
+        party_name (str): Party name.
+        secrets (nillion.Secrets): Secrets.
+
+    Returns:
+        str: Store ID.
+    """
     secret_bindings = nillion.ProgramBindings(program_id)
     secret_bindings.add_input_party(party_name, party_id)
-
-    store_id = await client.store_secrets(
-        cluster_id, secret_bindings, stored_secret, None
-    )
+    store_id = await client.store_secrets(cluster_id, secret_bindings, secrets, None)
     return store_id
 
 

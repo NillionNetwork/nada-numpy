@@ -1,19 +1,22 @@
 """Dot product Nada example"""
 
-import asyncio
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
+import asyncio
 from typing import Dict
 
 import numpy as np
 import py_nillion_client as nillion
 from dotenv import load_dotenv
+# Import helper functions for creating nillion client and getting keys
+from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
+                                    getUserKeyFromFile)
 
 import nada_numpy.client as na_client
-# Import helper functions for creating nillion client and getting keys
-from examples.common.nillion_client_helper import create_nillion_client
-from examples.common.nillion_keypath_helper import (getNodeKeyFromFile,
-                                                    getUserKeyFromFile)
-from examples.common.utils import compute, store_program, store_secrets
+from examples.common.utils import compute, store_program, store_secret_array
 from examples.dot_product.config import DIM
 
 # Load environment variables from a .env file
@@ -43,7 +46,7 @@ async def main() -> Dict:
 
     # Create and store secrets for two parties
     A = np.ones([DIM])
-    A_store_id = await store_secrets(
+    A_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,
@@ -55,7 +58,7 @@ async def main() -> Dict:
     )
 
     B = np.ones([DIM])
-    B_store_id = await store_secrets(
+    B_store_id = await store_secret_array(
         client,
         cluster_id,
         program_id,

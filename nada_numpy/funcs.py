@@ -261,7 +261,9 @@ def random(
     return NadaArray.random(dims, nada_type)
 
 
-def output(value: Union[NadaArray, AnyNadaType], party: Party, prefix: str) -> List[Output]:
+def output(
+    value: Union[NadaArray, AnyNadaType], party: Party, prefix: str
+) -> List[Output]:
     """
     Generate a list of Output objects for some provided value.
 
