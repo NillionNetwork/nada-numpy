@@ -24,10 +24,6 @@ from nillion_python_helpers import (
     create_payments_config,
 )
 
-from examples.common.utils import (
-    store_secret_array
-)
-
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
@@ -87,35 +83,32 @@ async def main() -> None:
     A = np.ones([DIM])
     C = np.ones([DIM])
 
+    # Create a secret
+    stored_secret = nillion.NadaValues(
+        na_client.concat(
+            [
+                na_client.array(A, "A", nillion.SecretInteger),
+                na_client.array(C, "C", nillion.SecretInteger),
+            ]
+        )
+    )
+
     # Create a permissions object to attach to the stored secret
     permissions = nillion.Permissions.default_for_user(client.user_id)
     permissions.add_compute_permissions({client.user_id: {program_id}})
 
-    # Create a secret
-    store_id_A = await store_secret_array(
+    # Get cost quote, then pay for operation to store the secret
+    receipt_store = await get_quote_and_pay(
         client,
+        nillion.Operation.store_values(stored_secret, ttl_days=5),
         payments_wallet,
         payments_client,
         cluster_id,
-        program_id,
-        A,
-        "A",
-        nillion.SecretInteger,
-        1,
-        permissions,
     )
 
-    store_id_C = await store_secret_array(
-        client,
-        payments_wallet,
-        payments_client,
-        cluster_id,
-        program_id,
-        C,
-        "C",
-        nillion.SecretInteger,
-        1,
-        permissions,
+    # Store a secret, passing in the receipt that shows proof of payment
+    A_C_store_id = await client.store_values(
+        cluster_id, stored_secret, permissions, receipt_store
     )
     
     # Create and store secrets for two parties
@@ -123,32 +116,33 @@ async def main() -> None:
     B = np.ones([DIM])
     D = np.ones([DIM])
 
-    store_id_B = await store_secret_array(
+    # Create a secret
+    stored_secret = nillion.NadaValues(
+        na_client.concat(
+            [
+                na_client.array(B, "B", nillion.SecretInteger),
+                na_client.array(D, "D", nillion.SecretInteger),
+            ]
+        )
+    )
+
+    # Create a permissions object to attach to the stored secret
+    permissions = nillion.Permissions.default_for_user(client.user_id)
+    permissions.add_compute_permissions({client.user_id: {program_id}})
+
+    # Get cost quote, then pay for operation to store the secret
+    receipt_store = await get_quote_and_pay(
         client,
+        nillion.Operation.store_values(stored_secret, ttl_days=5),
         payments_wallet,
         payments_client,
         cluster_id,
-        program_id,
-        B,
-        "B",
-        nillion.SecretInteger,
-        1,
-        permissions,
     )
 
-    store_id_D = await store_secret_array(
-        client,
-        payments_wallet,
-        payments_client,
-        cluster_id,
-        program_id,
-        D,
-        "D",
-        nillion.SecretInteger,
-        1,
-        permissions,
+    # Store a secret, passing in the receipt that shows proof of payment
+    B_D_store_id = await client.store_values(
+        cluster_id, stored_secret, permissions, receipt_store
     )
-
     # Set up the compute bindings for the parties
     compute_bindings = nillion.ProgramBindings(program_id)
 
@@ -158,7 +152,7 @@ async def main() -> None:
 
     print(f"Computing using program {program_id}")
     print(
-        f"Use secret store_id: {store_id_A}, {store_id_B}, {store_id_C}, {store_id_D}"
+        f"Use secret store_id: {A_C_store_id}, {B_D_store_id}"
     )
 
     ##### COMPUTE
@@ -186,12 +180,12 @@ async def main() -> None:
     uuid = await client.compute(
         cluster_id,
         compute_bindings,
-        [store_id_A, store_id_B, store_id_C, store_id_D],
+        [A_C_store_id, B_D_store_id],
         computation_time_secrets,
         receipt_compute,
     )
     print(f"Computing using program {program_id}")
-    print(f"Use secret store_id: {store_id_A}, {store_id_B}, {store_id_C}, {store_id_D}")
+    print(f"Use secret store_ids: {A_C_store_id} {B_D_store_id}")
 
     # Print compute result
     print(f"The computation was sent to the network. compute_id: {uuid}")

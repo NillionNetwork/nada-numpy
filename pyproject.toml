@@ -12,7 +12,7 @@ numpy = "^1.26.4"
 # nilup install v2024-06-24-f23d46e74 --python-client --nada-dsl
 # nada-dsl = "^0.2.1"
 # py-nillion-client = "^0.2.1"
-nillion-python-helpers = "~0.2" # Works for any 0.2.x version
+# nillion-python-helpers = "~0.2" # Works for any 0.2.x version
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"

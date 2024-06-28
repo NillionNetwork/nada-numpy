@@ -9,6 +9,17 @@ import nada_numpy.client as na_client
 import numpy as np
 import py_nillion_client as nillion
 
+from cosmpy.aerial.wallet import LocalWallet
+from cosmpy.aerial.client import LedgerClient
+
+
+from nillion_python_helpers import (
+    create_nillion_client,
+    get_quote_and_pay,
+    get_quote,
+    pay_with_quote,
+    create_payments_config,
+)
 
 def async_timer(file_path: os.PathLike) -> Callable:
     """
@@ -84,13 +95,14 @@ async def store_program(
 
 async def store_secret_array(
     client: nillion.NillionClient,
+    payments_wallet: LocalWallet,
+    payments_client: LedgerClient,
     cluster_id: str,
     program_id: str,
-    party_id: str,
-    party_name: str,
     secret_array: np.ndarray,
-    name: str,
+    secret_name: str,
     nada_type: Any,
+    ttl_days: int = 1,
     permissions: nillion.Permissions = None,
 ):
     """
@@ -111,16 +123,22 @@ async def store_secret_array(
     Returns:
         str: Store ID.
     """
-    secret = na_client.array(secret_array, name, nada_type)
-    secrets = nillion.Secrets(secret)
-    store_id = await store_secrets(
+
+    # Create a secret
+    stored_secret = nillion.NadaValues(na_client.array(secret_array, secret_name, nada_type))
+
+    # Get cost quote, then pay for operation to store the secret
+    receipt_store = await get_quote_and_pay(
         client,
+        nillion.Operation.store_values(stored_secret, ttl_days=ttl_days),
+        payments_wallet,
+        payments_client,
         cluster_id,
-        program_id,
-        party_id,
-        party_name,
-        secrets,
-        permissions,
+    )
+
+    # Store a secret, passing in the receipt that shows proof of payment
+    store_id = await client.store_values(
+        cluster_id, stored_secret, permissions, receipt_store
     )
     return store_id
 
@@ -180,7 +198,7 @@ async def store_secrets(
     program_id: str,
     party_id: str,
     party_name: str,
-    secrets: nillion.Secrets,
+    secrets: nillion.NadaValues,
     permissions: nillion.Permissions = None
 ):
     """
@@ -209,7 +227,7 @@ async def compute(
     cluster_id: str,
     compute_bindings: nillion.ProgramBindings,
     store_ids: List[str],
-    computation_time_secrets: nillion.Secrets,
+    computation_time_secrets: nillion.NadaValues,
     verbose: bool = True,
 ) -> Dict[str, Any]:
     """
