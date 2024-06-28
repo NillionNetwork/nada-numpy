@@ -40,12 +40,10 @@ class TestClient:
             nada_array_3["test_0"]
         )
 
-        nada_array_4 = na_client.array(
-            input_arr, "test", nillion.UnsignedInteger
+        nada_array_4 = na_client.array(input_arr, "test", nillion.UnsignedInteger)
+        assert isinstance(nada_array_4["test_0"], nillion.UnsignedInteger), type(
+            nada_array_4["test_0"]
         )
-        assert isinstance(
-            nada_array_4["test_0"], nillion.UnsignedInteger
-        ), type(nada_array_4["test_0"])
 
         nada_array_5 = na_client.array(input_arr, "test", na.Rational)
         assert isinstance(nada_array_5["test_0"], nillion.Integer), type(

@@ -7,9 +7,8 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 # pylint:disable=no-name-in-module
-from py_nillion_client import (Integer,
-                               UnsignedInteger, SecretInteger,
-                               SecretUnsignedInteger)
+from py_nillion_client import (Integer, SecretInteger, SecretUnsignedInteger,
+                               UnsignedInteger)
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
 
@@ -77,10 +76,7 @@ def array(
         return {
             f"{prefix}_{i}": (
                 nada_type(int(arr[i]))  # type: ignore
-                if (
-                    nada_type in (Integer, UnsignedInteger)
-                    or int(arr[i]) != 0
-                )
+                if (nada_type in (Integer, UnsignedInteger) or int(arr[i]) != 0)
                 else nada_type(1)  # type: ignore
             )
             for i in range(arr.shape[0])

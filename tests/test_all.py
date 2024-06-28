@@ -123,9 +123,7 @@ def test_client():
         na_client.concat(
             [
                 na_client.array(np.zeros((4, 4)), "C", nillion.Integer),
-                na_client.array(
-                    np.zeros((3, 3)), "D", nillion.UnsignedInteger
-                ),
+                na_client.array(np.zeros((3, 3)), "D", nillion.UnsignedInteger),
             ]
         )
     )

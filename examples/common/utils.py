@@ -4,22 +4,17 @@ import os
 import time
 from typing import Any, Callable, Dict, List
 
-import nada_numpy as na
-import nada_numpy.client as na_client
 import numpy as np
 import py_nillion_client as nillion
-
-from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.aerial.client import LedgerClient
+from cosmpy.aerial.wallet import LocalWallet
+from nillion_python_helpers import (create_nillion_client,
+                                    create_payments_config, get_quote,
+                                    get_quote_and_pay, pay_with_quote)
 
+import nada_numpy as na
+import nada_numpy.client as na_client
 
-from nillion_python_helpers import (
-    create_nillion_client,
-    get_quote_and_pay,
-    get_quote,
-    pay_with_quote,
-    create_payments_config,
-)
 
 def async_timer(file_path: os.PathLike) -> Callable:
     """
@@ -88,7 +83,9 @@ async def store_program(
         str: Program ID.
     """
 
-    quote_store_program = await get_quote(client, nillion.Operation.store_program(program_mir_path), cluster_id)
+    quote_store_program = await get_quote(
+        client, nillion.Operation.store_program(program_mir_path), cluster_id
+    )
 
     receipt_store_program = await pay_with_quote(
         quote_store_program, payments_wallet, payments_client
@@ -131,14 +128,16 @@ async def store_secret_array(
         name (str): Secrets name.
         nada_type (Any): Nada type.
         permissions (nillion.Permissions): Optional Permissions.
-        
+
 
     Returns:
         str: Store ID.
     """
 
     # Create a secret
-    stored_secret = nillion.NadaValues(na_client.array(secret_array, secret_name, nada_type))
+    stored_secret = nillion.NadaValues(
+        na_client.array(secret_array, secret_name, nada_type)
+    )
 
     # Get cost quote, then pay for operation to store the secret
     receipt_store = await get_quote_and_pay(
@@ -167,7 +166,6 @@ async def store_secret_value(
     nada_type: Any,
     ttl_days: int = 1,
     permissions: nillion.Permissions = None,
-    
 ):
     """
     Asynchronous function to store secret values on the nillion client.
@@ -194,8 +192,9 @@ async def store_secret_value(
         nada_type = nillion.SecretInteger
 
     # Create a secret
-    stored_secret = nillion.NadaValues({
-    secret_name: nada_type(secret_value),
+    stored_secret = nillion.NadaValues(
+        {
+            secret_name: nada_type(secret_value),
         }
     )
 

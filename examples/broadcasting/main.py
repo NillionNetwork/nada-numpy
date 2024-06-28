@@ -2,38 +2,28 @@
 
 import os
 import sys
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import asyncio
-import py_nillion_client as nillion
-import numpy as np
 
-import nada_numpy.client as na_client
-from py_nillion_client import NodeKey, UserKey
-from dotenv import load_dotenv
+import numpy as np
+import py_nillion_client as nillion
+from common.utils import compute, store_program, store_secret_array
+from config import DIM
 from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
+from dotenv import load_dotenv
+from nillion_python_helpers import (create_nillion_client,
+                                    create_payments_config, get_quote,
+                                    get_quote_and_pay, pay_with_quote)
+from py_nillion_client import NodeKey, UserKey
 
-from config import DIM
-
-from nillion_python_helpers import (
-    create_nillion_client,
-    get_quote_and_pay,
-    get_quote,
-    pay_with_quote,
-    create_payments_config,
-)
-
-from common.utils import (
-    store_program,
-    store_secret_array,
-    compute
-)
+import nada_numpy.client as na_client
 
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-
 
 
 # Main asynchronous function to coordinate the process
@@ -54,7 +44,6 @@ async def main() -> None:
     program_name = "broadcasting"
     program_mir_path = f"target/{program_name}.nada.bin"
 
-
     # Create payments config and set up Nillion wallet with a private key to pay for operations
     payments_config = create_payments_config(chain_id, grpc_endpoint)
     payments_client = LedgerClient(payments_config)
@@ -65,7 +54,6 @@ async def main() -> None:
 
     ##### STORE PROGRAM
     print("-----STORE PROGRAM")
-
 
     program_id = await store_program(
         client,
@@ -112,7 +100,7 @@ async def main() -> None:
         1,
         permissions,
     )
-    
+
     # Create and store secrets for two parties
 
     B = np.ones([DIM])
@@ -179,7 +167,7 @@ async def main() -> None:
         compute_bindings,
         [store_id_A, store_id_B, store_id_C, store_id_D],
         computation_time_secrets,
-        verbose = 1
+        verbose=1,
     )
 
 
