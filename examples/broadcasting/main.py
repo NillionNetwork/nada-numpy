@@ -26,7 +26,9 @@ from nillion_python_helpers import (
 )
 
 from common.utils import (
-    store_secret_array
+    store_program,
+    store_secret_array,
+    compute
 )
 
 home = os.getenv("HOME")
@@ -65,22 +67,15 @@ async def main() -> None:
     print("-----STORE PROGRAM")
 
 
-    quote_store_program = await get_quote(client, nillion.Operation.store_program(program_mir_path), cluster_id)
-
-    receipt_store_program = await pay_with_quote(
-        quote_store_program, payments_wallet, payments_client
+    program_id = await store_program(
+        client,
+        payments_wallet,
+        payments_client,
+        user_id,
+        cluster_id,
+        program_name,
+        program_mir_path,
     )
-
-    # Store program, passing in the receipt that shows proof of payment
-    action_id = await client.store_program(
-        cluster_id, program_name, program_mir_path, receipt_store_program
-    )
-
-    # Print details about stored program
-    program_id = f"{user_id}/{program_name}"
-    print("Stored program. action_id:", action_id)
-    print("Stored program_id:", program_id)
-
 
     ##### STORE SECRETS
     print("-----STORE SECRETS")
@@ -174,34 +169,18 @@ async def main() -> None:
     computation_time_secrets = nillion.NadaValues({})
 
     # Get cost quote, then pay for operation to compute
-    receipt_compute = await get_quote_and_pay(
+
+    result = await compute(
         client,
-        nillion.Operation.compute(program_id, computation_time_secrets),
         payments_wallet,
         payments_client,
-        cluster_id,
-    )
-
-    # Compute, passing all params including the receipt that shows proof of payment
-    uuid = await client.compute(
+        program_id,
         cluster_id,
         compute_bindings,
         [store_id_A, store_id_B, store_id_C, store_id_D],
         computation_time_secrets,
-        receipt_compute,
+        verbose = 1
     )
-    print(f"Computing using program {program_id}")
-    print(f"Use secret store_id: {store_id_A}, {store_id_B}, {store_id_C}, {store_id_D}")
-
-    # Print compute result
-    print(f"The computation was sent to the network. compute_id: {uuid}")
-    while True:
-        compute_event = await client.next_compute_event()
-        if isinstance(compute_event, nillion.ComputeFinishedEvent):
-            print(f"✅  Compute complete for compute_id {compute_event.uuid}")
-            print(f"🖥️  The result is {compute_event.result.value}")
-            return compute_event.result.value
-
 
 
 # Run the main function if the script is executed directly

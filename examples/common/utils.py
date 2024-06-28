@@ -65,6 +65,8 @@ def async_timer(file_path: os.PathLike) -> Callable:
 
 async def store_program(
     client: nillion.NillionClient,
+    payments_wallet: LocalWallet,
+    payments_client: LedgerClient,
     user_id: str,
     cluster_id: str,
     program_name: str,
@@ -85,7 +87,18 @@ async def store_program(
     Returns:
         str: Program ID.
     """
-    action_id = await client.store_program(cluster_id, program_name, program_mir_path)
+
+    quote_store_program = await get_quote(client, nillion.Operation.store_program(program_mir_path), cluster_id)
+
+    receipt_store_program = await pay_with_quote(
+        quote_store_program, payments_wallet, payments_client
+    )
+
+    # Store program, passing in the receipt that shows proof of payment
+    action_id = await client.store_program(
+        cluster_id, program_name, program_mir_path, receipt_store_program
+    )
+
     program_id = f"{user_id}/{program_name}"
     if verbose:
         print("Stored program. action_id:", action_id)
@@ -145,13 +158,14 @@ async def store_secret_array(
 
 async def store_secret_value(
     client: nillion.NillionClient,
+    payments_wallet: LocalWallet,
+    payments_client: LedgerClient,
     cluster_id: str,
     program_id: str,
-    party_id: str,
-    party_name: str,
     secret_value: Any,
-    name: str,
+    secret_name: str,
     nada_type: Any,
+    ttl_days: int = 1,
     permissions: nillion.Permissions = None,
     
 ):
@@ -179,51 +193,33 @@ async def store_secret_value(
         secret_value = round(secret_value * 2 ** na.get_log_scale())
         nada_type = nillion.SecretInteger
 
-    secrets = nillion.Secrets({name: nada_type(secret_value)})
-    store_id = await store_secrets(
-        client,
-        cluster_id,
-        program_id,
-        party_id,
-        party_name,
-        secrets,
-        permissions,
+    # Create a secret
+    stored_secret = nillion.NadaValues({
+    secret_name: nada_type(secret_value),
+        }
     )
-    return store_id
 
+    # Get cost quote, then pay for operation to store the secret
+    receipt_store = await get_quote_and_pay(
+        client,
+        nillion.Operation.store_values(stored_secret, ttl_days=ttl_days),
+        payments_wallet,
+        payments_client,
+        cluster_id,
+    )
 
-async def store_secrets(
-    client: nillion.NillionClient,
-    cluster_id: str,
-    program_id: str,
-    party_id: str,
-    party_name: str,
-    secrets: nillion.NadaValues,
-    permissions: nillion.Permissions = None
-):
-    """
-    Asynchronous function to store secret values on the nillion client.
-
-    Args:
-        client (nillion.NillionClient): Nillion client.
-        cluster_id (str): Cluster ID.
-        program_id (str): Program ID.
-        party_id (str): Party ID.
-        party_name (str): Party name.
-        secrets (nillion.Secrets): Secrets.
-        permissions (nillion.Permissions): Optional Permissions.
-
-    Returns:
-        str: Store ID.
-    """
-    secret_bindings = nillion.ProgramBindings(program_id)
-    secret_bindings.add_input_party(party_name, party_id)
-    store_id = await client.store_secrets(cluster_id, secret_bindings, secrets, permissions)
+    # Store a secret, passing in the receipt that shows proof of payment
+    store_id = await client.store_values(
+        cluster_id, stored_secret, permissions, receipt_store
+    )
     return store_id
 
 
 async def compute(
     client: nillion.NillionClient,
+    payments_wallet: LocalWallet,
+    payments_client: LedgerClient,
+    program_id: str,
     cluster_id: str,
     compute_bindings: nillion.ProgramBindings,
     store_ids: List[str],
@@ -244,16 +240,22 @@ async def compute(
     Returns:
         Dict[str, Any]: Result of computation.
     """
-    compute_id = await client.compute(
+    receipt_compute = await get_quote_and_pay(
+        client,
+        nillion.Operation.compute(program_id, computation_time_secrets),
+        payments_wallet,
+        payments_client,
+        cluster_id,
+    )
+
+    # Compute, passing all params including the receipt that shows proof of payment
+    uuid = await client.compute(
         cluster_id,
         compute_bindings,
         store_ids,
         computation_time_secrets,
-        nillion.s({}),
+        receipt_compute,
     )
-
-    if verbose:
-        print(f"The computation was sent to the network. compute_id: {compute_id}")
     while True:
         compute_event = await client.next_compute_event()
         if isinstance(compute_event, nillion.ComputeFinishedEvent):
