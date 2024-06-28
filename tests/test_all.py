@@ -44,9 +44,11 @@ TESTS = [
     "logistic_regression",
     "logistic_regression_rational",
     "type_guardrails",
+    "shape",
+    "get_vec",
     # Not supported yet
     # "unsigned_matrix_inverse",
-    # "private_inverse"
+    "private_inverse",
     # "unsigned_matrix_inverse_2"
 ]
 
@@ -76,6 +78,10 @@ def run_nada(test_dir):
     result = subprocess.run(
         ["nada", "test", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
+
+    # if "shape" in test_dir[1]:
+    #     pytest.fail(f"Run {test_dir}:\n{result.stdout + result.stderr}")
+
     err = result.stderr.lower() + result.stdout.lower()
     if result.returncode != 0 or "error" in err or "fail" in err:
         pytest.fail(f"Run {test_dir}:\n{result.stdout + result.stderr}")

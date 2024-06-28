@@ -3,5 +3,5 @@ inputs:
   A_0:
     SecretUnsignedInteger: '3'
 expected_outputs:
-  my_output_0:
+  my_output:
     SecretUnsignedInteger: '1'
