@@ -156,7 +156,7 @@ async def store_secret_value(
     """
     if nada_type == na.Rational:
         secret_value = round(secret_value * 2 ** na.get_log_scale())
-        nada_type = nillion.PublicVariableInteger
+        nada_type = nillion.Integer
     elif nada_type == na.SecretRational:
         secret_value = round(secret_value * 2 ** na.get_log_scale())
         nada_type = nillion.SecretInteger
@@ -231,7 +231,7 @@ async def compute(
         compute_bindings,
         store_ids,
         computation_time_secrets,
-        nillion.PublicVariables({}),
+        nillion.s({}),
     )
 
     if verbose:

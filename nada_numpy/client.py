@@ -7,8 +7,8 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 # pylint:disable=no-name-in-module
-from py_nillion_client import (PublicVariableInteger,
-                               PublicVariableUnsignedInteger, SecretInteger,
+from py_nillion_client import (Integer,
+                               UnsignedInteger, SecretInteger,
                                SecretUnsignedInteger)
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
@@ -43,8 +43,8 @@ def array(
     nada_type: Union[
         SecretInteger,
         SecretUnsignedInteger,
-        PublicVariableInteger,
-        PublicVariableUnsignedInteger,
+        Integer,
+        UnsignedInteger,
         Rational,
         SecretRational,
     ],
@@ -78,7 +78,7 @@ def array(
             f"{prefix}_{i}": (
                 nada_type(int(arr[i]))  # type: ignore
                 if (
-                    nada_type in (PublicVariableInteger, PublicVariableUnsignedInteger)
+                    nada_type in (Integer, UnsignedInteger)
                     or int(arr[i]) != 0
                 )
                 else nada_type(1)  # type: ignore
@@ -120,7 +120,7 @@ def __rational(value: Union[float, int]) -> int:
     return round(value * (1 << get_log_scale()))
 
 
-def public_rational(value: Union[float, int]) -> PublicVariableInteger:
+def public_rational(value: Union[float, int]) -> Integer:
     """
     Returns the integer representation of the given float value.
 
@@ -130,7 +130,7 @@ def public_rational(value: Union[float, int]) -> PublicVariableInteger:
     Returns:
         int: The integer representation of the input value.
     """
-    return PublicVariableInteger(__rational(value))
+    return Integer(__rational(value))
 
 
 def secret_rational(value: Union[float, int]) -> SecretInteger:
