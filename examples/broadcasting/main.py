@@ -170,6 +170,8 @@ async def main() -> None:
         verbose=1,
     )
 
+    return result
+
 
 # Run the main function if the script is executed directly
 if __name__ == "__main__":
