@@ -8,9 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 numpy = "^1.26.4"
-nada-dsl = "^0.2.1"
-py-nillion-client = "^0.2.1"
-nillion-python-helpers = "~0.1" # Works for any 0.1.x version
+# For this non-official version this libraries have to be manually installed with:
+# nilup install v2024-06-24-f23d46e74 --python-client --nada-dsl
+# nada-dsl = "^0.2.1"
+# py-nillion-client = "^0.2.1"
 
 
 [tool.poetry.group.dev.dependencies]

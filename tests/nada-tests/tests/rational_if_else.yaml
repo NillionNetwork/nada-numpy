@@ -1,42 +1,39 @@
----
 program: rational_if_else
 inputs:
-  secrets:
-    A:
-      SecretInteger: "78643" # 1.2
-    B:
-      SecretInteger: "294912" # 3.2
-    C:
-      SecretInteger: "65536" # 1
-    D:
-      SecretInteger: "1"
-    E:
-      SecretUnsignedInteger: "1"
-  public_variables: {}
+  A:
+    SecretInteger: '78643'
+  B:
+    SecretInteger: '294912'
+  C:
+    SecretInteger: '65536'
+  D:
+    SecretInteger: '1'
+  E:
+    SecretUnsignedInteger: '1'
 expected_outputs:
   out_0:
-    SecretInteger: "294912"
+    SecretInteger: '294912'
   out_1:
-    SecretInteger: "294912"
+    SecretInteger: '294912'
   out_2:
-    SecretInteger: "78643"
+    SecretInteger: '78643'
   out_3:
-    SecretInteger: "78643"
+    SecretInteger: '78643'
   out_4:
-    SecretInteger: "1"
+    SecretInteger: '1'
   out_5:
-    SecretInteger: "1"
+    SecretInteger: '1'
   out_6:
-    SecretInteger: "1"
+    SecretInteger: '1'
   out_7:
-    SecretInteger: "1"
+    SecretInteger: '1'
   out_8:
-    Integer: "131072"
+    Integer: '131072'
   out_9:
-    Integer: "65536"
+    Integer: '65536'
   out_10:
-    Integer: "1"
+    Integer: '1'
   out_11:
-    SecretInteger: "1"
+    SecretInteger: '1'
   out_12:
-    SecretUnsignedInteger: "1"
+    SecretUnsignedInteger: '1'

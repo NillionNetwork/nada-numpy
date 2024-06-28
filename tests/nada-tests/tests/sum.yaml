@@ -1,14 +1,11 @@
----
 program: sum
 inputs:
-  secrets:
-    A_1:
-      SecretInteger: "3"
-    A_0:
-      SecretInteger: "3"
-    A_2:
-      SecretInteger: "3"
-  public_variables: {}
+  A_1:
+    SecretInteger: '3'
+  A_0:
+    SecretInteger: '3'
+  A_2:
+    SecretInteger: '3'
 expected_outputs:
   my_output:
-    SecretInteger: "9"
+    SecretInteger: '9'
