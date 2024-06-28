@@ -1,10 +1,8 @@
 """Broadcasting example script"""
 
 import asyncio
-import py_nillion_client as nillion
 import os
-import sys
-import pytest
+import py_nillion_client as nillion
 import numpy as np
 
 import nada_numpy.client as na_client
@@ -14,7 +12,7 @@ from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
 
-from examples.broadcasting.config import DIM
+from config import DIM
 
 from nillion_python_helpers import (
     create_nillion_client,
@@ -24,7 +22,6 @@ from nillion_python_helpers import (
     create_payments_config,
 )
 
-#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
 
