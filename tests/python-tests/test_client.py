@@ -35,20 +35,18 @@ class TestClient:
             nada_array_2["test_0"]
         )
 
-        nada_array_3 = na_client.array(input_arr, "test", nillion.PublicVariableInteger)
-        assert isinstance(nada_array_3["test_0"], nillion.PublicVariableInteger), type(
+        nada_array_3 = na_client.array(input_arr, "test", nillion.Integer)
+        assert isinstance(nada_array_3["test_0"], nillion.Integer), type(
             nada_array_3["test_0"]
         )
 
-        nada_array_4 = na_client.array(
-            input_arr, "test", nillion.PublicVariableUnsignedInteger
+        nada_array_4 = na_client.array(input_arr, "test", nillion.UnsignedInteger)
+        assert isinstance(nada_array_4["test_0"], nillion.UnsignedInteger), type(
+            nada_array_4["test_0"]
         )
-        assert isinstance(
-            nada_array_4["test_0"], nillion.PublicVariableUnsignedInteger
-        ), type(nada_array_4["test_0"])
 
         nada_array_5 = na_client.array(input_arr, "test", na.Rational)
-        assert isinstance(nada_array_5["test_0"], nillion.PublicVariableInteger), type(
+        assert isinstance(nada_array_5["test_0"], nillion.Integer), type(
             nada_array_5["test_0"]
         )
 
@@ -59,7 +57,7 @@ class TestClient:
 
     def test_array_4(self):
         input_arr = np.array([0])
-        nada_array = na_client.array(input_arr, "test", nillion.PublicVariableInteger)
+        nada_array = na_client.array(input_arr, "test", nillion.Integer)
 
         assert list(nada_array.keys()) == ["test_0"]
 
@@ -88,8 +86,8 @@ class TestClient:
         supported_types = [
             nillion.SecretInteger,
             nillion.SecretUnsignedInteger,
-            nillion.PublicVariableInteger,
-            nillion.PublicVariableUnsignedInteger,
+            nillion.Integer,
+            nillion.UnsignedInteger,
             na.Rational,
             na.SecretRational,
         ]
@@ -144,7 +142,7 @@ class TestClient:
 
         rational = na_client.public_rational(test_value)
 
-        assert isinstance(rational, nillion.PublicVariableInteger)
+        assert isinstance(rational, nillion.Integer)
 
         rational_value = rational.value
 
@@ -155,7 +153,7 @@ class TestClient:
 
         rational = na_client.public_rational(test_value)
 
-        assert isinstance(rational, nillion.PublicVariableInteger)
+        assert isinstance(rational, nillion.Integer)
 
         rational_value = rational.value
 

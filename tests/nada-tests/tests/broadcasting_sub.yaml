@@ -1,18 +1,15 @@
----
 program: broadcasting_sub
 inputs:
-  secrets:
-    A_0:
-      SecretInteger: "3"
-    A_1:
-      SecretInteger: "4"
-    A_2:
-      SecretInteger: "5"
-  public_variables: {}
+  A_0:
+    SecretInteger: '3'
+  A_1:
+    SecretInteger: '4'
+  A_2:
+    SecretInteger: '5'
 expected_outputs:
   my_output_0:
-    SecretInteger: "2"
+    SecretInteger: '2'
   my_output_1:
-    SecretInteger: "3"
+    SecretInteger: '3'
   my_output_2:
-    SecretInteger: "4"
+    SecretInteger: '4'

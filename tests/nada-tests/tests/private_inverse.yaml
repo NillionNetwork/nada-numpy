@@ -1,10 +1,7 @@
----
 program: private_inverse
 inputs:
-  secrets:
-    A_0:
-      SecretUnsignedInteger: "3"
-  public_variables: {}
+  A_0:
+    SecretUnsignedInteger: '3'
 expected_outputs:
-  my_output_0:
-    SecretUnsignedInteger: "1"
+  my_output:
+    SecretUnsignedInteger: '1'

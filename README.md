@@ -4,7 +4,7 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/NillionNetwork/nada-numpy/test.yml?style=for-the-badge&logo=python&logoColor=white&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml&link=https%3A%2F%2Fgithub.com%2FNillionNetwork%2Fnada-numpy%2Factions%2Fworkflows%2Ftest.yml)
 ![GitHub Release](https://img.shields.io/github/v/release/NillionNetwork/nada-numpy?sort=date&display_name=release&style=for-the-badge&logo=dependabot&label=LATEST%20RELEASE&color=0000FE&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy&link=https%3A%2F%2Fpypi.org%2Fproject%2Fnada-numpy)
 
-
+# WARNING: THIS VERSION DOES NOT INSTALL `nada_dsl` and `py_nillion_client` by default as it needs to be installed by `nilup`.
 Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network. It provides a simple and intuitive interface for performing various algebraic computations, including dot products, element-wise operations, and stacking operations, while supporting broadcasting similar to NumPy arrays.
 
 ## Features

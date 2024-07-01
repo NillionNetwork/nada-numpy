@@ -1,62 +1,59 @@
----
 program: broadcasting_rationals
 inputs:
-  secrets:
-    X_2:
-      SecretInteger: "196608"
-    y:
-      SecretInteger: "262144"
-    X_1:
-      SecretInteger: "131072"
-    X_0:
-      SecretInteger: "65536"
-  public_variables: {}
+  X_2:
+    SecretInteger: '196608'
+  y:
+    SecretInteger: '262144'
+  X_1:
+    SecretInteger: '131072'
+  X_0:
+    SecretInteger: '65536'
 expected_outputs:
   my_output_a_0:
-    SecretInteger: "327680"
+    SecretInteger: '327680'
   my_output_a_1:
-    SecretInteger: "393216"
+    SecretInteger: '393216'
   my_output_a_2:
-    SecretInteger: "458752"
+    SecretInteger: '458752'
   my_output_b_0:
-    SecretInteger: "327680"
+    SecretInteger: '327680'
   my_output_b_1:
-    SecretInteger: "393216"
+    SecretInteger: '393216'
   my_output_b_2:
-    SecretInteger: "458752"
+    SecretInteger: '458752'
   my_output_c_0:
-    SecretInteger: "-196608"
+    SecretInteger: '-196608'
   my_output_c_1:
-    SecretInteger: "-131072"
+    SecretInteger: '-131072'
   my_output_c_2:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   my_output_d_0:
-    SecretInteger: "196608"
+    SecretInteger: '196608'
   my_output_d_1:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   my_output_d_2:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   my_output_e_0:
-    SecretInteger: "262144"
+    SecretInteger: '262144'
   my_output_e_1:
-    SecretInteger: "524288"
+    SecretInteger: '524288'
   my_output_e_2:
-    SecretInteger: "786432"
+    SecretInteger: '786432'
   my_output_f_0:
-    SecretInteger: "262144"
+    SecretInteger: '262144'
   my_output_f_1:
-    SecretInteger: "524288"
+    SecretInteger: '524288'
   my_output_f_2:
-    SecretInteger: "786432"
+    SecretInteger: '786432'
   my_output_g_0:
-    SecretInteger: "16384"
+    SecretInteger: '16384'
   my_output_g_1:
-    SecretInteger: "32768"
+    SecretInteger: '32768'
   my_output_g_2:
-    SecretInteger: "49152"
+    SecretInteger: '49152'
   my_output_h_0:
-    SecretInteger: "262144"
+    SecretInteger: '262144'
   my_output_h_1:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   my_output_h_2:
-    SecretInteger: "87381"
+    SecretInteger: '87381'

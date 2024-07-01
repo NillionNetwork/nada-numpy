@@ -15,24 +15,6 @@ files = [
 typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
 
 [[package]]
-name = "asttokens"
-version = "2.4.1"
-description = "Annotate AST trees with source code positions"
-optional = false
-python-versions = "*"
-files = [
-    {file = "asttokens-2.4.1-py2.py3-none-any.whl", hash = "sha256:051ed49c3dcae8913ea7cd08e46a606dba30b79993209636c4875bc1d637bc24"},
-    {file = "asttokens-2.4.1.tar.gz", hash = "sha256:b03869718ba9a6eb027e134bfdf69f38a236d681c83c160d510768af11254ba0"},
-]
-
-[package.dependencies]
-six = ">=1.12.0"
-
-[package.extras]
-astroid = ["astroid (>=1,<2)", "astroid (>=2,<4)"]
-test = ["astroid (>=1,<2)", "astroid (>=2,<4)", "pytest"]
-
-[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -167,42 +149,6 @@ files = [
 ]
 
 [[package]]
-name = "nada-dsl"
-version = "0.2.1"
-description = "Nillion Nada DSL to create Nillion MPC programs."
-optional = false
-python-versions = ">=3.10"
-files = [
-    {file = "nada_dsl-0.2.1-py3-none-any.whl", hash = "sha256:da9e0de0d629d76004cea36b64dd274cc3ed3f4699f8d34f14e30d0db13fa814"},
-]
-
-[package.dependencies]
-asttokens = ">=2.4,<3.0"
-parsial = ">=0.1,<1.0"
-richreports = ">=0.2,<1.0"
-
-[package.extras]
-docs = ["sphinx (>=5,<8)", "sphinx-rtd-theme (>=1.0,<2.1)", "toml (>=0.10.2,<0.11.0)"]
-lint = ["pylint (>=2.17,<3.2)"]
-test = ["pytest (>=7.4,<9.0)", "pytest-cov (>=4,<6)"]
-
-[[package]]
-name = "nillion-python-helpers"
-version = "0.1.2"
-description = ""
-optional = false
-python-versions = "<4.0,>=3.10"
-files = [
-    {file = "nillion_python_helpers-0.1.2-py3-none-any.whl", hash = "sha256:6cfda32d7122d00b343ebc3bc50068537c710beab57f835e026c5989a58d4b5b"},
-    {file = "nillion_python_helpers-0.1.2.tar.gz", hash = "sha256:e6eb07517f048dc9410902e356d48ce64a535b60a4b60980c0dafaa28511aa87"},
-]
-
-[package.dependencies]
-py-nillion-client = ">=0.2.1,<0.3.0"
-pytest-asyncio = ">=0.23.7,<0.24.0"
-python-dotenv = "1.0.0"
-
-[[package]]
 name = "numpy"
 version = "1.26.4"
 description = "Fundamental package for array computing in Python"
@@ -259,24 +205,6 @@ files = [
 ]
 
 [[package]]
-name = "parsial"
-version = "0.1.0"
-description = "Python library that transforms any string parser into a parser that skips portions of the input that contain syntax errors."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "parsial-0.1.0-py3-none-any.whl", hash = "sha256:b9911496b75e619f2c866f72567597d49aeef3aeb1a298f3a1328170407197f9"},
-    {file = "parsial-0.1.0.tar.gz", hash = "sha256:99126d3dd0fae6b349701a6e6e2855f32fd61839aeb81b25a6a0a93b6521d7d1"},
-]
-
-[package.extras]
-coveralls = ["coveralls (>=3.3.1,<3.4.0)"]
-docs = ["sphinx (>=5.0,<6.0)", "sphinx-rtd-theme (>=1.1.0,<1.2.0)", "toml (>=0.10.2,<0.11.0)"]
-lint = ["pylint (>=2.17,<3.0)"]
-publish = ["build (>=0.10,<1.0)", "twine (>=4.0,<5.0)"]
-test = ["pytest (>=7.4,<8.0)", "pytest-cov (>=4.0,<5.0)"]
-
-[[package]]
 name = "platformdirs"
 version = "4.2.2"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
@@ -308,30 +236,14 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
-name = "py-nillion-client"
-version = "0.2.1"
-description = "Python client for Nillion network and utilities."
-optional = false
-python-versions = ">=3.10"
-files = [
-    {file = "py_nillion_client-0.2.1-cp37-abi3-macosx_10_12_x86_64.whl", hash = "sha256:badc041dce6a3faf4ae26cd27992d67a06fa0fdd747196900560e0fb24806c09"},
-    {file = "py_nillion_client-0.2.1-cp37-abi3-macosx_11_0_arm64.whl", hash = "sha256:6b4d9e1b8426c55db9ebbdcae640803d1e326daebd4bef83252d6933af84d94e"},
-    {file = "py_nillion_client-0.2.1-cp37-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8bd848896dee63def40c1871f6a43ffe513016c0ef319333fa5430c16f0444d3"},
-    {file = "py_nillion_client-0.2.1-cp37-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:2377dae91f9feffd3d471050a5c15142a461653b3b1c4ba671d9c18761c90cc3"},
-]
-
-[package.extras]
-dev = ["maturin (==1.4.0)", "maturin[zig] (==1.4.0)", "pytest (==8.0.0)", "pyyaml (==6.0.1)"]
-
-[[package]]
 name = "pylint"
-version = "3.2.3"
+version = "3.2.5"
 description = "python code static checker"
 optional = false
 python-versions = ">=3.8.0"
 files = [
-    {file = "pylint-3.2.3-py3-none-any.whl", hash = "sha256:b3d7d2708a3e04b4679e02d99e72329a8b7ee8afb8d04110682278781f889fa8"},
-    {file = "pylint-3.2.3.tar.gz", hash = "sha256:02f6c562b215582386068d52a30f520d84fdbcf2a95fc7e855b816060d048b60"},
+    {file = "pylint-3.2.5-py3-none-any.whl", hash = "sha256:32cd6c042b5004b8e857d727708720c54a676d1e22917cf1a2df9b4d4868abd6"},
+    {file = "pylint-3.2.5.tar.gz", hash = "sha256:e9b7171e242dcc6ebd0aaa7540481d1a72860748a0a7816b8fe6cf6c80a6fe7e"},
 ]
 
 [package.dependencies]
@@ -375,67 +287,6 @@ tomli = {version = ">=1", markers = "python_version < \"3.11\""}
 dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
-name = "pytest-asyncio"
-version = "0.23.7"
-description = "Pytest support for asyncio"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pytest_asyncio-0.23.7-py3-none-any.whl", hash = "sha256:009b48127fbe44518a547bddd25611551b0e43ccdbf1e67d12479f569832c20b"},
-    {file = "pytest_asyncio-0.23.7.tar.gz", hash = "sha256:5f5c72948f4c49e7db4f29f2521d4031f1c27f86e57b046126654083d4770268"},
-]
-
-[package.dependencies]
-pytest = ">=7.0.0,<9"
-
-[package.extras]
-docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
-testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)"]
-
-[[package]]
-name = "python-dotenv"
-version = "1.0.0"
-description = "Read key-value pairs from a .env file and set them as environment variables"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "python-dotenv-1.0.0.tar.gz", hash = "sha256:a8df96034aae6d2d50a4ebe8216326c61c3eb64836776504fcca410e5937a3ba"},
-    {file = "python_dotenv-1.0.0-py3-none-any.whl", hash = "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"},
-]
-
-[package.extras]
-cli = ["click (>=5.0)"]
-
-[[package]]
-name = "richreports"
-version = "0.2.0"
-description = "Library that supports the construction of human-readable, interactive static analysis reports that consist of decorated concrete syntax representations of programs."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "richreports-0.2.0-py3-none-any.whl", hash = "sha256:b99a4a0fb65d53f0d68e577518a89d5e098a9361a72fb1df7f8f0b9d4b6df2ac"},
-    {file = "richreports-0.2.0.tar.gz", hash = "sha256:da06aea8aac6f66101eba7c057644ef002785d755d5001bbf8b9c6f7a2d480a4"},
-]
-
-[package.extras]
-coveralls = ["coveralls (>=3.3.1,<3.4.0)"]
-docs = ["sphinx (>=5.0,<6.0)", "sphinx-rtd-theme (>=1.1.0,<1.2.0)", "toml (>=0.10.2,<0.11.0)"]
-lint = ["pylint (>=2.17,<3.0)"]
-publish = ["build (>=0.10,<1.0)", "twine (>=4.0,<5.0)"]
-test = ["pytest (>=7.4,<8.0)", "pytest-cov (>=4.0,<5.0)"]
-
-[[package]]
-name = "six"
-version = "1.16.0"
-description = "Python 2 and 3 compatibility utilities"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
-files = [
-    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
-    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
-]
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -471,4 +322,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "7c8a1d8c836d1047606b44d9229af4ac0f0c5cf4cd8d230c7df90bf00fbad876"
+content-hash = "b5b6a1e028cd986705888bfb6e3d67781b3fff06db375bdadfe8004d0cf72858"

@@ -1,22 +1,19 @@
----
 program: logistic_regression
 inputs:
-  secrets:
-    B_1:
-      SecretInteger: "65536"
-    A_1:
-      SecretInteger: "65536"
-    B_2:
-      SecretInteger: "65536"
-    bias:
-      SecretInteger: "65536"
-    A_0:
-      SecretInteger: "65536"
-    B_0:
-      SecretInteger: "65536"
-    A_2:
-      SecretInteger: "65536"
-  public_variables: {}
+  B_1:
+    SecretInteger: '65536'
+  A_1:
+    SecretInteger: '65536'
+  B_2:
+    SecretInteger: '65536'
+  bias:
+    SecretInteger: '65536'
+  A_0:
+    SecretInteger: '65536'
+  B_0:
+    SecretInteger: '65536'
+  A_2:
+    SecretInteger: '65536'
 expected_outputs:
   my_output:
-    SecretInteger: "12884967424"
+    SecretInteger: '12884967424'

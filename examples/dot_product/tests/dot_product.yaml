@@ -1,20 +1,20 @@
 ---
 program: dot_product
 inputs:
-  secrets:
-    A_0:
-      SecretInteger: "3"
-    A_1:
-      SecretInteger: "3"
-    A_2:
-      SecretInteger: "3"
-    B_0:
-      SecretInteger: "3"
-    B_1:
-      SecretInteger: "3"
-    B_2:
-      SecretInteger: "3"
-  public_variables: {}
+
+  A_0:
+    SecretInteger: "3"
+  A_1:
+    SecretInteger: "3"
+  A_2:
+    SecretInteger: "3"
+  B_0:
+    SecretInteger: "3"
+  B_1:
+    SecretInteger: "3"
+  B_2:
+    SecretInteger: "3"
+
 expected_outputs:
   my_output:
     SecretInteger: "27"

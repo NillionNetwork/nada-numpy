@@ -1,32 +1,31 @@
 ---
 program: broadcasting
 inputs:
-  secrets:
-    B_1:
-      SecretInteger: "3"
-    A_0:
-      SecretInteger: "3"
-    C_1:
-      SecretInteger: "3"
-    B_0:
-      SecretInteger: "3"
-    D_0:
-      SecretInteger: "3"
-    C_2:
-      SecretInteger: "3"
-    C_0:
-      SecretInteger: "3"
-    A_2:
-      SecretInteger: "3"
-    A_1:
-      SecretInteger: "3"
-    D_1:
-      SecretInteger: "3"
-    B_2:
-      SecretInteger: "3"
-    D_2:
-      SecretInteger: "3"
-  public_variables: {}
+  B_1:
+    SecretInteger: "3"
+  A_0:
+    SecretInteger: "3"
+  C_1:
+    SecretInteger: "3"
+  B_0:
+    SecretInteger: "3"
+  D_0:
+    SecretInteger: "3"
+  C_2:
+    SecretInteger: "3"
+  C_0:
+    SecretInteger: "3"
+  A_2:
+    SecretInteger: "3"
+  A_1:
+    SecretInteger: "3"
+  D_1:
+    SecretInteger: "3"
+  B_2:
+    SecretInteger: "3"
+  D_2:
+    SecretInteger: "3"
+
 expected_outputs:
   my_output_1:
     SecretInteger: "-3"

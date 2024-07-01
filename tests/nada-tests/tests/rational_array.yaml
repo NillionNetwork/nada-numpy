@@ -1,72 +1,69 @@
----
 program: rational_array
 inputs:
-  secrets:
-    A_0:
-      SecretInteger: "0" # 0
-    A_1:
-      SecretInteger: "65536" # 1
-    A_2:
-      SecretInteger: "131072" # 2
-    B_0:
-      SecretInteger: "65536" # 1
-    B_1:
-      SecretInteger: "131072" # 2
-    B_2:
-      SecretInteger: "196608" # 3
-  public_variables: {}
+  A_0:
+    SecretInteger: '0'
+  A_1:
+    SecretInteger: '65536'
+  A_2:
+    SecretInteger: '131072'
+  B_0:
+    SecretInteger: '65536'
+  B_1:
+    SecretInteger: '131072'
+  B_2:
+    SecretInteger: '196608'
 expected_outputs:
   out_0_0:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   out_0_1:
-    SecretInteger: "196608"
+    SecretInteger: '196608'
   out_0_2:
-    SecretInteger: "327680"
+    SecretInteger: '327680'
   out_1_0:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   out_1_1:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   out_1_2:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   out_2_0:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_2_1:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   out_2_2:
-    SecretInteger: "393216"
+    SecretInteger: '393216'
   out_3_0:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_3_1:
-    SecretInteger: "32768"
+    SecretInteger: '32768'
   out_3_2:
-    SecretInteger: "43690"
+    SecretInteger: '43690'
   out_4_0:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   out_4_1:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   out_4_2:
-    SecretInteger: "196608"
+    SecretInteger: '196608'
   out_5_0:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   out_5_1:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_5_2:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   out_6_0:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_6_1:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   out_6_2:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   out_7_0:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_7_1:
-    SecretInteger: "65536"
+    SecretInteger: '65536'
   out_7_2:
-    SecretInteger: "131072"
+    SecretInteger: '131072'
   out_8_0:
-    SecretInteger: "0"
+    SecretInteger: '0'
   out_8_1:
-    SecretInteger: "-65536"
+    SecretInteger: '-65536'
   out_8_2:
-    SecretInteger: "-131072"
+    SecretInteger: '-131072'

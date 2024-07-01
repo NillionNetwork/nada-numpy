@@ -1,78 +1,75 @@
----
 program: reveal
 inputs:
-  secrets:
-    A_0_0:
-      SecretInteger: "3"
-    A_0_2:
-      SecretInteger: "3"
-    A_1_2:
-      SecretInteger: "3"
-    B_1_2:
-      SecretInteger: "3"
-    A_1_0:
-      SecretInteger: "3"
-    B_2_2:
-      SecretInteger: "3"
-    B_2_1:
-      SecretInteger: "3"
-    B_0_1:
-      SecretInteger: "3"
-    A_2_1:
-      SecretInteger: "3"
-    A_1_1:
-      SecretInteger: "3"
-    A_0_1:
-      SecretInteger: "3"
-    B_1_1:
-      SecretInteger: "3"
-    A_2_2:
-      SecretInteger: "3"
-    B_0_0:
-      SecretInteger: "3"
-    A_2_0:
-      SecretInteger: "3"
-    B_1_0:
-      SecretInteger: "3"
-    B_2_0:
-      SecretInteger: "3"
-    B_0_2:
-      SecretInteger: "3"
-  public_variables: {}
+  A_0_0:
+    SecretInteger: '3'
+  A_0_2:
+    SecretInteger: '3'
+  A_1_2:
+    SecretInteger: '3'
+  B_1_2:
+    SecretInteger: '3'
+  A_1_0:
+    SecretInteger: '3'
+  B_2_2:
+    SecretInteger: '3'
+  B_2_1:
+    SecretInteger: '3'
+  B_0_1:
+    SecretInteger: '3'
+  A_2_1:
+    SecretInteger: '3'
+  A_1_1:
+    SecretInteger: '3'
+  A_0_1:
+    SecretInteger: '3'
+  B_1_1:
+    SecretInteger: '3'
+  A_2_2:
+    SecretInteger: '3'
+  B_0_0:
+    SecretInteger: '3'
+  A_2_0:
+    SecretInteger: '3'
+  B_1_0:
+    SecretInteger: '3'
+  B_2_0:
+    SecretInteger: '3'
+  B_0_2:
+    SecretInteger: '3'
 expected_outputs:
   my_output_B_0_1:
-    Integer: "3"
+    Integer: '3'
   my_output_A_0_1:
-    Integer: "3"
+    Integer: '3'
   my_output_A_0_2:
-    Integer: "3"
+    Integer: '3'
   my_output_B_0_2:
-    Integer: "3"
+    Integer: '3'
   my_output_A_1_1:
-    Integer: "3"
+    Integer: '3'
   my_output_B_1_1:
-    Integer: "3"
+    Integer: '3'
   my_output_A_2_2:
-    Integer: "3"
+    Integer: '3'
   my_output_A_2_1:
-    Integer: "3"
+    Integer: '3'
   my_output_A_2_0:
-    Integer: "3"
+    Integer: '3'
   my_output_B_2_1:
-    Integer: "3"
+    Integer: '3'
   my_output_A_1_2:
-    Integer: "3"
+    Integer: '3'
   my_output_B_1_0:
-    Integer: "3"
+    Integer: '3'
   my_output_B_2_2:
-    Integer: "3"
+    Integer: '3'
   my_output_A_1_0:
-    Integer: "3"
+    Integer: '3'
   my_output_B_2_0:
-    Integer: "3"
+    Integer: '3'
   my_output_B_1_2:
-    Integer: "3"
+    Integer: '3'
   my_output_A_0_0:
-    Integer: "3"
+    Integer: '3'
   my_output_B_0_0:
-    Integer: "3"
+    Integer: '3'
