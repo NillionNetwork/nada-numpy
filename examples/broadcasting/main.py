@@ -23,7 +23,7 @@ from py_nillion_client import NodeKey, UserKey
 import nada_numpy.client as na_client
 
 home = os.getenv("HOME")
-load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
+load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
 
 
 # Main asynchronous function to coordinate the process

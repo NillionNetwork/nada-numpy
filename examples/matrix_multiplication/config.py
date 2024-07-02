@@ -1,3 +1,3 @@
 """Configuration variables"""
 
-DIM = (3, 3)
+DIM = (16, 16)

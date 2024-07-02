@@ -24,6 +24,7 @@ import nada_numpy.client as na_client
 
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
+#load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
 
 
 # Main asynchronous function to coordinate the process
@@ -103,16 +104,6 @@ async def main() -> None:
         1,
         permissions,
     )
-
-    # Set up the compute bindings for the parties
-    compute_bindings = nillion.ProgramBindings(program_id)
-
-    for party_name in party_names[:-1]:
-        compute_bindings.add_input_party(party_name, party_id)
-    compute_bindings.add_output_party(party_names[-1], party_id)
-
-    print(f"Computing using program {program_id}")
-    print(f"Use secret store_id: {store_id_A}, {store_id_B}")
 
     ##### COMPUTE
     print("-----COMPUTE")
