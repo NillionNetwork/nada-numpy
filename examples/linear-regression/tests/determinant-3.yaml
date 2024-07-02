@@ -1,0 +1,24 @@
+---
+program: determinant
+inputs:
+  A_0_0:
+    SecretInteger: "1"
+  A_0_1:
+    SecretInteger: "0"
+  A_0_2:
+    SecretInteger: "0"
+  A_1_0:
+    SecretInteger: "0"
+  A_1_1:
+    SecretInteger: "2"
+  A_1_2:
+    SecretInteger: "0"
+  A_2_0:
+    SecretInteger: "0"
+  A_2_1:
+    SecretInteger: "0"
+  A_2_2:
+    SecretInteger: "3"
+expected_outputs:
+  my_output:
+    Integer: "6"

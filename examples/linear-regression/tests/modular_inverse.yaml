@@ -1,0 +1,8 @@
+---
+program: modular_inverse
+inputs:
+  A_0:
+    SecretInteger: "982554"
+expected_outputs:
+  my_output:
+    SecretInteger: "1"
