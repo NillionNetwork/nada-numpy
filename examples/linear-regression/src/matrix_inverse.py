@@ -1,10 +1,10 @@
-from nada_dsl import *
+import time
+
 import numpy as np
+from nada_dsl import *
 
 import nada_numpy as na
 from nada_numpy.array import NadaArray
-
-import time
 
 LOG_SCALE = 16
 SCALE = 1 << LOG_SCALE
@@ -114,6 +114,7 @@ def random_lu_matrix(n: int) -> NadaArray:
     # detU = upper.inner.diagonal().prod()
     return lower @ upper, None
 
+
 def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
     """
     Perform Gauss-Jordan elimination on Z_n on a given matrix.
@@ -160,20 +161,18 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
     return mat
 
 
-
 def matrix_inverse(matrix: np.ndarray, modulo: int):
     if matrix.shape[0] != matrix.shape[1]:
         raise Exception("Invalid input shape: Expected equal squared matrix")
     n = matrix.shape[0]
     R, detR = random_lu_matrix(n)  # n by n random matrix R with determinant detR
-    
+
     # Revealing matrix RA
     RA = (R @ matrix).reveal()
     # # Concatenating RA and R
     RAR = RA.hstack(R)
     # Performing Gauss-Jordan elimination
     A_inv = gauss_jordan_zn(RAR, modulo)
-    
 
     A_inv = A_inv[
         :, n:
@@ -181,8 +180,9 @@ def matrix_inverse(matrix: np.ndarray, modulo: int):
     return A_inv
 
 
-
 start_time = time.time()
+
+
 def nada_main():
     parties = na.parties(3)
 

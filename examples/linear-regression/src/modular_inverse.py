@@ -1,5 +1,5 @@
-from nada_dsl import *
 import numpy as np
+from nada_dsl import *
 
 import nada_numpy as na
 

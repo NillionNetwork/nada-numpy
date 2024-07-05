@@ -1,5 +1,6 @@
-from nada_dsl import *
 import numpy as np
+from nada_dsl import *
+
 import nada_numpy as na
 from nada_numpy.array import NadaArray
 
@@ -273,7 +274,7 @@ def linear_regression_zn(
 
     """
     n, d = X.shape
-    A = X.T @ X #+ na.identity(d) * lambda_  # (n,d) @ (d,n) = (d,d)
+    A = X.T @ X  # + na.identity(d) * lambda_  # (n,d) @ (d,n) = (d,d)
     # A = SCALE * SCALE + SCALE
     b = X.T.dot(y)  # (d,n) @ (n,) = (d,)
     adjAb, detA = linsol(A, b, modulo)
@@ -286,7 +287,7 @@ def nada_main():
 
     X = na.array([3, 3], parties[0], "A", nada_type=SecretInteger)
     y = na.array([3], parties[1], "b", nada_type=SecretInteger)
-    #lambda_ = na.array([1], parties[0], "lambda", nada_type=PublicInteger)
+    # lambda_ = na.array([1], parties[0], "lambda", nada_type=PublicInteger)
     lambda_ = Integer(0)
 
     (w, b) = linear_regression_zn(X, y, PRIME, lambda_)

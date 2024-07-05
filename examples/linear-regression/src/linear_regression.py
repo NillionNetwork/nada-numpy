@@ -1,13 +1,12 @@
-
 import numpy as np
-import nada_numpy as na
-from nada_numpy.array import NadaArray
-from nada_dsl import *
-
-from modular_inverse import public_modular_inverse, private_modular_inverse, PRIME
 from determinant import determinant
 from gauss_jordan import gauss_jordan_zn
+from modular_inverse import (PRIME, private_modular_inverse,
+                             public_modular_inverse)
+from nada_dsl import *
 
+import nada_numpy as na
+from nada_numpy.array import NadaArray
 
 
 def create_random_upper_triangular_matrix(n: int) -> NadaArray:
@@ -32,6 +31,7 @@ def create_random_upper_triangular_matrix(n: int) -> NadaArray:
             ]
         )
     )
+
 
 def create_random_lower_triangular_matrix(n: int) -> NadaArray:
     """
@@ -125,7 +125,7 @@ def linear_regression_zn(
     """
     n, d = X.shape
     identity = na.eye(d, nada_type=Integer)
-    A = X.T @ X +  identity * lambda_  # (n,d) @ (d,n) = (d,d)
+    A = X.T @ X + identity * lambda_  # (n,d) @ (d,n) = (d,d)
     # A = SCALE * SCALE + SCALE
     b = X.T @ y  # (d,n) @ (n,) = (d,)
     adjAb, detA = linsol(A, b, modulo)
@@ -145,4 +145,3 @@ def nada_main():
     (w, b) = linear_regression_zn(X, y, PRIME, lambda_)
 
     return w.output(parties[2], "w") + na.output(b, parties[2], "b")
-

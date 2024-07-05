@@ -25,7 +25,8 @@ import nada_numpy.client as na_client
 home = os.getenv("HOME")
 
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-#load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
+# load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
+
 
 # Main asynchronous function to coordinate the process
 async def main() -> None:
@@ -73,7 +74,6 @@ async def main() -> None:
     A = np.array([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 10.0]])
     b = np.array([1.0, 2.0, 3.0])
 
-
     # Minmax normalization of data
     dmin = np.min([np.min(A), np.min(b)])
     dmax = np.max([np.max(A), np.max(b)])
@@ -90,7 +90,6 @@ async def main() -> None:
     # Scale data into (-SCALE, SCALE) range
     A = np.round(A * SCALE).astype(np.int64)
     b = np.round(b * SCALE).astype(np.int64)
-
 
     print(A)
     print(b)
