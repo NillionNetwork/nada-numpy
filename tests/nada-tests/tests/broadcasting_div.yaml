@@ -1,18 +1,15 @@
----
 program: broadcasting_div
 inputs:
-  secrets:
-    A_0:
-      SecretInteger: "10"
-    A_1:
-      SecretInteger: "8"
-    A_2:
-      SecretInteger: "6"
-  public_variables: {}
+  A_0:
+    SecretInteger: '10'
+  A_1:
+    SecretInteger: '8'
+  A_2:
+    SecretInteger: '6'
 expected_outputs:
   my_output_0:
-    SecretInteger: "5"
+    SecretInteger: '5'
   my_output_1:
-    SecretInteger: "4"
+    SecretInteger: '4'
   my_output_2:
-    SecretInteger: "3"
+    SecretInteger: '3'

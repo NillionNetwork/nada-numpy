@@ -3,91 +3,133 @@
 import os
 import sys
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import asyncio
 
 import numpy as np
 import py_nillion_client as nillion
+from common.utils import compute, store_program, store_secret_array
+from config import DIM
+from cosmpy.aerial.client import LedgerClient
+from cosmpy.aerial.wallet import LocalWallet
+from cosmpy.crypto.keypairs import PrivateKey
 from dotenv import load_dotenv
-from nillion_python_helpers import (create_nillion_client, getNodeKeyFromFile,
-                                    getUserKeyFromFile)
+from nillion_python_helpers import (create_nillion_client,
+                                    create_payments_config, get_quote,
+                                    get_quote_and_pay, pay_with_quote)
+from py_nillion_client import NodeKey, UserKey
 
 import nada_numpy.client as na_client
-# Import helper functions for creating nillion client and getting keys
-from examples.broadcasting.config import DIM
-from examples.common.utils import compute, store_program, store_secret_array
 
-# Load environment variables from a .env file
-load_dotenv()
+home = os.getenv("HOME")
+load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
 
 
 # Main asynchronous function to coordinate the process
 async def main() -> None:
     """Main nada program"""
 
-    print(f"USING: {DIM} dims")
-
     cluster_id = os.getenv("NILLION_CLUSTER_ID")
-    userkey = getUserKeyFromFile(os.getenv("NILLION_USERKEY_PATH_PARTY_1"))
-    nodekey = getNodeKeyFromFile(os.getenv("NILLION_NODEKEY_PATH_PARTY_1"))
+    grpc_endpoint = os.getenv("NILLION_NILCHAIN_GRPC")
+    chain_id = os.getenv("NILLION_NILCHAIN_CHAIN_ID")
+    seed = "my_seed"
+    userkey = UserKey.from_seed((seed))
+    nodekey = NodeKey.from_seed((seed))
     client = create_nillion_client(userkey, nodekey)
     party_id = client.party_id
     user_id = client.user_id
+
     party_names = na_client.parties(3)
     program_name = "broadcasting"
     program_mir_path = f"target/{program_name}.nada.bin"
 
-    # Store the program
-    program_id = await store_program(
-        client, user_id, cluster_id, program_name, program_mir_path
+    # Create payments config and set up Nillion wallet with a private key to pay for operations
+    payments_config = create_payments_config(chain_id, grpc_endpoint)
+    payments_client = LedgerClient(payments_config)
+    payments_wallet = LocalWallet(
+        PrivateKey(bytes.fromhex(os.getenv("NILLION_NILCHAIN_PRIVATE_KEY_0"))),
+        prefix="nillion",
     )
 
-    # Create and store secrets for two parties
+    ##### STORE PROGRAM
+    print("-----STORE PROGRAM")
+
+    program_id = await store_program(
+        client,
+        payments_wallet,
+        payments_client,
+        user_id,
+        cluster_id,
+        program_name,
+        program_mir_path,
+    )
+
+    ##### STORE SECRETS
+    print("-----STORE SECRETS")
     A = np.ones([DIM])
     C = np.ones([DIM])
-    A_store_id = await store_secret_array(
+
+    # Create a permissions object to attach to the stored secret
+    permissions = nillion.Permissions.default_for_user(client.user_id)
+    permissions.add_compute_permissions({client.user_id: {program_id}})
+
+    # Create a secret
+    store_id_A = await store_secret_array(
         client,
+        payments_wallet,
+        payments_client,
         cluster_id,
         program_id,
-        party_id,
-        party_names[0],
         A,
         "A",
         nillion.SecretInteger,
+        1,
+        permissions,
     )
-    C_store_id = await store_secret_array(
+
+    store_id_C = await store_secret_array(
         client,
+        payments_wallet,
+        payments_client,
         cluster_id,
         program_id,
-        party_id,
-        party_names[0],
         C,
         "C",
         nillion.SecretInteger,
+        1,
+        permissions,
     )
+
+    # Create and store secrets for two parties
 
     B = np.ones([DIM])
     D = np.ones([DIM])
-    B_store_id = await store_secret_array(
+
+    store_id_B = await store_secret_array(
         client,
+        payments_wallet,
+        payments_client,
         cluster_id,
         program_id,
-        party_id,
-        party_names[1],
         B,
         "B",
         nillion.SecretInteger,
+        1,
+        permissions,
     )
-    D_store_id = await store_secret_array(
+
+    store_id_D = await store_secret_array(
         client,
+        payments_wallet,
+        payments_client,
         cluster_id,
         program_id,
-        party_id,
-        party_names[1],
         D,
         "D",
         nillion.SecretInteger,
+        1,
+        permissions,
     )
 
     # Set up the compute bindings for the parties
@@ -99,19 +141,35 @@ async def main() -> None:
 
     print(f"Computing using program {program_id}")
     print(
-        f"Use secret store_id: {A_store_id}, {B_store_id}, {C_store_id}, {D_store_id}"
+        f"Use secret store_id: {store_id_A}, {store_id_B}, {store_id_C}, {store_id_D}"
     )
 
-    computation_time_secrets = nillion.Secrets({"my_int2": nillion.SecretInteger(10)})
+    ##### COMPUTE
+    print("-----COMPUTE")
 
-    # Perform the computation and return the result
+    # Bind the parties in the computation to the client to set input and output parties
+    compute_bindings = nillion.ProgramBindings(program_id)
+    compute_bindings.add_input_party(party_names[0], party_id)
+    compute_bindings.add_input_party(party_names[1], party_id)
+    compute_bindings.add_output_party(party_names[2], party_id)
+
+    # Create a computation time secret to use
+    computation_time_secrets = nillion.NadaValues({})
+
+    # Get cost quote, then pay for operation to compute
+
     result = await compute(
         client,
+        payments_wallet,
+        payments_client,
+        program_id,
         cluster_id,
         compute_bindings,
-        [A_store_id, B_store_id, C_store_id, D_store_id],
+        [store_id_A, store_id_B, store_id_C, store_id_D],
         computation_time_secrets,
+        verbose=1,
     )
+
     return result
 
 

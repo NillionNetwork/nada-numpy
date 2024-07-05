@@ -1,18 +1,9 @@
----
 program: rational_numbers
 inputs:
-  secrets:
-    my_input_0:
-      # This number equals round(3.2 * SCALE) = round(3.2 * 2^16) = 209715
-      # The scale determines the number of decimal places in the fixed-point representation.
-      SecretInteger: "209715"
-    my_input_1:
-      # This number equals round(4.5 * SCALE) = round(4.5 * 2^16) = 294912
-      # The scale determines the number of decimal places in the fixed-point representation.
-      SecretInteger: "294912"
-  public_variables: {}
+  my_input_0:
+    SecretInteger: '209715'
+  my_input_1:
+    SecretInteger: '294912'
 expected_outputs:
   my_output:
-    # This number equals round(result * SCALE) = (round(4.5 * 2^16)) = 294912
-    SecretInteger: "294912"
-
+    SecretInteger: '294912'

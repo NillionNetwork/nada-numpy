@@ -1,0 +1,30 @@
+name = "linear-regression"
+version = "0.1.0"
+authors = [""]
+
+[[programs]]
+path = "src/linear_regression.py"
+prime_size = 64
+
+[[programs]]
+path = "src/linear_regression_256.py"
+prime_size = 256
+
+
+[[programs]]
+path = "src/modular_inverse.py"
+prime_size = 64
+
+[[programs]]
+path = "src/determinant.py"
+prime_size = 64
+
+
+[[programs]]
+path = "src/gauss_jordan.py"
+prime_size = 64
+
+
+[[programs]]
+path = "src/matrix_inverse.py"
+prime_size = 64
