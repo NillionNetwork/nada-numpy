@@ -71,7 +71,7 @@ def array(
     #     }
 
     # TODO: remove check for zero values when pushing zero secrets is supported
-    
+
     if len(arr.shape) == 1:
         if nada_type == Rational:
             return {
