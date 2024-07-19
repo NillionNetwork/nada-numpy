@@ -7,10 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-numpy = "^1.26.4"
-nada-dsl = "~0.4" # Works for any 0.4.x version
-py-nillion-client = "~0.4" # Works for any 0.4.x version
-nillion-python-helpers = "~0.2.3" # Works for any 0.2.x version
+numpy = "^2.0.0"
+nada-dsl = "^0.4.0"
+py-nillion-client = "^0.4.0"
+nillion-python-helpers = "^0.2.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"

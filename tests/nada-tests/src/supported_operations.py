@@ -56,7 +56,6 @@ def nada_main():
 
     f = na.array([1], parties[0], "F", SecretInteger)
     f.fill(Integer(40))
-    f.itemset(0, f.item(0) + Integer(2))
     with pytest.raises(Exception):
         f.itemset(0, na.rational(1))
     f = f.tolist()[0]

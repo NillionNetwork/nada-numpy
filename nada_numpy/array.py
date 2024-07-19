@@ -876,23 +876,6 @@ class NadaArray:  # pylint:disable=too-many-public-methods
     def itemset(self, item: Any, value: Any): ...
 
     # pylint:disable=missing-function-docstring
-    @copy_metadata(np.ndarray.itemset)
-    def itemset(self, *args, **kwargs):
-        value = None
-        if len(args) == 1:
-            value = args[0]
-        elif len(args) == 2:
-            value = args[1]
-        else:
-            value = kwargs["value"]
-
-        _check_type_compatibility(value, self.dtype)
-        result = self.inner.itemset(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            return NadaArray(result)
-        return result
-
-    # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.prod)
     def prod(self, *args, **kwargs):
         result = self.inner.prod(*args, **kwargs)

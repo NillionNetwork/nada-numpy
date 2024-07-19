@@ -84,8 +84,6 @@ def nada_main():
     check_array(f)
     f.fill(Integer(40))
     check_array(f)
-    f.itemset(0, f.item(0) + Integer(2))
-    check_array(f)
     assert isinstance(f.tolist(), list)
     f = f.tolist()[0]  # Not an array
 
