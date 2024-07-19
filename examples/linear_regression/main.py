@@ -23,9 +23,8 @@ from sklearn.linear_model import Ridge
 from common.utils import compute, store_program, store_secret_array
 
 home = os.getenv("HOME")
-
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-# load_dotenv(f"/workspaces/ai/.nillion-testnet.env")
+#load_dotenv(f"/workspaces/ai/.nucleus-testnet.env")
 
 
 # Main asynchronous function to coordinate the process

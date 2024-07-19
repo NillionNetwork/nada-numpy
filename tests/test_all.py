@@ -52,7 +52,7 @@ TESTS = [
     # "unsigned_matrix_inverse_2"
 ]
 
-EXAMPLES = ["dot_product", "matrix_multiplication", "broadcasting", "rational_numbers"]
+EXAMPLES = ["dot_product", "matrix_multiplication", "broadcasting", "rational_numbers", "linear_regression"]
 
 TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
     (os.path.join("examples/", test), test) for test in EXAMPLES
