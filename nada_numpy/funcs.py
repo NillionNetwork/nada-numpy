@@ -79,7 +79,9 @@ def parties(num: int, party_names: Optional[List[str]] = None) -> List[Party]:
 
     if len(party_names) != num:
         num_supplied_parties = len(party_names)
-        raise ValueError(f"Incorrect number of party names. Expected {num}, received {num_supplied_parties}")
+        raise ValueError(
+            f"Incorrect number of party names. Expected {num}, received {num_supplied_parties}"
+        )
 
     return [Party(name=party_name) for party_name in party_names]
 
