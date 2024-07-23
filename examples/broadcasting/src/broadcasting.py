@@ -4,6 +4,8 @@ from typing import List
 
 from nada_dsl import Output, SecretInteger
 
+from config import DIM
+
 # Step 0: Nada Numpy is imported with this line
 import nada_numpy as na
 
@@ -19,16 +21,16 @@ def nada_main() -> List[Output]:
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3, ) with name "A"
-    a = na.array([3], parties[0], "A", SecretInteger)
+    a = na.array([DIM], parties[0], "A", SecretInteger)
 
     # Step 3: Party1 creates an array of dimension (3, ) with name "B"
-    b = na.array([3], parties[1], "B", SecretInteger)
+    b = na.array([DIM], parties[1], "B", SecretInteger)
 
     # Step 4: Party0 creates an array of dimension (3, ) with name "C"
-    c = na.array([3], parties[0], "C", SecretInteger)
+    c = na.array([DIM], parties[0], "C", SecretInteger)
 
     # Step 5: Party1 creates an array of dimension (3, ) with name "D"
-    d = na.array([3], parties[1], "D", SecretInteger)
+    d = na.array([DIM], parties[1], "D", SecretInteger)
 
     # Step 4: The result is of computing SIMD operations on top of the elements of the array
     # SIMD operations are performed on all the elements of the array.
