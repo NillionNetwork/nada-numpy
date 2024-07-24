@@ -4,6 +4,8 @@ import os
 import time
 from typing import Any, Callable, Dict, List
 
+import nada_numpy as na
+import nada_numpy.client as na_client
 import numpy as np
 import py_nillion_client as nillion
 from cosmpy.aerial.client import LedgerClient
@@ -11,9 +13,6 @@ from cosmpy.aerial.wallet import LocalWallet
 from nillion_python_helpers import (create_nillion_client,
                                     create_payments_config, get_quote,
                                     get_quote_and_pay, pay_with_quote)
-
-import nada_numpy as na
-import nada_numpy.client as na_client
 
 
 def async_timer(file_path: os.PathLike) -> Callable:
