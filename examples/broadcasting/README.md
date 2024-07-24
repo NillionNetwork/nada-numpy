@@ -11,6 +11,8 @@ Therefore, you will notice that large-scale computational workloads may lead to 
 
 That said, the Nillion team is working around the clock to push the boundaries of this technology and bring the potential of blind computing to reality 🚀
 
+👉 This example has been tested on local devnet with arrays of up to 1000 elements.
+
 ## ➡️ Stay in touch
 If you want to get involved in the blind computing community and be the first to know all big updates, join our Discord
 
