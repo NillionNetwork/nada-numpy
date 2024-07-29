@@ -3,7 +3,7 @@ This module provides common functions to work with Nada Numpy, including the cre
 and manipulation of arrays and party objects.
 """
 
-from typing import Any, Callable, List, Sequence, Tuple, Union
+from typing import Any, Callable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 from nada_dsl import (Boolean, Integer, Output, Party, PublicInteger,
@@ -60,18 +60,30 @@ __all__ = [
 ]
 
 
-def parties(num: int, prefix: str = "Party") -> List[Party]:
+def parties(num: int, party_names: Optional[List[str]] = None) -> List[Party]:
     """
     Create a list of Party objects with specified names.
 
     Args:
         num (int): The number of parties to create.
-        prefix (str, optional): The prefix to use for party names. Defaults to "Party".
+        party_names (List[str], optional): Party names to use. Defaults to None.
+
+    Raises:
+        ValueError: Raised when incorrect number of party names is supplied.
 
     Returns:
-        List[Party]: A list of Party objects with names in the format "{prefix}{i}".
+        List[Party]: A list of Party objects.
     """
-    return [Party(name=f"{prefix}{i}") for i in range(num)]
+    if party_names is None:
+        party_names = [f"Party{i}" for i in range(num)]
+
+    if len(party_names) != num:
+        num_supplied_parties = len(party_names)
+        raise ValueError(
+            f"Incorrect number of party names. Expected {num}, received {num_supplied_parties}"
+        )
+
+    return [Party(name=party_name) for party_name in party_names]
 
 
 def __from_numpy(arr: np.ndarray, nada_type: NadaCleartextNumber) -> List:
