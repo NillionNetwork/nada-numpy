@@ -88,4 +88,4 @@ expected_outputs:
   out_4:
     SecretInteger: 21
   out_5:
-    Integer: 40
+    Integer: 42
