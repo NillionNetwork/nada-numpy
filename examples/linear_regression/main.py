@@ -7,9 +7,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import asyncio
 
-import nada_numpy.client as na_client
 import numpy as np
 import py_nillion_client as nillion
+from common.utils import compute, store_program, store_secret_array
 from cosmpy.aerial.client import LedgerClient
 from cosmpy.aerial.wallet import LocalWallet
 from cosmpy.crypto.keypairs import PrivateKey
@@ -20,11 +20,11 @@ from nillion_python_helpers import (create_nillion_client,
 from py_nillion_client import NodeKey, UserKey
 from sklearn.linear_model import Ridge
 
-from common.utils import compute, store_program, store_secret_array
+import nada_numpy.client as na_client
 
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
-#load_dotenv(f"/workspaces/ai/.nucleus-testnet.env")
+# load_dotenv(f"/workspaces/ai/.nucleus-testnet.env")
 
 
 # Main asynchronous function to coordinate the process

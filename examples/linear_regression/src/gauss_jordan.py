@@ -1,7 +1,8 @@
-import nada_numpy as na
 import numpy as np
 from modular_inverse import PRIME, public_modular_inverse
 from nada_dsl import *
+
+import nada_numpy as na
 
 # from nada_crypto import random_lu_matrix, public_modular_inverse
 
