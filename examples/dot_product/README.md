@@ -1,45 +1,23 @@
 # Dot Product Tutorial
 
-This tutorial shows how to efficiently program a dot product in Nada using Nada Numpy. 
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NillionNetwork/nada-numpy/blob/main/examples/dot_product/dot_product.ipynb)
 
-```python
-from nada_dsl import *
+This tutorial shows how to efficiently use dot product in Nada using Nada Numpy.
 
-# Step 0: Nada Numpy is imported with this line
-import nada_numpy as na
+## 🚨 Limitations
+The choice for blind computing implies certain trade-offs in comparison to conventional computing. What you gain in privacy, you pay in extra computational overhead & capacity constraints.
 
+Therefore, you will notice that large-scale computational workloads may lead to long compilation and/or execution times or hitting network capacity guardrails.
 
-def nada_main():
-    # Step 1: We use Nada Numpy wrapper to create "Party0", "Party1" and "Party2"
-    parties = na.parties(3)
+That said, the Nillion team is working around the clock to push the boundaries of this technology and bring the potential of blind computing to reality 🚀
 
-    # Step 2: Party0 creates an array of dimension (3, ) with name "A"
-    a = na.array([3], parties[0], "A", SecretInteger)
+👉 This example has been tested on local devnet with arrays of up to 2500 elements.
 
-    # Step 3: Party1 creates an array of dimension (3, ) with name "B"
-    b = na.array([3], parties[1], "B", SecretInteger)
+## ➡️ Stay in touch
+If you want to get involved in the blind computing community and be the first to know all big updates, join our Discord
 
-    # Step 4: The result is of computing the dot product between the two
-    result = a.dot(b)
+[![Discord](https://img.shields.io/badge/Discord-nillionnetwork-%235865F2?logo=discord)](https://discord.gg/nillionnetwork)
 
-    # Step 5: We can use result.output() to produce the output for Party2 and variable name "my_output"
-    return na.output(result, parties[1], "my_output")
-```
+And if you want to contribute to the blind computing revolution, we welcome open-source contributors!
 
-0. We import Nada Numpy using `import nada_numpy as na`.
-1. We create an array of parties, with our wrapper using `parties = na.parties(3)` which creates an array of parties named: `Party0`, `Party1` and `Party2`.
-2. We create our input array `a` with `na.array([3], parties[0], "A")`, meaning our array will have dimension 3, `Party0` will be in charge of giving its inputs and the name of the variable is `"A"`.
-3. We create our input array `b` with `na.array([3], parties[1], "B")`, meaning our array will have dimension 3, `Party1` will be in charge of giving its inputs and the name of the variable is `"B"`.
-4. Then, we use the `dot` function to compute the dot product like `a.dot(b)`, which will encompass all the functionality.
-5. Finally, we use Nada Numpy to produce the outputs of the array like:  `result.output(parties[2], "my_output")` establishing that the output party will be `Party2`and the name of the output variable will be `my_output`. 
-# How to run the tutorial.
-
-1. First, we need to compile the nada program running: `nada build`.
-2. (Optional) Then, we can test our program is running with: `nada test`.
-3. Finally, we can call our Nada program via the Nillion python client by running: `python3 main.py`
-
-Inspecting `tests/dot-product.yml`, we see how the inputs for the file are two vectors of 3s: 
-
-$$ A = (3, 3, 3), B = (3, 3, 3)$$
-And we obtain:
-$$A \times B = 3 \cdot 3 + 3 \cdot 3 + 3 \cdot 3 = 27$$
+[![GitHub Discussions](https://img.shields.io/badge/GitHub_Discussions-NillionNetwork-%23181717?logo=github)](https://github.com/orgs/NillionNetwork/discussions)

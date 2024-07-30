@@ -2,10 +2,11 @@
 
 from typing import List
 
-from nada_dsl import Output, SecretInteger
+from config import DIM
 
 # Step 0: Nada Numpy is imported with this line
 import nada_numpy as na
+from nada_dsl import Output, SecretInteger
 
 
 def nada_main() -> List[Output]:
@@ -19,10 +20,10 @@ def nada_main() -> List[Output]:
     parties = na.parties(3)
 
     # Step 2: Party0 creates an array of dimension (3, ) with name "A"
-    a = na.array([3], parties[0], "A", SecretInteger)
+    a = na.array([DIM], parties[0], "A", SecretInteger)
 
     # Step 3: Party1 creates an array of dimension (3, ) with name "B"
-    b = na.array([3], parties[1], "B", SecretInteger)
+    b = na.array([DIM], parties[1], "B", SecretInteger)
 
     # Step 4: The result is of computing the dot product between the two
     result = a.dot(b)
