@@ -181,3 +181,15 @@ prime_size = 128
 [[programs]]
 path = "src/type_guardrails.py"
 prime_size = 128
+
+[[programs]]
+path = "src/fxpmath_funcs.py"
+prime_size = 128
+
+[[programs]]
+path = "src/fxpmath_methods.py"
+prime_size = 128
+
+[[programs]]
+path = "src/fxpmath_arrays.py"
+prime_size = 128

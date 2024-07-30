@@ -1,5 +1,5 @@
 ---
-program: main
+program: fxpmath_methods
 inputs:
   my_input_0:
     SecretInteger: "65536"

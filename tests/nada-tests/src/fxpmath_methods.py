@@ -1,36 +1,35 @@
 from nada_dsl import *
+
 import nada_numpy as na
-from fxpmath import (exp, log, reciprocal, inv_sqrt, sqrt,
-                     cos, sin, tan, tanh, sigmoid, gelu, silu)
+
 
 def nada_main():
-    
+
     parties = na.parties(2)
 
     # We use na.SecretRational to create a secret rational number for party 0
     a = na.secret_rational("my_input_0", parties[0])
 
-    result_exp = exp(a*na.rational(2))
-    result_log = log(a*na.rational(100))
-    result_rec_NR = reciprocal(a*na.rational(2), method="NR")
-    result_rec_log = reciprocal(a*na.rational(4), method="log")
-    result_isqrt = inv_sqrt(a*na.rational(210))
-    result_sqrt = sqrt(a*na.rational(16))
-    result_sin = sin(a*na.rational(2.1))
-    result_cos = cos(a*na.rational(2.1))
-    result_tan = tan(a*na.rational(4.8))
-    result_tanh = tanh(a*na.rational(1.3))
-    result_tanh_che = tanh(a*na.rational(0.3), method="chebyshev")
-    result_tanh_motz = tanh(a*na.rational(0.4), method="motzkin")
-    result_sig = sigmoid(a*na.rational(0.1))
-    result_sig_che = sigmoid(a*na.rational(-0.1), method="chebyshev")
-    result_sig_motz = sigmoid(a*na.rational(10), method="motzkin")
-    result_gelu = gelu(a * na.rational(-13))
-    result_gelu_motz = gelu(a * na.rational(-13), method="motzkin")
-    result_silu = silu(a * na.rational(10))
-    result_silu_che = silu(a * na.rational(-10), method_sigmoid="chebyshev")
-    result_silu_motz = silu(a * na.rational(0), method_sigmoid="motzkin")
-
+    result_exp = (a * na.rational(2)).exp()
+    result_log = (a * na.rational(100)).log()
+    result_rec_NR = (a * na.rational(2)).reciprocal(method="NR")
+    result_rec_log = (a * na.rational(4)).reciprocal(method="log")
+    result_isqrt = (a * na.rational(210)).inv_sqrt()
+    result_sqrt = (a * na.rational(16)).sqrt()
+    result_sin = (a * na.rational(2.1)).sin()
+    result_cos = (a * na.rational(2.1)).cos()
+    result_tan = (a * na.rational(4.8)).tan()
+    result_tanh = (a * na.rational(1.3)).tanh()
+    result_tanh_che = (a * na.rational(0.3)).tanh(method="chebyshev")
+    result_tanh_motz = (a * na.rational(0.4)).tanh(method="motzkin")
+    result_sig = (a * na.rational(0.1)).sigmoid()
+    result_sig_che = (a * na.rational(-0.1)).sigmoid(method="chebyshev")
+    result_sig_motz = (a * na.rational(10)).sigmoid(method="motzkin")
+    result_gelu = (a * na.rational(-13)).gelu()
+    result_gelu_motz = (a * na.rational(-13)).gelu(method="motzkin")
+    result_silu = (a * na.rational(10)).silu()
+    result_silu_che = (a * na.rational(-10)).silu(method_sigmoid="chebyshev")
+    result_silu_motz = (a * na.rational(0)).silu(method_sigmoid="motzkin")
 
     return [
         Output(result_exp.value, "result_exp", parties[1]),
@@ -52,5 +51,5 @@ def nada_main():
         Output(result_gelu_motz.value, "result_gelu_motz", parties[1]),
         Output(result_silu.value, "result_silu", parties[1]),
         Output(result_silu_che.value, "result_silu_che", parties[1]),
-        Output(result_silu_motz.value, "result_silu_motz", parties[1])
+        Output(result_silu_motz.value, "result_silu_motz", parties[1]),
     ]
