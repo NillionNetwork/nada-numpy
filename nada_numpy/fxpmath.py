@@ -12,23 +12,24 @@
 # Modifications:
 # July, 2024
 #   - Nada datatypes.
-#   - Relative accuracy documentation. 
+#   - Relative accuracy documentation.
 #   - Some performance improvements.
 #   - Fixed Tanh Chebyshev method by changing '_hardtanh' implementation.
 #   - Tan.
 #   - Motzkin's prolynomial preprocessing approach.
 #   - GeLU and SiLU functions.
 
-from typing import Union, Tuple, TypeVar
 import functools
-import numpy as np
+from typing import Tuple, TypeVar, Union
 
+import numpy as np
 from nada_dsl import UnsignedInteger
+
 # from nada_numpy import (NadaArray, Rational, SecretRational, rational)
-from nada_numpy import (NadaArray, rational)
+from nada_numpy import rational
 
 # _NadaRational = Union["Rational", "SecretRational"]
-_NadaRational = TypeVar('_NadaRational')
+_NadaRational = TypeVar("_NadaRational")
 
 __all__ = [
     "sign",
@@ -46,25 +47,25 @@ __all__ = [
     "tanh",
     "sigmoid",
     "gelu",
-    "silu"
+    "silu",
 ]
+
 
 def sign(input: _NadaRational) -> _NadaRational:
     """Computes the sign value (0 is considered positive)"""
-    
+
     ltz_cond = input < rational(0)
     ltz = ltz_cond.if_else(rational(1), rational(0))
-    
+
     return rational(1) - rational(2) * ltz
+
 
 def abs(input: _NadaRational) -> _NadaRational:
     """Computes the absolute value"""
     return input * sign(input)
 
-def exp(
-        x: _NadaRational, 
-        iterations: int = 8
-    ) -> _NadaRational:
+
+def exp(x: _NadaRational, iterations: int = 8) -> _NadaRational:
     """
     Approximates the exponential function using a limit approximation.
 
@@ -72,7 +73,7 @@ def exp(
 
         exp(x) = lim_{n -> ∞} (1 + x / n) ^ n
 
-    The exponential function is computed by choosing n = 2 ** d, where d is set to `iterations`. 
+    The exponential function is computed by choosing n = 2 ** d, where d is set to `iterations`.
     The calculation is performed by computing (1 + x / n) once and then squaring it `d` times.
 
     Approximation accuracy range (with 16 bit precision):
@@ -95,15 +96,11 @@ def exp(
 
     result = rational(1) + (x >> iters_na)
     for _ in range(iterations):
-        result = result ** 2
+        result = result**2
     return result
 
 
-
-def polynomial(
-        x: _NadaRational, 
-        coefficients: list
-    ) -> _NadaRational:
+def polynomial(x: _NadaRational, coefficients: list) -> _NadaRational:
     """
     Computes a polynomial function on a value with given coefficients.
 
@@ -119,21 +116,20 @@ def polynomial(
         Union[Rational, SecretRational]: The result of the polynomial function applied to the input x.
     """
     result = rational(0)
-    
+
     for power, coeff in enumerate(coefficients, start=1):
-        result += coeff * (x ** power)
-    
+        result += coeff * (x**power)
+
     return result
 
 
-
 def log(
-        x: _NadaRational,
-        input_in_01: bool = False, 
-        iterations: int = 2, 
-        exp_iterations: int = 8, 
-        order: int = 8
-    ) -> _NadaRational:
+    x: _NadaRational,
+    input_in_01: bool = False,
+    iterations: int = 2,
+    exp_iterations: int = 8,
+    order: int = 8,
+) -> _NadaRational:
     """
     Approximates the natural logarithm using 8th order modified Householder iterations.
     This approximation is accurate within 2% relative error on the interval [0.0001, 250].
@@ -174,12 +170,17 @@ def log(
         Union[Rational, SecretRational]: The approximate value of the natural logarithm.
     """
     if input_in_01:
-        return log(x * rational(100), iterations=iterations, exp_iterations=exp_iterations, order=order) - rational(4.605170)
+        return log(
+            x * rational(100),
+            iterations=iterations,
+            exp_iterations=exp_iterations,
+            order=order,
+        ) - rational(4.605170)
 
     # Initialization to a decent estimate (found by qualitative inspection):
     #                ln(x) = x/120 - 20exp(-2x - 1.0) + 3.0
-    term1 = x * rational(1/120.0)
-    term2 = exp( - x - x - rational(1), iterations=exp_iterations) * rational(20)
+    term1 = x * rational(1 / 120.0)
+    term2 = exp(-x - x - rational(1), iterations=exp_iterations) * rational(20)
     y = term1 - term2 + rational(3.0)
 
     # 8th order Householder iterations
@@ -188,19 +189,20 @@ def log(
         y -= polynomial(h, [rational(1 / (i + 1)) for i in range(order)])
     return y
 
+
 def reciprocal(
-        x: _NadaRational, 
-        all_pos: bool = False, 
-        initial: Union[_NadaRational, None] = None, 
-        input_in_01: bool = False, 
-        iterations: int = 10, 
-        log_iters: int = 1, 
-        exp_iters: int = 8, 
-        method: str = "NR"
-    ) -> _NadaRational:
+    x: _NadaRational,
+    all_pos: bool = False,
+    initial: Union[_NadaRational, None] = None,
+    input_in_01: bool = False,
+    iterations: int = 10,
+    log_iters: int = 1,
+    exp_iters: int = 8,
+    method: str = "NR",
+) -> _NadaRational:
     r"""
     Approximates the reciprocal of a number through two possible methods: Newton-Raphson
-    and log. 
+    and log.
 
     Methods:
         'NR' : `Newton-Raphson`_ method computes the reciprocal using iterations
@@ -228,7 +230,7 @@ def reciprocal(
                 | [0.00001, 253]   |       <90%        |
                 | [253, +∞[        |     Unstable      |
                 + ------------------------------------ +
-                
+
     Args:
         x (Union[Rational, SecretRational]): the value for which the reciprocal function is to be approximated.
         all_pos (bool, optional): determines whether all elements of the
@@ -256,23 +258,29 @@ def reciprocal(
         https://en.wikipedia.org/wiki/Newton%27s_method
     """
     if input_in_01:
-        rec = reciprocal(x * rational(64), method=method, \
-                         all_pos=True, initial=initial, \
-                            iterations=iterations) * rational(64)
+        rec = reciprocal(
+            x * rational(64),
+            method=method,
+            all_pos=True,
+            initial=initial,
+            iterations=iterations,
+        ) * rational(64)
         return rec
 
     if not all_pos:
         sgn = sign(x)
         pos = sgn * x
-        return sgn * reciprocal(pos, method=method, all_pos=True, \
-                                initial=initial, iterations=iterations)
+        return sgn * reciprocal(
+            pos, method=method, all_pos=True, initial=initial, iterations=iterations
+        )
 
     if method == "NR":
         if initial is None:
             # Initialization to a decent estimate (found by qualitative inspection):
             #                1/x = 3exp(1 - 2x) + 0.003
-            result = rational(3) * exp(rational(1) - x - x, iterations=exp_iters) \
-                + rational(0.003)
+            result = rational(3) * exp(
+                rational(1) - x - x, iterations=exp_iters
+            ) + rational(0.003)
         else:
             result = initial
         for _ in range(iterations):
@@ -282,13 +290,14 @@ def reciprocal(
         return exp(-log(x, iterations=log_iters), iterations=exp_iters)
     else:
         raise ValueError(f"Invalid method {method} given for reciprocal function")
-    
+
+
 def inv_sqrt(
-        x: _NadaRational, 
-        initial: Union[_NadaRational, None] = None, 
-        iterations: int = 5, 
-        method: str = "NR"
-    ) -> _NadaRational:
+    x: _NadaRational,
+    initial: Union[_NadaRational, None] = None,
+    iterations: int = 5,
+    method: str = "NR",
+) -> _NadaRational:
     r"""
     Computes the inverse square root of the input using the Newton-Raphson method.
 
@@ -320,9 +329,10 @@ def inv_sqrt(
         if initial is None:
             # Initialization to a decent estimate (found by qualitative inspection):
             #                 exp(- x/2 - 0.2) * 2.2 + 0.2 - x/1024
-            y = exp( - (x >> UnsignedInteger(1)) - rational(0.2)) * \
-                rational(2.2) + rational(0.2)
-            y -= x >> UnsignedInteger(10) # div by 1024
+            y = exp(-(x >> UnsignedInteger(1)) - rational(0.2)) * rational(
+                2.2
+            ) + rational(0.2)
+            y -= x >> UnsignedInteger(10)  # div by 1024
         else:
             y = initial
 
@@ -332,14 +342,14 @@ def inv_sqrt(
         return y
     else:
         raise ValueError(f"Invalid method {method} given for inv_sqrt function")
-    
+
 
 def sqrt(
-        x: _NadaRational, 
-        initial: Union[_NadaRational, None] = None,  
-        iterations: int = 5,
-        method: str = "NR", 
-    ) -> _NadaRational:
+    x: _NadaRational,
+    initial: Union[_NadaRational, None] = None,
+    iterations: int = 5,
+    method: str = "NR",
+) -> _NadaRational:
     r"""
     Computes the square root of the input by computing its inverse square root using
     the Newton-Raphson method and multiplying by the input.
@@ -373,12 +383,13 @@ def sqrt(
     else:
         raise ValueError(f"Invalid method {method} given for sqrt function")
 
-# Trigonometry    
+
+# Trigonometry
+
 
 def _eix(
-        input: _NadaRational, 
-        iterations: int = 10
-    ) -> Tuple[_NadaRational, _NadaRational]:
+    input: _NadaRational, iterations: int = 10
+) -> Tuple[_NadaRational, _NadaRational]:
     r"""Computes e^(i * input) where i is the imaginary unit through the formula:
 
     .. math::
@@ -389,7 +400,7 @@ def _eix(
         iterations (int, optional): determines the number of iterations to run. Defaults to 10.
 
     Returns:
-        Tuple[Union[Rational, SecretRational], Union[Rational, SecretRational]]: 
+        Tuple[Union[Rational, SecretRational], Union[Rational, SecretRational]]:
             A tuple where the first element is cos and the second element is the sin.
     """
 
@@ -410,10 +421,10 @@ def _eix(
 
     return re, im
 
+
 def cossin(
-        input: _NadaRational, 
-        iterations: int = 10
-    ) -> Tuple[_NadaRational, _NadaRational]:
+    input: _NadaRational, iterations: int = 10
+) -> Tuple[_NadaRational, _NadaRational]:
     r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the formula:
 
     .. math::
@@ -424,15 +435,13 @@ def cossin(
         iterations (int, optional): determines the number of iterations to run. Defaults to 10.
 
     Returns:
-        Tuple[Union[Rational, SecretRational], Union[Rational, SecretRational]]: 
+        Tuple[Union[Rational, SecretRational], Union[Rational, SecretRational]]:
             A tuple where the first element is cos and the second element is the sin.
     """
     return _eix(input, iterations=iterations)
-    
-def cos(
-        input: _NadaRational, 
-        iterations: int = 10
-    ) -> _NadaRational:
+
+
+def cos(input: _NadaRational, iterations: int = 10) -> _NadaRational:
     r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
 
     Note: unstable outside [-30, 30]
@@ -447,10 +456,7 @@ def cos(
     return cossin(input, iterations=iterations)[0]
 
 
-def sin(
-        input: _NadaRational, 
-        iterations: int = 10
-    ) -> _NadaRational:
+def sin(input: _NadaRational, iterations: int = 10) -> _NadaRational:
     r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
 
     Note: unstable outside [-30, 30]
@@ -464,14 +470,12 @@ def sin(
     """
     return cossin(input, iterations=iterations)[1]
 
-def tan(
-        input: _NadaRational, 
-        iterations: int = 10
-    ) -> _NadaRational:
+
+def tan(input: _NadaRational, iterations: int = 10) -> _NadaRational:
     r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
 
     Note: unstable outside [-30, 30]
-    
+
     Args:
         intput (Union[Rational, SecretRational]): the input value.
         iterations (int, optional): determines the number of iterations to run. Defaults to 10.
@@ -482,7 +486,9 @@ def tan(
     c, s = cossin(input, iterations=iterations)
     return s * reciprocal(c)
 
+
 # Activation functions
+
 
 @functools.lru_cache(maxsize=10)
 def chebyshev_series(func, width, terms):
@@ -508,17 +514,16 @@ def chebyshev_series(func, width, terms):
     coeffs = (2 / terms) * np.sum(y * cos_term, axis=1)
     return coeffs
 
+
 def tanh(
-        input: _NadaRational, 
-        chebyshev_terms: int = 32,
-        method: str = "reciprocal" 
-    ) -> _NadaRational:
+    input: _NadaRational, chebyshev_terms: int = 32, method: str = "reciprocal"
+) -> _NadaRational:
     r"""Computes the hyperbolic tangent function using the identity
 
     .. math::
         tanh(x) = 2\sigma(2x) - 1
 
-    
+
     Methods:
     If a valid method is given, this function will compute tanh using that method:
 
@@ -528,22 +533,22 @@ def tanh(
             tanh(x) = 2\sigma(2x) - 1
 
             Note: stable for x in [-250, 250]. Unstable otherwise.
-        
+
         "chebyshev" - computes tanh via Chebyshev approximation with truncation.
 
             .. math::
                 tanh(x) = \sum_{j=1}^chebyshev_terms c_{2j - 1} P_{2j - 1} (x / maxval)
 
             where c_i is the ith Chebyshev series coefficient and P_i is ith polynomial.
-            
-            Note: stable for all input range as the approximation is truncated 
+
+            Note: stable for all input range as the approximation is truncated
                     to +/-1 outside [-1, 1].
 
         "motzkin" - computes tanh via approximation from the paper
             "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
             on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
                     to +/-1 outside [-1, 1].
 
     Args:
@@ -564,7 +569,7 @@ def tanh(
     elif method == "chebyshev":
         coeffs = chebyshev_series(np.tanh, 1, chebyshev_terms)[1::2]
         # transform np.array of float to na.array of rationals
-        coeffs = NadaArray(np.vectorize(rational)(coeffs))
+        coeffs = np.vectorize(rational)(coeffs)
         tanh_polys = _chebyshev_polynomials(input, chebyshev_terms)
         tanh_polys_flipped = tanh_polys.transpose()
         out = tanh_polys_flipped @ coeffs
@@ -574,12 +579,12 @@ def tanh(
         # Using approximation from "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
         # section 5.3 based on the Motzkin’s polynomial preprocessing technique.
 
-        # ltz is used for absolute value of input and to compute sign (used to generate result). 
+        # ltz is used for absolute value of input and to compute sign (used to generate result).
         # We don't use 'abs' and 'sign' functions to avoid computing ltz twice.
         ltz_cond = input < rational(0)
         ltz = ltz_cond.if_else(rational(1), rational(0))
         # sign
-        sgn =  rational(1) - rational(2) * ltz
+        sgn = rational(1) - rational(2) * ltz
         # absolute value
         abs_input = input * sgn
 
@@ -591,7 +596,9 @@ def tanh(
         t4 = rational(-3.3289339650097993)
         t5 = rational(-0.0024920889620412097)
         tanh_p0 = (abs_input + t0) * abs_input + t1
-        tanh_p1 = (tanh_p0 + abs_input + t2) * tanh_p0 * t3 * abs_input + t4 * abs_input + t5
+        tanh_p1 = (
+            (tanh_p0 + abs_input + t2) * tanh_p0 * t3 * abs_input + t4 * abs_input + t5
+        )
 
         cond_2_855 = abs_input > rational(2.855)
         result = cond_2_855.if_else(sgn, sgn * tanh_p1)
@@ -600,12 +607,11 @@ def tanh(
     else:
         raise ValueError(f"Unrecognized method {method} for tanh")
 
+
 ### Auxiliary functions for tanh
 
-def _chebyshev_polynomials(
-        input: _NadaRational, 
-        terms: int
-    ) -> NadaArray:
+
+def _chebyshev_polynomials(input: _NadaRational, terms: int) -> np.ndarray:
     r"""Evaluates odd degree Chebyshev polynomials at input.
 
     Chebyshev Polynomials of the first kind are defined as:
@@ -641,12 +647,13 @@ def _chebyshev_polynomials(
 
     return polynomials
 
+
 def _hardtanh(
-        input: _NadaRational, 
-        output: _NadaRational, 
-        abs_const: _NadaRational = rational(1),
-        abs_range: _NadaRational = rational(1)
-    ) -> _NadaRational: 
+    input: _NadaRational,
+    output: _NadaRational,
+    abs_const: _NadaRational = rational(1),
+    abs_range: _NadaRational = rational(1),
+) -> _NadaRational:
     r"""Applies the HardTanh function element-wise.
 
     HardTanh is defined as:
@@ -671,21 +678,21 @@ def _hardtanh(
         Union[Rational, SecretRational]: HardTanh output.
     """
     # absolute value
-    sgn =  sign(input)
+    sgn = sign(input)
     abs_input = input * sgn
     # chekc if inside [-abs_range, abs_range] interval
     ineight_cond = abs_input < abs_range
-    result = ineight_cond.if_else(output, abs_const * sgn) 
+    result = ineight_cond.if_else(output, abs_const * sgn)
 
     return result
 
+
 ### End of auxiliary functions for tanh
 
+
 def sigmoid(
-        input: _NadaRational, 
-        chebyshev_terms: int = 32,
-        method: str = "reciprocal"
-    ) -> _NadaRational:
+    input: _NadaRational, chebyshev_terms: int = 32, method: str = "reciprocal"
+) -> _NadaRational:
     r"""Computes the sigmoid function using the following definition
 
     .. math::
@@ -701,7 +708,7 @@ def sigmoid(
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
                     to 0/1 outside [-1, 1].
 
         "motzkin" - computes tanh via approximation from the paper
@@ -711,7 +718,7 @@ def sigmoid(
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
                     to 0/1 outside [-1, 1].
 
         "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
@@ -732,34 +739,39 @@ def sigmoid(
         ValueError: Raised if method type is not supported.
     """
     if method == "chebyshev":
-        tanh_approx = tanh(input >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms)
+        tanh_approx = tanh(
+            input >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms
+        )
         return (tanh_approx >> UnsignedInteger(1)) + rational(0.5)
     elif method == "motzkin":
-        tanh_approx = tanh(input >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms)
+        tanh_approx = tanh(
+            input >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms
+        )
         return (tanh_approx >> UnsignedInteger(1)) + rational(0.5)
     elif method == "reciprocal":
-        # ltz is used for absolute value of input and to generate 'result'. 
+        # ltz is used for absolute value of input and to generate 'result'.
         # We don't use 'abs' function to avoid computing ltz twice.
         ltz_cond = input < rational(0)
         ltz = ltz_cond.if_else(rational(1), rational(0))
         # compute absolute value of input
-        sgn =  rational(1) - rational(2) * ltz
-        pos_input = input * sgn 
+        sgn = rational(1) - rational(2) * ltz
+        pos_input = input * sgn
 
         denominator = exp(-pos_input) + rational(1)
-        pos_output = reciprocal(denominator, all_pos=True, initial=rational(0.75), iterations=3, exp_iters=9)
+        pos_output = reciprocal(
+            denominator, all_pos=True, initial=rational(0.75), iterations=3, exp_iters=9
+        )
 
         # result is equivalent to (1 - ltz).if_else(pos_output, 1 - pos_output)
         result = pos_output + ltz - rational(2) * pos_output * ltz
         return result
     else:
         raise ValueError(f"Unrecognized method {method} for sigmoid")
-    
+
+
 def gelu(
-        input: _NadaRational, 
-        method: str = "tanh", 
-        tanh_method: str = "reciprocal"
-    ) -> _NadaRational:
+    input: _NadaRational, method: str = "tanh", tanh_method: str = "reciprocal"
+) -> _NadaRational:
     r"""Computes the gelu function using the following definition
 
     .. math::
@@ -777,7 +789,7 @@ def gelu(
             "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
             on section 5.2 based on the Motzkin’s polynomial preprocessing technique.
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
             to relu function outside [-2.7, 2.7].
 
     Args:
@@ -796,18 +808,20 @@ def gelu(
         # Using common approximation:
         #       x/2 * (1 + tanh(0.797884560 * ( x + 0.04471 * x ** 3 ) ) )
         # where 0.797884560 ~= sqrt(2/pi).
-        val = rational(0.797884560) * (input + rational(0.044715) * input ** 3)
-        return (input * (rational(1) + tanh( val , method=tanh_method))) >> UnsignedInteger(1)
+        val = rational(0.797884560) * (input + rational(0.044715) * input**3)
+        return (
+            input * (rational(1) + tanh(val, method=tanh_method))
+        ) >> UnsignedInteger(1)
     elif method == "motzkin":
         # Using approximation from "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
         # section 5.2 based on the Motzkin’s polynomial preprocessing technique.
 
-        # ltz is used for absolute value of input and to compute relu. 
+        # ltz is used for absolute value of input and to compute relu.
         # We don't use 'abs' and '_relu' functions to avoid computing ltz twice.
         ltz_cond = input < rational(0)
         ltz = ltz_cond.if_else(rational(1), rational(0))
         # absolute value
-        sgn =  rational(1) - rational(2) * ltz
+        sgn = rational(1) - rational(2) * ltz
         abs_input = input * sgn
         # relu
         relu = input * (rational(1) - ltz)
@@ -819,7 +833,11 @@ def gelu(
         g3 = rational(-8.15444702051307)
         g4 = rational(16.382265425072532)
         gelu_p0 = (g0 * abs_input + g1) * abs_input + g2
-        gelu_p1 = (gelu_p0 + g0 * abs_input + g3) * gelu_p0 + g4 + (input >> UnsignedInteger(1))
+        gelu_p1 = (
+            (gelu_p0 + g0 * abs_input + g3) * gelu_p0
+            + g4
+            + (input >> UnsignedInteger(1))
+        )
 
         cond_2_7 = abs_input > rational(2.7)
         result = cond_2_7.if_else(relu, gelu_p1)
@@ -827,11 +845,12 @@ def gelu(
         return result
     else:
         raise ValueError(f"Unrecognized method {method} for gelu")
-    
+
+
 def silu(
-        input: _NadaRational, 
-        method_sigmoid: str = "reciprocal", 
-    ) -> _NadaRational:
+    input: _NadaRational,
+    method_sigmoid: str = "reciprocal",
+) -> _NadaRational:
     r"""Computes the gelu function using the following definition
 
     .. math::
@@ -847,7 +866,7 @@ def silu(
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
                     to 0/1 outside [-1, 1].
 
         "motzkin" - computes tanh via approximation from the paper
@@ -857,7 +876,7 @@ def silu(
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-            Note: stable for all input range as the approximation is truncated 
+            Note: stable for all input range as the approximation is truncated
                     to 0/1 outside [-1, 1].
 
         "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
