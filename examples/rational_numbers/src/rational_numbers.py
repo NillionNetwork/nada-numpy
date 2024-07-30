@@ -2,9 +2,8 @@
 
 from typing import List
 
-from nada_dsl import Output
-
 import nada_numpy as na
+from nada_dsl import Output
 
 
 def nada_main() -> List[Output]:

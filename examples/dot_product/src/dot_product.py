@@ -3,10 +3,10 @@
 from typing import List
 
 from config import DIM
-from nada_dsl import Output, SecretInteger
 
 # Step 0: Nada Numpy is imported with this line
 import nada_numpy as na
+from nada_dsl import Output, SecretInteger
 
 
 def nada_main() -> List[Output]:
