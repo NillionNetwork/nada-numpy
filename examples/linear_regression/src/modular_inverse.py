@@ -1,6 +1,7 @@
-import nada_numpy as na
 import numpy as np
 from nada_dsl import *
+
+import nada_numpy as na
 
 LOG_SCALE = 16
 SCALE = 1 << LOG_SCALE

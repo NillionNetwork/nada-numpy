@@ -1,16 +1,19 @@
 [tool.poetry]
 name = "nada-numpy"
-version = "0.3.0"
+version = "0.3.1"
 description = "Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network."
 authors = ["José Cabrero-Holgueras <jose.cabrero@nillion.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-numpy = "^1.26.4"
-nada-dsl = "~0.4" # Works for any 0.4.x version
-py-nillion-client = "~0.4" # Works for any 0.4.x version
-nillion-python-helpers = "~0.2.3" # Works for any 0.2.x version
+numpy = "^2.0.0"
+nada-dsl = "^0.4.0"
+py-nillion-client = "^0.4.0"
+nillion-python-helpers = "^0.2.3"
+black = {version="^24.4.2", optional=true}
+isort = {version="^5.13.2", optional=true}
+scikit-learn = {version="^1.5.1", optional=true}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
@@ -20,3 +23,7 @@ mypy = "^1.10.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.extras]
+linter = ["black", "isort"]
+examples = ["scikit-learn"]

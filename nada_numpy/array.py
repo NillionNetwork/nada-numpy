@@ -5,7 +5,7 @@
 
 # pylint:disable=too-many-lines
 
-from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
+from typing import Any, Callable, Optional, Sequence, Union, get_args
 
 import numpy as np
 from nada_dsl import (Boolean, Input, Integer, Output, Party, PublicInteger,
@@ -866,28 +866,6 @@ class NadaArray:  # pylint:disable=too-many-public-methods
     @copy_metadata(np.ndarray.item)
     def item(self, *args, **kwargs):
         result = self.inner.item(*args, **kwargs)
-        if isinstance(result, np.ndarray):
-            return NadaArray(result)
-        return result
-
-    @overload
-    def itemset(self, value: Any): ...
-    @overload
-    def itemset(self, item: Any, value: Any): ...
-
-    # pylint:disable=missing-function-docstring
-    @copy_metadata(np.ndarray.itemset)
-    def itemset(self, *args, **kwargs):
-        value = None
-        if len(args) == 1:
-            value = args[0]
-        elif len(args) == 2:
-            value = args[1]
-        else:
-            value = kwargs["value"]
-
-        _check_type_compatibility(value, self.dtype)
-        result = self.inner.itemset(*args, **kwargs)
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result

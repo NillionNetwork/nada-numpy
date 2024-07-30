@@ -1,10 +1,11 @@
-import nada_numpy as na
 import numpy as np
 from determinant import determinant
 from gauss_jordan import gauss_jordan_zn
 from modular_inverse import (PRIME, private_modular_inverse,
                              public_modular_inverse)
 from nada_dsl import *
+
+import nada_numpy as na
 from nada_numpy.array import NadaArray
 
 
