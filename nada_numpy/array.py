@@ -869,7 +869,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-    
+
     @overload
     def itemset(self, value: Any): ...
     @overload
@@ -891,7 +891,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
-    
+
     # pylint:disable=missing-function-docstring
     @copy_metadata(np.ndarray.prod)
     def prod(self, *args, **kwargs):
