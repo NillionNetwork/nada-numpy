@@ -1,6 +1,6 @@
-# Dot Product Tutorial
+# Linear Regression Closed-Form Solution Tutorial
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NillionNetwork/nada-numpy/blob/main/examples/dot_product/linear_regression.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/NillionNetwork/nada-numpy/blob/main/examples/linear_regression/linear_regression.ipynb)
 
 This tutorial shows how to train a linear regression privately based on the closed-form solution to linear regression.
 
