@@ -1,4 +1,4 @@
-"""Dot Product example script"""
+"""Linear Regression example script"""
 
 import os
 import sys
