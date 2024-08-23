@@ -12,4 +12,6 @@ def nada_main():
     result1 = a * b
     result2 = a * Integer(2)
 
-    return result1.output(parties[1], "my_output_1") + result2.output(parties[2], "my_output_2")
+    return result1.output(parties[1], "my_output_1") + result2.output(
+        parties[2], "my_output_2"
+    )

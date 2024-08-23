@@ -390,6 +390,106 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         """
         return self.matmul(other)
 
+    def __comparison_operator(self, value: Any, operator: Callable) -> "NadaArray":
+        """
+        Perform element-wise comparison with broadcasting.
+
+        NOTE: Specially for __eq__ and __ne__ operators, the result expected is bool.
+        If we don't define this method, the result will be a NadaArray with bool outputs.
+
+        Args:
+            other (Any): The object to compare.
+            operator (str): The comparison operator.
+
+        Returns:
+            NadaArray: A new NadaArray representing the element-wise comparison result.
+        """
+        if isinstance(value, NadaArray):
+            value = value.inner
+        result = []
+        if isinstance(value, (SecretInteger, PublicInteger, Integer)):
+            for x in self.inner:
+                result.append(operator(x, value))
+        elif isinstance(value, np.ndarray):
+            if len(self.inner) != len(value):
+                raise ValueError("Arrays must have the same length")
+            for x, y in zip(self.inner, value):
+                result.append(operator(x, y))
+        return NadaArray(np.array(result))
+
+    def __eq__(self, value: Any) -> "NadaArray":  # type: ignore
+        """
+        Perform equality comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean representing the element-wise equality comparison result.
+        """
+        return self.__comparison_operator(value, lambda x, y: x == y)
+
+    def __ne__(self, value: Any) -> "NadaArray":  # type: ignore
+        """
+        Perform inequality comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean array representing the element-wise inequality comparison result.
+        """
+        return self.__comparison_operator(value, lambda x, y: ~(x == y))
+
+    def __lt__(self, value: Any) -> "NadaArray":
+        """
+        Perform less than comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean array representing the element-wise less than comparison result.
+        """
+        return self.__comparison_operator(value, lambda x, y: x < y)
+
+    def __le__(self, value: Any) -> "NadaArray":
+        """
+        Perform less than or equal comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean array representing
+                the element-wise less or equal thancomparison result.
+        """
+        return self.__comparison_operator(value, lambda x, y: x <= y)
+
+    def __gt__(self, value: Any) -> "NadaArray":
+        """
+        Perform greater than comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean array representing the element-wise greater than comparison result.
+        """
+        return self.__comparison_operator(value, lambda x, y: x > y)
+
+    def __ge__(self, value: Any) -> "NadaArray":
+        """
+        Perform greater than or equal comparison with broadcasting.
+
+        Args:
+            value (object): The object to compare.
+
+        Returns:
+            NadaArray: A boolean representing the element-wise greater or equal than comparison.
+        """
+        return self.__comparison_operator(value, lambda x, y: x >= y)
+
     def dot(self, other: "NadaArray") -> "NadaArray":
         """
         Compute the dot product between two NadaArray objects.
