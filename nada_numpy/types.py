@@ -2,8 +2,9 @@
 
 # pylint:disable=too-many-lines
 
+import functools
 import warnings
-from typing import Optional, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import nada_dsl as dsl
 import numpy as np
@@ -143,7 +144,7 @@ class PublicBoolean(dsl.PublicBoolean):
         return result
 
 
-class Rational:
+class Rational:  # pylint:disable=too-many-public-methods
     """Wrapper class to store scaled Integer values representing a fixed-point number."""
 
     def __init__(
@@ -709,19 +710,21 @@ class Rational:
 
     def sign(self) -> "Rational":
         """Computes the sign value (0 is considered positive)"""
-        from nada_numpy.fxpmath import sign
 
         result = sign(self)
+        if not isinstance(result, Rational):
+            raise TypeError("sign input should be of type Rational.")
         return result
 
     def abs(self) -> "Rational":
         """Computes the absolute value"""
-        from nada_numpy.fxpmath import abs
 
-        result = abs(self)
+        result = fxp_abs(self)
+        if not isinstance(result, Rational):
+            raise TypeError("abs input should be of type Rational.")
         return result
 
-    def exp(self, iterations: Optional[int] = 8) -> "Rational":
+    def exp(self, iterations: int = 8) -> "Rational":
         """
         Approximates the exponential function using a limit approximation.
 
@@ -729,7 +732,7 @@ class Rational:
 
             exp(x) = lim_{n -> ∞} (1 + x / n) ^ n
 
-        The exponential function is computed by choosing n = 2 ** d, where d is set to `iterations`.
+        The function is computed by choosing n = 2 ** d, where d is set to `iterations`.
         The calculation is performed by computing (1 + x / n) once and then squaring it `d` times.
 
         Approximation accuracy range (with 16 bit precision):
@@ -742,14 +745,16 @@ class Rational:
         + ---------------------------------- +
 
         Args:
-            iterations (int, optional): The number of iterations for the limit approximation. Defaults to 8.
+            iterations (int, optional): The number of iterations for the limit approximation.
+                Defaults to 8.
 
         Returns:
             Rational: The approximated value of the exponential function.
         """
-        from nada_numpy.fxpmath import exp
 
         result = exp(self, iterations=iterations)
+        if not isinstance(result, Rational):
+            raise TypeError("exp input should be of type Rational.")
         return result
 
     def polynomial(self, coefficients: list) -> "Rational":
@@ -757,7 +762,8 @@ class Rational:
         Computes a polynomial function on a value with given coefficients.
 
         The coefficients can be provided as a list of values.
-        They should be ordered from the linear term (order 1) first, ending with the highest order term.
+        They should be ordered from the linear term (order 1) first, ending with the
+        highest order term.
         **Note: The constant term is not included.**
 
         Args:
@@ -766,17 +772,18 @@ class Rational:
         Returns:
             Rational: The result of the polynomial function applied to the input x.
         """
-        from nada_numpy.fxpmath import polynomial
 
         result = polynomial(self, coefficients=coefficients)
+        if not isinstance(result, Rational):
+            raise TypeError("polynomial input should be of type Rational.")
         return result
 
     def log(
         self,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 2,
-        exp_iterations: Optional[int] = 8,
-        order: Optional[int] = 8,
+        input_in_01: bool = False,
+        iterations: int = 2,
+        exp_iterations: int = 8,
+        order: int = 8,
     ) -> "Rational":
         """
         Approximates the natural logarithm using 8th order modified Householder iterations.
@@ -809,14 +816,16 @@ class Rational:
                 Given the convergence domain for log() function is approximately [1e-4, 1e2],
                 we set a = 100.
                 Defaults to False.
-            iterations (int, optional): Number of Householder iterations for the approximation. Defaults to 2.
-            exp_iterations (int, optional): Number of iterations for the limit approximation of exp. Defaults to 8.
-            order (int, optional): Number of polynomial terms used (order of Householder approximation). Defaults to 8.
+            iterations (int, optional): Number of Householder iterations for the approximation.
+                Defaults to 2.
+            exp_iterations (int, optional): Number of iterations for the limit approximation
+                of exp. Defaults to 8.
+            order (int, optional): Number of polynomial terms used (order of Householder
+                approximation). Defaults to 8.
 
         Returns:
             Rational: The approximate value of the natural logarithm.
         """
-        from nada_numpy.fxpmath import log
 
         result = log(
             self,
@@ -825,17 +834,19 @@ class Rational:
             exp_iterations=exp_iterations,
             order=order,
         )
+        if not isinstance(result, Rational):
+            raise TypeError("log input should be of type Rational.")
         return result
 
-    def reciprocal(
+    def reciprocal(  # pylint: disable=too-many-arguments
         self,
-        all_pos: Optional[bool] = False,
-        initial: Optional[Union["Rational", None]] = None,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 10,
-        log_iters: Optional[int] = 1,
-        exp_iters: Optional[int] = 8,
-        method: Optional[str] = "NR",
+        all_pos: bool = False,
+        initial: Optional["Rational"] = None,
+        input_in_01: bool = False,
+        iterations: int = 10,
+        log_iters: int = 1,
+        exp_iters: int = 8,
+        method: str = "NR",
     ) -> "Rational":
         r"""
         Approximates the reciprocal of a number through two possible methods: Newton-Raphson
@@ -872,13 +883,14 @@ class Rational:
             all_pos (bool, optional): determines whether all elements of the
                 input are known to be positive, which optimizes the step of
                 computing the sign of the input. Defaults to False.
-            initial (Union[Rational, None], optional): sets the initial value for the
+            initial (Rational, optional): sets the initial value for the
                 Newton-Raphson method. By default, this will be set to :math:
                 `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
                 a fairly large domain.
-            input_in_01 (bool, optional) : Allows a user to indicate that the input is in the range [0, 1],
-                        causing the function optimize for this range. This is useful for improving
-                        the accuracy of functions on probabilities (e.g. entropy functions).
+            input_in_01 (bool, optional) : Allows a user to indicate that the input is
+                        in the range [0, 1], causing the function optimize for this range.
+                        This is useful for improving the accuracy of functions on
+                        probabilities (e.g. entropy functions).
             iterations (int, optional):  determines the number of Newton-Raphson iterations to run
                             for the `NR` method. Defaults to 10.
             log_iters (int, optional): determines the number of Householder
@@ -893,7 +905,6 @@ class Rational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Newton%27s_method
         """
-        from nada_numpy.fxpmath import reciprocal
 
         result = reciprocal(
             self,
@@ -905,13 +916,15 @@ class Rational:
             exp_iters=exp_iters,
             method=method,
         )
+        if not isinstance(result, Rational):
+            raise TypeError("reciprocal input should be of type Rational.")
         return result
 
     def inv_sqrt(
         self,
-        initial: Optional[Union["Rational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["Rational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "Rational":
         r"""
         Computes the inverse square root of the input using the Newton-Raphson method.
@@ -926,9 +939,9 @@ class Rational:
         + ---------------------------------- +
 
         Args:
-            initial (Union[Rational, None], optional): sets the initial value for the Newton-Raphson iterations.
-                        By default, this will be set to allow the method to converge over a
-                        fairly large domain.
+            initial (Union[Rational, None], optional): sets the initial value for the
+                        Newton-Raphson iterations. By default, this will be set to allow the
+                        method to converge over a fairly large domain.
             iterations (int, optional): determines the number of Newton-Raphson iterations to run.
             method (str, optional): method used to compute inv_sqrt. Defaults to "NR".
 
@@ -938,16 +951,17 @@ class Rational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
-        from nada_numpy.fxpmath import inv_sqrt
 
         result = inv_sqrt(self, initial=initial, iterations=iterations, method=method)
+        if not isinstance(result, Rational):
+            raise TypeError("inv_sqrt input should be of type Rational.")
         return result
 
     def sqrt(
         self,
-        initial: Optional[Union["Rational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["Rational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "Rational":
         r"""
         Computes the square root of the input by computing its inverse square root using
@@ -963,10 +977,11 @@ class Rational:
         + ---------------------------------- +
 
         Args:
-            initial (Union[Rational, None], optional): sets the initial value for the inverse square root
-                Newton-Raphson iterations. By default, this will be set to allow convergence
-                over a fairly large domain. Defaults to None.
-            iterations (int, optional):  determines the number of Newton-Raphson iterations to run. Defaults to 5.
+            initial (Union[Rational, None], optional): sets the initial value for the inverse
+                square root Newton-Raphson iterations. By default, this will be set to allow
+                convergence over a fairly large domain. Defaults to None.
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run.
+                Defaults to 5.
             method (str, optional): method used to compute sqrt. Defaults to "NR".
 
         Returns:
@@ -975,15 +990,17 @@ class Rational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
-        from nada_numpy.fxpmath import sqrt
 
         result = sqrt(self, initial=initial, iterations=iterations, method=method)
+        if not isinstance(result, Rational):
+            raise TypeError("sqrt input should be of type Rational.")
         return result
 
     # Trigonometry
 
-    def cossin(self, iterations: Optional[int] = 10) -> Tuple["Rational", "Rational"]:
-        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the formula:
+    def cossin(self, iterations: int = 10) -> Tuple["Rational", "Rational"]:
+        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through
+        the formula:
 
         .. math::
             Re\{e^{i * input}\}, Im\{e^{i * input}\} = \cos(input), \sin(input)
@@ -995,12 +1012,13 @@ class Rational:
             Tuple[Rational, Rational]:
                 A tuple where the first element is cos and the second element is the sin.
         """
-        from nada_numpy.fxpmath import cossin
 
         result = cossin(self, iterations=iterations)
+        if not isinstance(result, Rational):
+            raise TypeError("cossin input should be of type Rational.")
         return result
 
-    def cos(self, iterations: Optional[int] = 10) -> "Rational":
+    def cos(self, iterations: int = 10) -> "Rational":
         r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -1011,12 +1029,13 @@ class Rational:
         Returns:
             Rational: The approximate value of the cosine.
         """
-        from nada_numpy.fxpmath import cos
 
         result = cos(self, iterations=iterations)
+        if not isinstance(result, Rational):
+            raise TypeError("cos input should be of type Rational.")
         return result
 
-    def sin(self, iterations: Optional[int] = 10) -> "Rational":
+    def sin(self, iterations: int = 10) -> "Rational":
         r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -1027,12 +1046,13 @@ class Rational:
         Returns:
             Rational: The approximate value of the sine.
         """
-        from nada_numpy.fxpmath import sin
 
         result = sin(self, iterations=iterations)
+        if not isinstance(result, Rational):
+            raise TypeError("sin input should be of type Rational.")
         return result
 
-    def tan(self, iterations: Optional[int] = 10) -> "Rational":
+    def tan(self, iterations: int = 10) -> "Rational":
         r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
 
         Note: unstable outside [-30, 30]
@@ -1043,16 +1063,15 @@ class Rational:
         Returns:
             Rational: The approximate value of the tan.
         """
-        from nada_numpy.fxpmath import tan
 
         result = tan(self, iterations=iterations)
+        if not isinstance(result, Rational):
+            raise TypeError("tan input should be of type Rational.")
         return result
 
     # Activation functions
 
-    def tanh(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
-    ) -> "Rational":
+    def tanh(self, chebyshev_terms: int = 32, method: str = "reciprocal") -> "Rational":
         r"""Computes the hyperbolic tangent function using the identity
 
         .. math::
@@ -1096,13 +1115,14 @@ class Rational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import tanh
 
         result = tanh(self, chebyshev_terms=chebyshev_terms, method=method)
+        if not isinstance(result, Rational):
+            raise TypeError("tanh input should be of type Rational.")
         return result
 
     def sigmoid(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
     ) -> "Rational":
         r"""Computes the sigmoid function using the following definition
 
@@ -1124,7 +1144,8 @@ class Rational:
 
             "motzkin" - computes tanh via approximation from the paper
                 "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses
+                the identity:
 
                 .. math::
                     \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -1140,7 +1161,8 @@ class Rational:
         Args:
             chebyshev_terms (int, optional): highest degree of Chebyshev polynomials.
                             Must be even and at least 6. Defaults to 32.
-            method (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+            method (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
 
         Returns:
             Rational: The sigmoid evaluation.
@@ -1148,14 +1170,13 @@ class Rational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import sigmoid
 
         result = sigmoid(self, chebyshev_terms=chebyshev_terms, method=method)
+        if not isinstance(result, Rational):
+            raise TypeError("sigmoid input should be of type Rational.")
         return result
 
-    def gelu(
-        self, method: Optional[str] = "tanh", tanh_method: Optional[str] = "reciprocal"
-    ) -> "Rational":
+    def gelu(self, method: str = "tanh", tanh_method: str = "reciprocal") -> "Rational":
         r"""Computes the gelu function using the following definition
 
         .. math::
@@ -1186,14 +1207,15 @@ class Rational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import gelu
 
         result = gelu(self, method=method, tanh_method=tanh_method)
+        if not isinstance(result, Rational):
+            raise TypeError("gelu input should be of type Rational.")
         return result
 
     def silu(
         self,
-        method_sigmoid: Optional[str] = "reciprocal",
+        method_sigmoid: str = "reciprocal",
     ) -> "Rational":
         r"""Computes the gelu function using the following definition
 
@@ -1215,7 +1237,8 @@ class Rational:
 
             "motzkin" - computes tanh via approximation from the paper
                 "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+                It uses the identity:
 
                 .. math::
                     \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -1229,7 +1252,8 @@ class Rational:
                 Note: stable for x in [-500, 500]. Unstable otherwise.
 
         Args:
-            method_sigmoid (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+            method_sigmoid (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
 
         Returns:
             Rational: The sigmoid evaluation.
@@ -1237,13 +1261,17 @@ class Rational:
         Raises:
             ValueError: Raised if sigmoid method type is not supported.
         """
-        from nada_numpy.fxpmath import silu
+
+        if method_sigmoid is None:
+            method_sigmoid = "reciprocal"
 
         result = silu(self, method_sigmoid=method_sigmoid)
+        if not isinstance(result, Rational):
+            raise TypeError("silu input should be of type Rational.")
         return result
 
 
-class SecretRational:
+class SecretRational:  # pylint:disable=too-many-public-methods
     """Wrapper class to store scaled SecretInteger values representing a fixed-point number."""
 
     def __init__(
@@ -1797,7 +1825,7 @@ class SecretRational:
         Rescale the SecretRational value downwards by a scaling factor.
 
         Args:
-            log_scale (int, optional): The scaling factor. Defaults to RationalConfig.log_scale.
+            log_scale (int, optional): The scaling factor. Defaults to RationalConfig.
 
         Returns:
             SecretRational: Rescaled SecretRational value.
@@ -1815,19 +1843,21 @@ class SecretRational:
 
     def sign(self) -> "SecretRational":
         """Computes the sign value (0 is considered positive)"""
-        from nada_numpy.fxpmath import sign
 
         result = sign(self)
+        if not isinstance(result, SecretRational):
+            raise TypeError("sign input should be of type SecretRational.")
         return result
 
     def abs(self) -> "SecretRational":
         """Computes the absolute value"""
-        from nada_numpy.fxpmath import abs
 
-        result = abs(self)
+        result = fxp_abs(self)
+        if not isinstance(result, SecretRational):
+            raise TypeError("abs input should be of type SecretRational.")
         return result
 
-    def exp(self, iterations: Optional[int] = 8) -> "SecretRational":
+    def exp(self, iterations: int = 8) -> "SecretRational":
         """
         Approximates the exponential function using a limit approximation.
 
@@ -1835,8 +1865,9 @@ class SecretRational:
 
             exp(x) = lim_{n -> ∞} (1 + x / n) ^ n
 
-        The exponential function is computed by choosing n = 2 ** d, where d is set to `iterations`.
-        The calculation is performed by computing (1 + x / n) once and then squaring it `d` times.
+        The exponential function is computed by choosing n = 2 ** d, where d is
+        set to `iterations`. The calculation is performed by computing (1 + x / n)
+        once and then squaring it `d` times.
 
         Approximation accuracy range (with 16 bit precision):
         + ---------------------------------- +
@@ -1848,14 +1879,16 @@ class SecretRational:
         + ---------------------------------- +
 
         Args:
-            iterations (int, optional): The number of iterations for the limit approximation. Defaults to 8.
+            iterations (int, optional): The number of iterations for the limit approximation.
+                Defaults to 8.
 
         Returns:
             SecretRational: The approximated value of the exponential function.
         """
-        from nada_numpy.fxpmath import exp
 
         result = exp(self, iterations=iterations)
+        if not isinstance(result, SecretRational):
+            raise TypeError("exp input should be of type SecretRational.")
         return result
 
     def polynomial(self, coefficients: list) -> "SecretRational":
@@ -1863,7 +1896,8 @@ class SecretRational:
         Computes a polynomial function on a value with given coefficients.
 
         The coefficients can be provided as a list of values.
-        They should be ordered from the linear term (order 1) first, ending with the highest order term.
+        They should be ordered from the linear term (order 1) first, ending with the
+        highest order term.
         **Note: The constant term is not included.**
 
         Args:
@@ -1872,17 +1906,18 @@ class SecretRational:
         Returns:
             SecretRational: The result of the polynomial function applied to the input x.
         """
-        from nada_numpy.fxpmath import polynomial
 
         result = polynomial(self, coefficients=coefficients)
+        if not isinstance(result, SecretRational):
+            raise TypeError("polynomial input should be of type SecretRational.")
         return result
 
     def log(
         self,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 2,
-        exp_iterations: Optional[int] = 8,
-        order: Optional[int] = 8,
+        input_in_01: bool = False,
+        iterations: int = 2,
+        exp_iterations: int = 8,
+        order: int = 8,
     ) -> "SecretRational":
         """
         Approximates the natural logarithm using 8th order modified Householder iterations.
@@ -1915,14 +1950,16 @@ class SecretRational:
                 Given the convergence domain for log() function is approximately [1e-4, 1e2],
                 we set a = 100.
                 Defaults to False.
-            iterations (int, optional): Number of Householder iterations for the approximation. Defaults to 2.
-            exp_iterations (int, optional): Number of iterations for the limit approximation of exp. Defaults to 8.
-            order (int, optional): Number of polynomial terms used (order of Householder approximation). Defaults to 8.
+            iterations (int, optional): Number of Householder iterations for the approximation.
+                Defaults to 2.
+            exp_iterations (int, optional): Number of iterations for the limit approximation of
+                exp. Defaults to 8.
+            order (int, optional): Number of polynomial terms used (order of
+                Householder approximation). Defaults to 8.
 
         Returns:
             SecretRational: The approximate value of the natural logarithm.
         """
-        from nada_numpy.fxpmath import log
 
         result = log(
             self,
@@ -1931,17 +1968,19 @@ class SecretRational:
             exp_iterations=exp_iterations,
             order=order,
         )
+        if not isinstance(result, SecretRational):
+            raise TypeError("log input should be of type SecretRational.")
         return result
 
-    def reciprocal(
+    def reciprocal(  # pylint: disable=too-many-arguments
         self,
-        all_pos: Optional[bool] = False,
-        initial: Optional[Union["SecretRational", None]] = None,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 10,
-        log_iters: Optional[int] = 1,
-        exp_iters: Optional[int] = 8,
-        method: Optional[str] = "NR",
+        all_pos: bool = False,
+        initial: Optional["Rational"] = None,
+        input_in_01: bool = False,
+        iterations: int = 10,
+        log_iters: int = 1,
+        exp_iters: int = 8,
+        method: str = "NR",
     ) -> "SecretRational":
         r"""
         Approximates the reciprocal of a number through two possible methods: Newton-Raphson
@@ -1978,13 +2017,14 @@ class SecretRational:
             all_pos (bool, optional): determines whether all elements of the
                 input are known to be positive, which optimizes the step of
                 computing the sign of the input. Defaults to False.
-            initial (Union[SecretRational, None], optional): sets the initial value for the
+            initial (Rational, optional): sets the initial value for the
                 Newton-Raphson method. By default, this will be set to :math:
                 `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
                 a fairly large domain.
-            input_in_01 (bool, optional) : Allows a user to indicate that the input is in the range [0, 1],
-                        causing the function optimize for this range. This is useful for improving
-                        the accuracy of functions on probabilities (e.g. entropy functions).
+            input_in_01 (bool, optional) : Allows a user to indicate that the input is
+                        in the range [0, 1], causing the function optimize for this range.
+                        This is useful for improving the accuracy of functions on
+                        probabilities (e.g. entropy functions).
             iterations (int, optional):  determines the number of Newton-Raphson iterations to run
                             for the `NR` method. Defaults to 10.
             log_iters (int, optional): determines the number of Householder
@@ -1999,7 +2039,6 @@ class SecretRational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Newton%27s_method
         """
-        from nada_numpy.fxpmath import reciprocal
 
         result = reciprocal(
             self,
@@ -2011,13 +2050,15 @@ class SecretRational:
             exp_iters=exp_iters,
             method=method,
         )
+        if not isinstance(result, SecretRational):
+            raise TypeError("reciprocal input should be of type SecretRational.")
         return result
 
     def inv_sqrt(
         self,
-        initial: Optional[Union["SecretRational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "SecretRational":
         r"""
         Computes the inverse square root of the input using the Newton-Raphson method.
@@ -2032,9 +2073,9 @@ class SecretRational:
         + ---------------------------------- +
 
         Args:
-            initial (Union[SecretRational, None], optional): sets the initial value for the Newton-Raphson iterations.
-                        By default, this will be set to allow the method to converge over a
-                        fairly large domain.
+            initial (Union[SecretRational, None], optional): sets the initial value for the
+                        Newton-Raphson iterations. By default, this will be set to allow the
+                        method to converge over a fairly large domain.
             iterations (int, optional): determines the number of Newton-Raphson iterations to run.
             method (str, optional): method used to compute inv_sqrt. Defaults to "NR".
 
@@ -2044,16 +2085,17 @@ class SecretRational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
-        from nada_numpy.fxpmath import inv_sqrt
 
         result = inv_sqrt(self, initial=initial, iterations=iterations, method=method)
+        if not isinstance(result, SecretRational):
+            raise TypeError("inv_sqrt input should be of type SecretRational.")
         return result
 
     def sqrt(
         self,
-        initial: Optional[Union["SecretRational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "SecretRational":
         r"""
         Computes the square root of the input by computing its inverse square root using
@@ -2069,10 +2111,11 @@ class SecretRational:
         + ---------------------------------- +
 
         Args:
-            initial (Union[SecretRational, None], optional): sets the initial value for the inverse square root
-                Newton-Raphson iterations. By default, this will be set to allow convergence
-                over a fairly large domain. Defaults to None.
-            iterations (int, optional):  determines the number of Newton-Raphson iterations to run. Defaults to 5.
+            initial (Union[SecretRational, None], optional): sets the initial value for the
+                inverse square root Newton-Raphson iterations. By default, this will be set
+                to allow convergence over a fairly large domain. Defaults to None.
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run.
+                Defaults to 5.
             method (str, optional): method used to compute sqrt. Defaults to "NR".
 
         Returns:
@@ -2081,17 +2124,17 @@ class SecretRational:
         .. _Newton-Raphson:
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
-        from nada_numpy.fxpmath import sqrt
 
         result = sqrt(self, initial=initial, iterations=iterations, method=method)
+        if not isinstance(result, SecretRational):
+            raise TypeError("sqrt input should be of type SecretRational.")
         return result
 
     # Trigonometry
 
-    def cossin(
-        self, iterations: Optional[int] = 10
-    ) -> Tuple["SecretRational", "SecretRational"]:
-        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the formula:
+    def cossin(self, iterations: int = 10) -> Tuple["SecretRational", "SecretRational"]:
+        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit
+        through the formula:
 
         .. math::
             Re\{e^{i * input}\}, Im\{e^{i * input}\} = \cos(input), \sin(input)
@@ -2103,12 +2146,13 @@ class SecretRational:
             Tuple[SecretRational, SecretRational]:
                 A tuple where the first element is cos and the second element is the sin.
         """
-        from nada_numpy.fxpmath import cossin
 
         result = cossin(self, iterations=iterations)
+        if not isinstance(result, SecretRational):
+            raise TypeError("cossin input should be of type SecretRational.")
         return result
 
-    def cos(self, iterations: Optional[int] = 10) -> "SecretRational":
+    def cos(self, iterations: int = 10) -> "SecretRational":
         r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -2119,12 +2163,13 @@ class SecretRational:
         Returns:
             SecretRational: The approximate value of the cosine.
         """
-        from nada_numpy.fxpmath import cos
 
         result = cos(self, iterations=iterations)
+        if not isinstance(result, SecretRational):
+            raise TypeError("cos input should be of type SecretRational.")
         return result
 
-    def sin(self, iterations: Optional[int] = 10) -> "SecretRational":
+    def sin(self, iterations: int = 10) -> "SecretRational":
         r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -2135,12 +2180,13 @@ class SecretRational:
         Returns:
             SecretRational: The approximate value of the sine.
         """
-        from nada_numpy.fxpmath import sin
 
         result = sin(self, iterations=iterations)
+        if not isinstance(result, SecretRational):
+            raise TypeError("sin input should be of type SecretRational.")
         return result
 
-    def tan(self, iterations: Optional[int] = 10) -> "SecretRational":
+    def tan(self, iterations: int = 10) -> "SecretRational":
         r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
 
         Note: unstable outside [-30, 30]
@@ -2151,15 +2197,16 @@ class SecretRational:
         Returns:
             SecretRational: The approximate value of the tan.
         """
-        from nada_numpy.fxpmath import tan
 
         result = tan(self, iterations=iterations)
+        if not isinstance(result, SecretRational):
+            raise TypeError("tan input should be of type SecretRational.")
         return result
 
     # Activation functions
 
     def tanh(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
     ) -> "SecretRational":
         r"""Computes the hyperbolic tangent function using the identity
 
@@ -2204,13 +2251,14 @@ class SecretRational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import tanh
 
         result = tanh(self, chebyshev_terms=chebyshev_terms, method=method)
+        if not isinstance(result, SecretRational):
+            raise TypeError("tanh input should be of type SecretRational.")
         return result
 
     def sigmoid(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
     ) -> "SecretRational":
         r"""Computes the sigmoid function using the following definition
 
@@ -2232,7 +2280,8 @@ class SecretRational:
 
             "motzkin" - computes tanh via approximation from the paper
                 "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+                It uses the identity:
 
                 .. math::
                     \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -2248,7 +2297,8 @@ class SecretRational:
         Args:
             chebyshev_terms (int, optional): highest degree of Chebyshev polynomials.
                             Must be even and at least 6. Defaults to 32.
-            method (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+            method (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
 
         Returns:
             SecretRational: The sigmoid evaluation.
@@ -2256,13 +2306,14 @@ class SecretRational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import sigmoid
 
         result = sigmoid(self, chebyshev_terms=chebyshev_terms, method=method)
+        if not isinstance(result, SecretRational):
+            raise TypeError("sigmoid input should be of type SecretRational.")
         return result
 
     def gelu(
-        self, method: Optional[str] = "tanh", tanh_method: Optional[str] = "reciprocal"
+        self, method: str = "tanh", tanh_method: str = "reciprocal"
     ) -> "SecretRational":
         r"""Computes the gelu function using the following definition
 
@@ -2294,14 +2345,15 @@ class SecretRational:
         Raises:
             ValueError: Raised if method type is not supported.
         """
-        from nada_numpy.fxpmath import gelu
 
         result = gelu(self, method=method, tanh_method=tanh_method)
+        if not isinstance(result, SecretRational):
+            raise TypeError("gelu input should be of type SecretRational.")
         return result
 
     def silu(
         self,
-        method_sigmoid: Optional[str] = "reciprocal",
+        method_sigmoid: str = "reciprocal",
     ) -> "SecretRational":
         r"""Computes the gelu function using the following definition
 
@@ -2323,7 +2375,8 @@ class SecretRational:
 
             "motzkin" - computes tanh via approximation from the paper
                 "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+                It uses the identity:
 
                 .. math::
                     \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -2337,7 +2390,8 @@ class SecretRational:
                 Note: stable for x in [-500, 500]. Unstable otherwise.
 
         Args:
-            method_sigmoid (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+            method_sigmoid (str, optional): method used to compute sigmoid function.
+            Defaults to "reciprocal".
 
         Returns:
             SecretRational: The sigmoid evaluation.
@@ -2345,9 +2399,10 @@ class SecretRational:
         Raises:
             ValueError: Raised if sigmoid method type is not supported.
         """
-        from nada_numpy.fxpmath import silu
 
         result = silu(self, method_sigmoid=method_sigmoid)
+        if not isinstance(result, SecretRational):
+            raise TypeError("silu input should be of type SecretRational.")
         return result
 
 
@@ -2489,7 +2544,8 @@ class _RationalConfig(metaclass=_MetaRationalConfig):
 def set_log_scale(new_log_scale: int) -> None:
     """
     Sets the default Rational log scaling factor to a new value.
-    Note that this value is the LOG scale and will be used as a base-2 exponent during quantization.
+    Note that this value is the LOG scale and will be used as a base-2 exponent
+    during quantization.
 
     Args:
         new_log_scale (int): New log scaling factor.
@@ -2515,3 +2571,503 @@ def get_log_scale() -> int:
 def reset_log_scale() -> None:
     """Resets the Rational log scaling factor to the original default value"""
     _RationalConfig.log_scale = _RationalConfig.default_log_scale
+
+
+# Fixed-point math operations
+
+# Copyright (c) Facebook, Inc. and its affiliates.
+#
+# This source code is licensed under the MIT license found in the
+# LICENSE file in the root directory of this source tree.
+#
+# Part of the code is from the CrypTen Facebook Project:
+# https://github.com/facebookresearch/CrypTen/blob/main/crypten/common/functions/logic.py
+# https://github.com/facebookresearch/CrypTen/blob/main/crypten/common/functions/approximations.py
+#
+# Modifications:
+# July, 2024
+#   - Nada datatypes.
+#   - Relative accuracy documentation.
+#   - Some performance improvements.
+#   - Fixed Tanh Chebyshev method by changing '_hardtanh' implementation.
+#   - Tan.
+#   - Motzkin's prolynomial preprocessing approach.
+#   - GeLU and SiLU functions.
+
+
+def sign(x: _NadaRational) -> _NadaRational:
+    """Computes the sign value (0 is considered positive)"""
+
+    ltz_cond = x < rational(0)
+    ltz = ltz_cond.if_else(rational(1), rational(0))
+
+    return rational(1) - rational(2) * ltz
+
+
+def fxp_abs(x: _NadaRational) -> _NadaRational:
+    """Computes the absolute value of a rational"""
+    return x * sign(x)
+
+
+def exp(x: _NadaRational, iterations: int = 8) -> _NadaRational:
+    """
+    Approximates the exponential function using a limit approximation.
+    """
+
+    iters_na = UnsignedInteger(iterations)
+
+    result = rational(1) + (x >> iters_na)
+    for _ in range(iterations):
+        result = result**2
+    return result
+
+
+def polynomial(x: _NadaRational, coefficients: List[Rational]) -> _NadaRational:
+    """
+    Computes a polynomial function on a value with given coefficients.
+
+    The coefficients can be provided as a list of values.
+    They should be ordered from the linear term (order 1) first, ending with the highest order term.
+    **Note: The constant term is not included.**
+    """
+    result = coefficients[0] * x
+
+    for power, coeff in enumerate(coefficients[1:], start=2):
+        result += coeff * (x**power)
+
+    return result
+
+
+def log(
+    x: _NadaRational,
+    input_in_01: bool = False,
+    iterations: int = 2,
+    exp_iterations: int = 8,
+    order: int = 8,
+) -> _NadaRational:
+    """
+    Approximates the natural logarithm using 8th order modified Householder iterations.
+    """
+
+    if input_in_01:
+        return log(
+            x * rational(100),
+            iterations=iterations,
+            exp_iterations=exp_iterations,
+            order=order,
+        ) - rational(4.605170)
+
+    # Initialization to a decent estimate (found by qualitative inspection):
+    #                ln(x) = x/120 - 20exp(-2x - 1.0) + 3.0
+    term1 = x * rational(1 / 120.0)
+    term2 = exp(-x - x - rational(1), iterations=exp_iterations) * rational(20)
+    y = term1 - term2 + rational(3.0)
+
+    # 8th order Householder iterations
+    for _ in range(iterations):
+        h = rational(1) - x * exp(-y, iterations=exp_iterations)
+        y -= polynomial(h, [rational(1 / (i + 1)) for i in range(order)])
+    return y
+
+
+def reciprocal(  # pylint: disable=too-many-arguments
+    x: _NadaRational,
+    all_pos: bool = False,
+    initial: Optional[Rational] = None,
+    input_in_01: bool = False,
+    iterations: int = 10,
+    log_iters: int = 1,
+    exp_iters: int = 8,
+    method: str = "NR",
+) -> _NadaRational:
+    """
+    Approximates the reciprocal of a number through two possible methods: Newton-Raphson
+    and log.
+    """
+    if input_in_01:
+        rec = reciprocal(
+            x * rational(64),
+            method=method,
+            all_pos=True,
+            initial=initial,
+            iterations=iterations,
+        ) * rational(64)
+        return rec
+
+    if not all_pos:
+        sgn = sign(x)
+        pos = sgn * x
+        return sgn * reciprocal(
+            pos, method=method, all_pos=True, initial=initial, iterations=iterations
+        )
+
+    if method == "NR":
+        if initial is None:
+            # Initialization to a decent estimate (found by qualitative inspection):
+            #                1/x = 3exp(1 - 2x) + 0.003
+            result = rational(3) * exp(
+                rational(1) - x - x, iterations=exp_iters
+            ) + rational(0.003)
+        else:
+            result = initial
+        for _ in range(iterations):
+            result = result + result - result * result * x
+        return result
+    if method == "log":
+        return exp(-log(x, iterations=log_iters), iterations=exp_iters)
+    raise ValueError(f"Invalid method {method} given for reciprocal function")
+
+
+def inv_sqrt(
+    x: _NadaRational,
+    initial: Optional[Union[_NadaRational, None]] = None,
+    iterations: int = 5,
+    method: str = "NR",
+) -> _NadaRational:
+    """
+    Computes the inverse square root of the input using the Newton-Raphson method.
+    """
+
+    if method == "NR":
+        if initial is None:
+            # Initialization to a decent estimate (found by qualitative inspection):
+            #                 exp(- x/2 - 0.2) * 2.2 + 0.2 - x/1024
+            y = exp(-(x >> UnsignedInteger(1)) - rational(0.2)) * rational(
+                2.2
+            ) + rational(0.2)
+            y -= x >> UnsignedInteger(10)  # div by 1024
+        else:
+            y = initial
+
+        # Newton Raphson iterations for inverse square root
+        for _ in range(iterations):
+            y = (y * (rational(3) - x * y * y)) >> UnsignedInteger(1)
+        return y
+    raise ValueError(f"Invalid method {method} given for inv_sqrt function")
+
+
+def sqrt(
+    x: _NadaRational,
+    initial: Union[_NadaRational, None] = None,
+    iterations: int = 5,
+    method: str = "NR",
+) -> _NadaRational:
+    """
+    Computes the square root of the input by computing its inverse square root using
+    the Newton-Raphson method and multiplying by the input.
+    """
+
+    if method == "NR":
+        return inv_sqrt(x, initial=initial, iterations=iterations, method=method) * x
+
+    raise ValueError(f"Invalid method {method} given for sqrt function")
+
+
+# Trigonometry
+
+
+def _eix(x: _NadaRational, iterations: int = 10) -> Tuple[_NadaRational, _NadaRational]:
+    r"""Computes e^(i * x) where i is the imaginary unit through the formula:
+
+    .. math::
+        Re\{e^{i * x}\}, Im\{e^{i * x}\} = \cos(x), \sin(x)
+
+    Args:
+        x (Union[Rational, SecretRational]): the input value.
+        iterations (int, optional): determines the number of iterations to run. Defaults to 10.
+
+    Returns:
+        Tuple[Union[Rational, SecretRational], Union[Rational, SecretRational]]:
+            A tuple where the first element is cos and the second element is the sin.
+    """
+
+    one = rational(1)
+    im = x >> UnsignedInteger(iterations)
+
+    # First iteration uses knowledge that `re` is public and = 1
+    re = one - im * im
+    im *= rational(2)
+
+    # Compute (a + bi)^2 -> (a^2 - b^2) + (2ab)i `iterations` times
+    for _ in range(iterations - 1):
+        a2 = re * re
+        b2 = im * im
+        im = im * re
+        im *= rational(2)
+        re = a2 - b2
+
+    return re, im
+
+
+def cossin(
+    x: _NadaRational, iterations: int = 10
+) -> Tuple[_NadaRational, _NadaRational]:
+    r"""
+    Computes cosine and sine through e^(i * x) where i is the imaginary unit.
+    """
+    return _eix(x, iterations=iterations)
+
+
+def cos(x: _NadaRational, iterations: int = 10) -> _NadaRational:
+    r"""
+    Computes the cosine of x using cos(x) = Re{exp(i * x)}.
+    """
+    return cossin(x, iterations=iterations)[0]
+
+
+def sin(x: _NadaRational, iterations: int = 10) -> _NadaRational:
+    r"""
+    Computes the sine of x using sin(x) = Im{exp(i * x)}.
+    """
+    return cossin(x, iterations=iterations)[1]
+
+
+def tan(x: _NadaRational, iterations: int = 10) -> _NadaRational:
+    r"""
+    Computes the tan of x using tan(x) = sin(x) / cos(x).
+    """
+    c, s = cossin(x, iterations=iterations)
+    return s * reciprocal(c)
+
+
+# Activation functions
+
+
+@functools.lru_cache(maxsize=10)
+def chebyshev_series(func, width, terms):
+    """
+    Computes Chebyshev coefficients.
+    """
+    n_range = np.arange(start=0, stop=terms, dtype=float)
+    x = width * np.cos((n_range + 0.5) * np.pi / terms)
+    y = func(x)
+    cos_term = np.cos(np.outer(n_range, n_range + 0.5) * np.pi / terms)
+    coeffs = (2 / terms) * np.sum(y * cos_term, axis=1)
+    return coeffs
+
+
+def tanh(
+    x: _NadaRational, chebyshev_terms: int = 32, method: str = "reciprocal"
+) -> _NadaRational:
+    """
+    Computes the hyperbolic tangent function.
+    """
+
+    if method == "reciprocal":
+        return sigmoid(x + x, method=method) * rational(2) - rational(1)
+    if method == "chebyshev":
+        coeffs = chebyshev_series(np.tanh, 1, chebyshev_terms)[1::2]
+        # transform np.array of float to na.array of rationals
+        coeffs = np.vectorize(rational)(coeffs)
+        out = _chebyshev_polynomials(x, chebyshev_terms).transpose() @ coeffs
+        # truncate outside [-maxval, maxval]
+        return _hardtanh(x, out)
+    if method == "motzkin":
+        # Using approximation from "BOLT: Privacy-Preserving, Accurate and Efficient
+        # Inference for Transformers"
+        # section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+
+        # ltz is used for absolute value of x and to compute sign (used to generate result).
+        # We don't use 'abs' and 'sign' functions to avoid computing ltz twice.
+        # sign = 1 - 2 * ltz, where ltz = (x < rational(0)).if_else(rational(1), rational(0))
+        sgn = rational(1) - rational(2) * (x < rational(0)).if_else(
+            rational(1), rational(0)
+        )
+        # absolute value
+        abs_x = x * sgn
+
+        # Motzkin’s polynomial preprocessing
+        t0 = rational(-4.259314087994767)
+        t1 = rational(18.86353816972803)
+        t2 = rational(-36.42402897526823)
+        t3 = rational(-0.013232131886235352)
+        t4 = rational(-3.3289339650097993)
+        t5 = rational(-0.0024920889620412097)
+        tanh_p0 = (abs_x + t0) * abs_x + t1
+        tanh_p1 = (tanh_p0 + abs_x + t2) * tanh_p0 * t3 * abs_x + t4 * abs_x + t5
+
+        return (abs_x > rational(2.855)).if_else(sgn, sgn * tanh_p1)
+    raise ValueError(f"Unrecognized method {method} for tanh")
+
+
+### Auxiliary functions for tanh
+
+
+def _chebyshev_polynomials(x: _NadaRational, terms: int) -> np.ndarray:
+    """Evaluates odd degree Chebyshev polynomials at x.
+
+    Chebyshev Polynomials of the first kind are defined as:
+
+    .. math::
+        P_0(x) = 1, P_1(x) = x, P_n(x) = 2 P_{n - 1}(x) - P_{n-2}(x)
+
+    Args:
+        x (Union["Rational", "SecretRational"]): input at which polynomials are evaluated
+        terms (int): highest degree of Chebyshev polynomials.
+                        Must be even and at least 6.
+    Returns:
+        NadaArray of polynomials evaluated at x of shape `(terms, *x)`.
+
+    Raises:
+        ValueError: Raised if 'terrms' is odd and < 6.
+    """
+    if terms % 2 != 0 or terms < 6:
+        raise ValueError("Chebyshev terms must be even and >= 6")
+
+    # Initiate base polynomials
+    # P_0
+    # polynomials = np.array([x])
+    # y = rational(4) * x * x - rational(2)
+    # z = y - rational(1)
+    # # P_1
+    # polynomials = np.append(polynomials, z * x)
+
+    # # Generate remaining Chebyshev polynomials using the recurrence relation
+    # for k in range(2, terms // 2):
+    #     next_polynomial = y * polynomials[k - 1] - polynomials[k - 2]
+    #     polynomials = np.append(polynomials, next_polynomial)
+
+    # return polynomials
+
+
+    polynomials = [x]
+    y = rational(4) * x * x - rational(2)
+    z = y - rational(1)
+    # P_1
+    polynomials.append(z * x)
+
+    # Generate remaining Chebyshev polynomials using the recurrence relation
+    for k in range(2, terms // 2):
+        next_polynomial = y * polynomials[k - 1] - polynomials[k - 2]
+        polynomials.append(next_polynomial)
+
+    return np.array(polynomials)
+
+
+def _hardtanh(
+    x: _NadaRational,
+    output: _NadaRational,
+    abs_const: _NadaRational = rational(1),
+    abs_range: _NadaRational = rational(1),
+) -> _NadaRational:
+    r"""Applies the HardTanh function element-wise.
+
+    HardTanh is defined as:
+
+    .. math::
+        \text{HardTanh}(x) = \begin{cases}
+            1 & \text{ if } x > 1 \\
+            -1 & \text{ if } x < -1 \\
+            Tanh(x) & \text{ otherwise } \\
+        \end{cases}
+
+    The range of the linear region :math:`[-1, 1]` can be adjusted using
+    :attr:`abs_range`.
+
+    Args:
+        x (Union[Rational, SecretRational]): the input value of the Tanh.
+        output (Union[Rational, SecretRational]): the output value of the approximation of Tanh.
+        abs_const (Union[Rational, SecretRational]): constant value to which |Tanh(x)| converges.
+            Defaults to 1.
+        abs_range (Union[Rational, SecretRational]): absolute value of the range. Defaults to 1.
+
+    Returns:
+        Union[Rational, SecretRational]: HardTanh output.
+    """
+    # absolute value
+    sgn = sign(x)
+    abs_x = x * sgn
+    # chekc if inside [-abs_range, abs_range] interval
+    ineight_cond = abs_x < abs_range
+    result = ineight_cond.if_else(output, abs_const * sgn)
+
+    return result
+
+
+### End of auxiliary functions for tanh
+
+
+def sigmoid(
+    x: _NadaRational, chebyshev_terms: int = 32, method: str = "reciprocal"
+) -> _NadaRational:
+    """
+    Computes the sigmoid function.
+    """
+    if method == "chebyshev":
+        tanh_approx = tanh(
+            x >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms
+        )
+        return (tanh_approx >> UnsignedInteger(1)) + rational(0.5)
+    if method == "motzkin":
+        tanh_approx = tanh(
+            x >> UnsignedInteger(1), method=method, chebyshev_terms=chebyshev_terms
+        )
+        return (tanh_approx >> UnsignedInteger(1)) + rational(0.5)
+    if method == "reciprocal":
+        # ltz is used for absolute value of x and to generate 'result'.
+        # We don't use 'abs' function to avoid computing ltz twice.
+        ltz_cond = x < rational(0)
+        ltz = ltz_cond.if_else(rational(1), rational(0))
+        # compute absolute value of x
+        sgn = rational(1) - rational(2) * ltz
+        pos_x = x * sgn
+
+        denominator = exp(-pos_x) + rational(1)
+        pos_output = reciprocal(
+            denominator, all_pos=True, initial=rational(0.75), iterations=3, exp_iters=9
+        )
+
+        # result is equivalent to (1 - ltz).if_else(pos_output, 1 - pos_output)
+        result = pos_output + ltz - rational(2) * pos_output * ltz
+        return result
+    raise ValueError(f"Unrecognized method {method} for sigmoid")
+
+
+def gelu(
+    x: _NadaRational, method: str = "tanh", tanh_method: str = "reciprocal"
+) -> _NadaRational:
+    """
+    Computes the gelu function.
+    """
+
+    if method == "tanh":
+        # Using common approximation:
+        #       x/2 * (1 + tanh(0.797884560 * ( x + 0.04471 * x ** 3 ) ) )
+        # where 0.797884560 ~= sqrt(2/pi).
+        val = rational(0.797884560) * (x + rational(0.044715) * x**3)
+        return (x * (rational(1) + tanh(val, method=tanh_method))) >> UnsignedInteger(1)
+    if method == "motzkin":
+        # Using approximation from "BOLT: Privacy-Preserving, Accurate and Efficient
+        # Inference for Transformers"
+        # section 5.2 based on the Motzkin’s polynomial preprocessing technique.
+
+        # ltz is used for absolute value of x and to compute relu.
+        # We don't use 'abs' and '_relu' functions to avoid computing ltz twice.
+        ltz = (x < rational(0)).if_else(rational(1), rational(0))
+        # absolute value
+        sgn = rational(1) - rational(2) * ltz
+        abs_x = x * sgn
+        # relu
+        relu = x * (rational(1) - ltz)
+
+        # Motzkin’s polynomial preprocessing
+        g0 = rational(0.14439048359960427)
+        g1 = rational(-0.7077117131613893)
+        g2 = rational(4.5702822654246535)
+        g3 = rational(-8.15444702051307)
+        g4 = rational(16.382265425072532)
+        gelu_p0 = (g0 * abs_x + g1) * abs_x + g2
+        gelu_p1 = (gelu_p0 + g0 * abs_x + g3) * gelu_p0 + g4 + (x >> UnsignedInteger(1))
+
+        return (abs_x > rational(2.7)).if_else(relu, gelu_p1)
+    raise ValueError(f"Unrecognized method {method} for gelu")
+
+
+def silu(
+    x: _NadaRational,
+    method_sigmoid: str = "reciprocal",
+) -> _NadaRational:
+    """
+    Computes the gelu function
+    """
+    return x * sigmoid(x, method=method_sigmoid)

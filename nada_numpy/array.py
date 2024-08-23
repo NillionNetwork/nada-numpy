@@ -5,8 +5,7 @@
 
 # pylint:disable=too-many-lines
 
-from typing import (Any, Callable, Optional, Sequence, Tuple, Union, get_args,
-                    overload)
+from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
 
 import numpy as np
 from nada_dsl import (Boolean, Input, Integer, Output, Party, PublicInteger,
@@ -17,8 +16,8 @@ from nada_numpy.context import UnsafeArithmeticSession
 from nada_numpy.nada_typing import (NadaBoolean, NadaCleartextType,
                                     NadaInteger, NadaRational,
                                     NadaUnsignedInteger)
-from nada_numpy.types import (Rational, SecretRational, get_log_scale,
-                              public_rational, rational, secret_rational)
+from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
+                              public_rational, rational, secret_rational, sign)
 from nada_numpy.utils import copy_metadata
 
 
@@ -1084,24 +1083,24 @@ class NadaArray:  # pylint:disable=too-many-public-methods
     def sign(self) -> "NadaArray":
         """Computes the sign value (0 is considered positive)"""
         if self.is_rational:
-            return self.apply(SecretRational.sign())
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Sign is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+            return self.apply(sign)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sign is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
 
     def abs(self) -> "NadaArray":
         """Computes the absolute value"""
         if self.is_rational:
-            return self.apply(SecretRational.abs())
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Abs is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+            return self.apply(fxp_abs)
 
-    def exp(self, iterations: Optional[int] = 8) -> "NadaArray":
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Abs is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def exp(self, iterations: int = 8) -> "NadaArray":
         """
         Approximates the exponential function using a limit approximation.
 
@@ -1122,26 +1121,31 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         + ---------------------------------- +
 
         Args:
-            iterations (int, optional): The number of iterations for the limit approximation. Defaults to 8.
+            iterations (int, optional): The number of iterations for the limit approximation.
+                Defaults to 8.
 
         Returns:
             NadaArray: The approximated value of the exponential function.
         """
         if self.is_rational:
-            exp = lambda x: x.exp(iterations=iterations)
+
+            def exp(x):
+                return x.exp(iterations=iterations)
+
             return self.apply(exp)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Exp is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Exp is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
 
     def polynomial(self, coefficients: list) -> "NadaArray":
         """
         Computes a polynomial function on a value with given coefficients.
 
         The coefficients can be provided as a list of values.
-        They should be ordered from the linear term (order 1) first, ending with the highest order term.
+        They should be ordered from the linear term (order 1) first,
+        ending with the highest order term.
         **Note: The constant term is not included.**
 
         Args:
@@ -1151,20 +1155,24 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             NadaArray: The result of the polynomial function applied to the input x.
         """
         if self.is_rational:
-            polynomial = lambda x: x.polynomial(coefficients=coefficients)
+
+            def polynomial(x):
+                return x.polynomial(coefficients=coefficients)
+
             return self.apply(polynomial)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Polynomial is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Polynomial is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     def log(
         self,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 2,
-        exp_iterations: Optional[int] = 8,
-        order: Optional[int] = 8,
+        input_in_01: bool = False,
+        iterations: int = 2,
+        exp_iterations: int = 8,
+        order: int = 8,
     ) -> "NadaArray":
         """
         Approximates the natural logarithm using 8th order modified Householder iterations.
@@ -1197,36 +1205,42 @@ class NadaArray:  # pylint:disable=too-many-public-methods
                 Given the convergence domain for log() function is approximately [1e-4, 1e2],
                 we set a = 100.
                 Defaults to False.
-            iterations (int, optional): Number of Householder iterations for the approximation. Defaults to 2.
-            exp_iterations (int, optional): Number of iterations for the limit approximation of exp. Defaults to 8.
-            order (int, optional): Number of polynomial terms used (order of Householder approximation). Defaults to 8.
+            iterations (int, optional): Number of Householder iterations for the approximation.
+                Defaults to 2.
+            exp_iterations (int, optional): Number of iterations for the limit
+                approximation of exp. Defaults to 8.
+            order (int, optional): Number of polynomial terms used (order of
+                Householder approximation). Defaults to 8.
 
         Returns:
             NadaArray: The approximate value of the natural logarithm.
         """
         if self.is_rational:
-            log = lambda x: x.log(
-                input_in_01=input_in_01,
-                iterations=iterations,
-                exp_iterations=exp_iterations,
-                order=order,
-            )
-            return self.apply(log)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Log is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
 
-    def reciprocal(
+            def log(x):
+                return x.log(
+                    input_in_01=input_in_01,
+                    iterations=iterations,
+                    exp_iterations=exp_iterations,
+                    order=order,
+                )
+
+            return self.apply(log)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Log is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def reciprocal(  # pylint: disable=too-many-arguments
         self,
-        all_pos: Optional[bool] = False,
-        initial: Optional[Union["SecretRational", None]] = None,
-        input_in_01: Optional[bool] = False,
-        iterations: Optional[int] = 10,
-        log_iters: Optional[int] = 1,
-        exp_iters: Optional[int] = 8,
-        method: Optional[str] = "NR",
+        all_pos: bool = False,
+        initial: Optional["Rational"] = None,
+        input_in_01: bool = False,
+        iterations: int = 10,
+        log_iters: int = 1,
+        exp_iters: int = 8,
+        method: str = "NR",
     ) -> "NadaArray":
         r"""
         Approximates the reciprocal of a number through two possible methods: Newton-Raphson
@@ -1263,13 +1277,14 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             all_pos (bool, optional): determines whether all elements of the
                 input are known to be positive, which optimizes the step of
                 computing the sign of the input. Defaults to False.
-            initial (Union[SecretRational, None], optional): sets the initial value for the
+            initial (Rational, optional): sets the initial value for the
                 Newton-Raphson method. By default, this will be set to :math:
                 `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
                 a fairly large domain.
-            input_in_01 (bool, optional) : Allows a user to indicate that the input is in the range [0, 1],
-                        causing the function optimize for this range. This is useful for improving
-                        the accuracy of functions on probabilities (e.g. entropy functions).
+            input_in_01 (bool, optional) : Allows a user to indicate that the input is
+                        in the range [0, 1], causing the function optimize for this range.
+                        This is useful for improving the accuracy of functions on
+                        probabilities (e.g. entropy functions).
             iterations (int, optional):  determines the number of Newton-Raphson iterations to run
                             for the `NR` method. Defaults to 10.
             log_iters (int, optional): determines the number of Householder
@@ -1285,27 +1300,31 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             https://en.wikipedia.org/wiki/Newton%27s_method
         """
         if self.is_rational:
-            reciprocal = lambda x: x.reciprocal(
-                all_pos=all_pos,
-                initial=initial,
-                input_in_01=input_in_01,
-                iterations=iterations,
-                log_iters=log_iters,
-                exp_iters=exp_iters,
-                method=method,
-            )
+            # pylint:disable=duplicate-code
+            def reciprocal(x):
+                return x.reciprocal(
+                    all_pos=all_pos,
+                    initial=initial,
+                    input_in_01=input_in_01,
+                    iterations=iterations,
+                    log_iters=log_iters,
+                    exp_iters=exp_iters,
+                    method=method,
+                )
+
             return self.apply(reciprocal)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Reciprocal is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Reciprocal is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     def inv_sqrt(
         self,
-        initial: Optional[Union["SecretRational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "NadaArray":
         r"""
         Computes the inverse square root of the input using the Newton-Raphson method.
@@ -1320,9 +1339,9 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         + ---------------------------------- +
 
         Args:
-            initial (Union[SecretRational, None], optional): sets the initial value for the Newton-Raphson iterations.
-                        By default, this will be set to allow the method to converge over a
-                        fairly large domain.
+            initial (Union[SecretRational, None], optional): sets the initial value for the
+                        Newton-Raphson iterations. By default, this will be set to allow the
+                        method to converge over a fairly large domain.
             iterations (int, optional): determines the number of Newton-Raphson iterations to run.
             method (str, optional): method used to compute inv_sqrt. Defaults to "NR".
 
@@ -1333,21 +1352,23 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
         if self.is_rational:
-            inv_sqrt = lambda x: x.inv_sqrt(
-                initial=initial, iterations=iterations, method=method
-            )
+
+            def inv_sqrt(x):
+                return x.inv_sqrt(initial=initial, iterations=iterations, method=method)
+
             return self.apply(inv_sqrt)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Inverse square-root is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Inverse square-root is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     def sqrt(
         self,
-        initial: Optional[Union["SecretRational", None]] = None,
-        iterations: Optional[int] = 5,
-        method: Optional[str] = "NR",
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
     ) -> "NadaArray":
         r"""
         Computes the square root of the input by computing its inverse square root using
@@ -1363,10 +1384,11 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         + ---------------------------------- +
 
         Args:
-            initial (Union[SecretRational, None], optional): sets the initial value for the inverse square root
-                Newton-Raphson iterations. By default, this will be set to allow convergence
-                over a fairly large domain. Defaults to None.
-            iterations (int, optional):  determines the number of Newton-Raphson iterations to run. Defaults to 5.
+            initial (Union[SecretRational, None], optional): sets the initial value for the inverse
+                square root Newton-Raphson iterations. By default, this will be set to allow
+                convergence over a fairly large domain. Defaults to None.
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run.
+                Defaults to 5.
             method (str, optional): method used to compute sqrt. Defaults to "NR".
 
         Returns:
@@ -1376,20 +1398,23 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
         """
         if self.is_rational:
-            sqrt = lambda x: x.sqrt(
-                initial=initial, iterations=iterations, method=method
-            )
+
+            def sqrt(x):
+                return x.sqrt(initial=initial, iterations=iterations, method=method)
+
             return self.apply(sqrt)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Square-root is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Square-root is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     # Trigonometry
 
-    def cossin(self, iterations: Optional[int] = 10) -> Tuple["NadaArray", "NadaArray"]:
-        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the formula:
+    def cossin(self, iterations: int = 10) -> "NadaArray":
+        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the
+        formula:
 
         .. math::
             Re\{e^{i * input}\}, Im\{e^{i * input}\} = \cos(input), \sin(input)
@@ -1402,15 +1427,19 @@ class NadaArray:  # pylint:disable=too-many-public-methods
                 A tuple where the first element is cos and the second element is the sin.
         """
         if self.is_rational:
-            cossin = lambda x: x.cossin(iterations=iterations)
-            return self.apply(cossin)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Cosine and Sine are not compatible with {dtype}, only with Rational and SecretRational types."
-            )
 
-    def cos(self, iterations: Optional[int] = 10) -> "NadaArray":
+            def cossin(x):
+                return x.cossin(iterations=iterations)
+
+            return self.apply(cossin)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Cosine and Sine are not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def cos(self, iterations: int = 10) -> "NadaArray":
         r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -1422,15 +1451,19 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             NadaArray: The approximate value of the cosine.
         """
         if self.is_rational:
-            cos = lambda x: x.cos(iterations=iterations)
-            return self.apply(cos)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Cosine is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
 
-    def sin(self, iterations: Optional[int] = 10) -> "NadaArray":
+            def cos(x):
+                return x.cos(iterations=iterations)
+
+            return self.apply(cos)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Cosine is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def sin(self, iterations: int = 10) -> "NadaArray":
         r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
 
         Note: unstable outside [-30, 30]
@@ -1442,15 +1475,18 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             NadaArray: The approximate value of the sine.
         """
         if self.is_rational:
-            sin = lambda x: x.sin(iterations=iterations)
-            return self.apply(sin)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Sine is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
 
-    def tan(self, iterations: Optional[int] = 10) -> "NadaArray":
+            def sin(x):
+                return x.sin(iterations=iterations)
+
+            return self.apply(sin)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sine is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def tan(self, iterations: int = 10) -> "NadaArray":
         r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
 
         Note: unstable outside [-30, 30]
@@ -1462,18 +1498,22 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             NadaArray: The approximate value of the tan.
         """
         if self.is_rational:
-            tan = lambda x: x.tan(iterations=iterations)
+
+            def tan(x):
+                return x.tan(iterations=iterations)
+
             return self.apply(tan)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Tangent is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Tangent is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     # Activation functions
 
     def tanh(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
     ) -> "NadaArray":
         r"""Computes the hyperbolic tangent function using the identity
 
@@ -1519,16 +1559,20 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             ValueError: Raised if method type is not supported.
         """
         if self.is_rational:
-            tanh = lambda x: x.tanh(chebyshev_terms=chebyshev_terms, method=method)
+
+            def tanh(x):
+                return x.tanh(chebyshev_terms=chebyshev_terms, method=method)
+
             return self.apply(tanh)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Hyperbolic tangent is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Hyperbolic tangent is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     def sigmoid(
-        self, chebyshev_terms: Optional[int] = 32, method: Optional[str] = "reciprocal"
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
     ) -> "NadaArray":
         r"""Computes the sigmoid function using the following definition
 
@@ -1550,7 +1594,8 @@ class NadaArray:  # pylint:disable=too-many-public-methods
 
             "motzkin" - computes tanh via approximation from the paper
                 "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses
+                the identity:
 
                 .. math::
                     \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -1566,7 +1611,8 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         Args:
             chebyshev_terms (int, optional): highest degree of Chebyshev polynomials.
                             Must be even and at least 6. Defaults to 32.
-            method (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+            method (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
 
         Returns:
             NadaArray: The sigmoid evaluation.
@@ -1575,18 +1621,20 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             ValueError: Raised if method type is not supported.
         """
         if self.is_rational:
-            sigmoid = lambda x: x.sigmoid(
-                chebyshev_terms=chebyshev_terms, method=method
-            )
+
+            def sigmoid(x):
+                return x.sigmoid(chebyshev_terms=chebyshev_terms, method=method)
+
             return self.apply(sigmoid)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Sigmoid is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sigmoid is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
 
     def gelu(
-        self, method: Optional[str] = "tanh", tanh_method: Optional[str] = "reciprocal"
+        self, method: str = "tanh", tanh_method: str = "reciprocal"
     ) -> "NadaArray":
         r"""Computes the gelu function using the following definition
 
@@ -1619,68 +1667,76 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             ValueError: Raised if method type is not supported.
         """
         if self.is_rational:
-            gelu = lambda x: x.gelu(method=method, tanh_method=tanh_method)
+
+            def gelu(x):
+                return x.gelu(method=method, tanh_method=tanh_method)
+
             return self.apply(gelu)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Gelu is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Gelu is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
 
     def silu(
         self,
-        method_sigmoid: Optional[str] = "reciprocal",
+        method_sigmoid: str = "reciprocal",
     ) -> "NadaArray":
         r"""Computes the gelu function using the following definition
 
+        .. math::
+            silu(x) = x * sigmoid(x)
+
+        Sigmoid methods:
+        If a valid method is given, this function will compute sigmoid
+            using that method:
+
+            "chebyshev" - computes tanh via Chebyshev approximation with
+                truncation and uses the identity:
+
                 .. math::
-                    silu(x) = x * sigmoid(x)
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-                Sigmoid methods:
-                If a valid method is given, this function will compute sigmoid
-                    using that method:
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
 
-                    "chebyshev" - computes tanh via Chebyshev approximation with
-                        truncation and uses the identity:
+            "motzkin" - computes tanh via approximation from the paper
+                "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+                It uses the identity:
 
-                        .. math::
-                            \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+                .. math::
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
 
-                        Note: stable for all input range as the approximation is truncated
-                                to 0/1 outside [-1, 1].
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
 
-                    "motzkin" - computes tanh via approximation from the paper
-                        "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-                        on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+            "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
+                the reciprocal
 
-                        .. math::
-                            \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+                Note: stable for x in [-500, 500]. Unstable otherwise.
 
-                        Note: stable for all input range as the approximation is truncated
-                                to 0/1 outside [-1, 1].
+        Args:
+            method_sigmoid (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
 
-                    "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
-                        the reciprocal
+        Returns:
+            NadaArray: The sigmoid evaluation.
 
-                        Note: stable for x in [-500, 500]. Unstable otherwise.
-
-                Args:
-                    method_sigmoid (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
-        rational
-                Returns:
-                    NadaArray: The sigmoid evaluation.
-
-                Raises:
-                    ValueError: Raised if sigmoid method type is not supported.
+        Raises:
+            ValueError: Raised if sigmoid method type is not supported.
         """
         if self.is_rational:
-            silu = lambda x: x.silu(method_sigmoid=method_sigmoid)
+
+            def silu(x):
+                return x.silu(method_sigmoid=method_sigmoid)
+
             return self.apply(silu)
-        else:
-            dtype = get_dtype(self)
-            raise TypeError(
-                f"Silu is not compatible with {dtype}, only with Rational and SecretRational types."
-            )
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Silu is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
 
 
 def _check_type_compatibility(

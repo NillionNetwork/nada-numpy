@@ -3,6 +3,8 @@ This module provides common functions to work with Nada Numpy, including the cre
 and manipulation of arrays and party objects.
 """
 
+# pylint:disable=too-many-lines
+
 from typing import Any, Callable, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
@@ -622,7 +624,7 @@ def abs(arr: NadaArray) -> "NadaArray":
     return arr.abs()
 
 
-def exp(arr: NadaArray, iterations: Optional[int] = 8) -> "NadaArray":
+def exp(arr: NadaArray, iterations: int = 8) -> "NadaArray":
     """
     Approximates the exponential function using a limit approximation.
 
@@ -643,7 +645,8 @@ def exp(arr: NadaArray, iterations: Optional[int] = 8) -> "NadaArray":
     + ---------------------------------- +
 
     Args:
-        iterations (int, optional): The number of iterations for the limit approximation. Defaults to 8.
+        iterations (int, optional): The number of iterations for the limit approximation.
+            Defaults to 8.
 
     Returns:
         NadaArray: The approximated value of the exponential function.
@@ -670,10 +673,10 @@ def polynomial(arr: NadaArray, coefficients: list) -> "NadaArray":
 
 def log(
     arr: NadaArray,
-    input_in_01: Optional[bool] = False,
-    iterations: Optional[int] = 2,
-    exp_iterations: Optional[int] = 8,
-    order: Optional[int] = 8,
+    input_in_01: bool = False,
+    iterations: int = 2,
+    exp_iterations: int = 8,
+    order: int = 8,
 ) -> "NadaArray":
     """
     Approximates the natural logarithm using 8th order modified Householder iterations.
@@ -706,9 +709,12 @@ def log(
             Given the convergence domain for log() function is approximately [1e-4, 1e2],
             we set a = 100.
             Defaults to False.
-        iterations (int, optional): Number of Householder iterations for the approximation. Defaults to 2.
-        exp_iterations (int, optional): Number of iterations for the limit approximation of exp. Defaults to 8.
-        order (int, optional): Number of polynomial terms used (order of Householder approximation). Defaults to 8.
+        iterations (int, optional): Number of Householder iterations for the approximation.
+            Defaults to 2.
+        exp_iterations (int, optional): Number of iterations for the limit approximation of exp.
+            Defaults to 8.
+        order (int, optional): Number of polynomial terms used (order of Householder approximation).
+            Defaults to 8.
 
     Returns:
         NadaArray: The approximate value of the natural logarithm.
@@ -721,15 +727,15 @@ def log(
     )
 
 
-def reciprocal(
+def reciprocal(  # pylint: disable=too-many-arguments
     arr: NadaArray,
-    all_pos: Optional[bool] = False,
-    initial: Optional[Union["SecretRational", None]] = None,
-    input_in_01: Optional[bool] = False,
-    iterations: Optional[int] = 10,
-    log_iters: Optional[int] = 1,
-    exp_iters: Optional[int] = 8,
-    method: Optional[str] = "NR",
+    all_pos: bool = False,
+    initial: Optional["Rational"] = None,
+    input_in_01: bool = False,
+    iterations: int = 10,
+    log_iters: int = 1,
+    exp_iters: int = 8,
+    method: str = "NR",
 ) -> "NadaArray":
     r"""
     Approximates the reciprocal of a number through two possible methods: Newton-Raphson
@@ -762,24 +768,25 @@ def reciprocal(
                 | [253, +∞[        |     Unstable      |
                 + ------------------------------------ +
 
-    Args:
-        all_pos (bool, optional): determines whether all elements of the
-            input are known to be positive, which optimizes the step of
-            computing the sign of the input. Defaults to False.
-        initial (Union[SecretRational, None], optional): sets the initial value for the
-            Newton-Raphson method. By default, this will be set to :math:
-            `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
-            a fairly large domain.
-        input_in_01 (bool, optional) : Allows a user to indicate that the input is in the range [0, 1],
-                    causing the function optimize for this range. This is useful for improving
-                    the accuracy of functions on probabilities (e.g. entropy functions).
-        iterations (int, optional):  determines the number of Newton-Raphson iterations to run
-                        for the `NR` method. Defaults to 10.
-        log_iters (int, optional): determines the number of Householder
-            iterations to run when computing logarithms for the `log` method. Defaults to 1.
-        exp_iters (int, optional): determines the number of exp
-            iterations to run when computing exp. Defaults to 8.
-        method (str, optional): method used to compute reciprocal. Defaults to "NR".
+        Args:
+            all_pos (bool, optional): determines whether all elements of the
+                input are known to be positive, which optimizes the step of
+                computing the sign of the input. Defaults to False.
+            initial (Rational, optional): sets the initial value for the
+                Newton-Raphson method. By default, this will be set to :math:
+                `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
+                a fairly large domain.
+            input_in_01 (bool, optional) : Allows a user to indicate that the input is
+                        in the range [0, 1], causing the function optimize for this range.
+                        This is useful for improving the accuracy of functions on
+                        probabilities (e.g. entropy functions).
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run
+                            for the `NR` method. Defaults to 10.
+            log_iters (int, optional): determines the number of Householder
+                iterations to run when computing logarithms for the `log` method. Defaults to 1.
+            exp_iters (int, optional): determines the number of exp
+                iterations to run when computing exp. Defaults to 8.
+            method (str, optional): method used to compute reciprocal. Defaults to "NR".
 
     Returns:
         NadaArray: The approximate value of the reciprocal
@@ -787,6 +794,7 @@ def reciprocal(
     .. _Newton-Raphson:
         https://en.wikipedia.org/wiki/Newton%27s_method
     """
+    # pylint:disable=duplicate-code
     return arr.reciprocal(
         all_pos=all_pos,
         initial=initial,
@@ -800,9 +808,9 @@ def reciprocal(
 
 def inv_sqrt(
     arr: NadaArray,
-    initial: Optional[Union["SecretRational", None]] = None,
-    iterations: Optional[int] = 5,
-    method: Optional[str] = "NR",
+    initial: Optional["SecretRational"] = None,
+    iterations: int = 5,
+    method: str = "NR",
 ) -> "NadaArray":
     r"""
     Computes the inverse square root of the input using the Newton-Raphson method.
@@ -817,9 +825,9 @@ def inv_sqrt(
     + ---------------------------------- +
 
     Args:
-        initial (Union[SecretRational, None], optional): sets the initial value for the Newton-Raphson iterations.
-                    By default, this will be set to allow the method to converge over a
-                    fairly large domain.
+        initial (Union[SecretRational, None], optional): sets the initial value for the
+                    Newton-Raphson iterations. By default, this will be set to allow the
+                    method to converge over a fairly large domain.
         iterations (int, optional): determines the number of Newton-Raphson iterations to run.
         method (str, optional): method used to compute inv_sqrt. Defaults to "NR".
 
@@ -834,9 +842,9 @@ def inv_sqrt(
 
 def sqrt(
     arr: NadaArray,
-    initial: Optional[Union["SecretRational", None]] = None,
-    iterations: Optional[int] = 5,
-    method: Optional[str] = "NR",
+    initial: Optional["SecretRational"] = None,
+    iterations: int = 5,
+    method: str = "NR",
 ) -> "NadaArray":
     r"""
     Computes the square root of the input by computing its inverse square root using
@@ -852,10 +860,11 @@ def sqrt(
     + ---------------------------------- +
 
     Args:
-        initial (Union[SecretRational, None], optional): sets the initial value for the inverse square root
-            Newton-Raphson iterations. By default, this will be set to allow convergence
-            over a fairly large domain. Defaults to None.
-        iterations (int, optional):  determines the number of Newton-Raphson iterations to run. Defaults to 5.
+        initial (Union[SecretRational, None], optional): sets the initial value for the inverse
+            square root Newton-Raphson iterations. By default, this will be set to allow
+            convergence over a fairly large domain. Defaults to None.
+        iterations (int, optional):  determines the number of Newton-Raphson iterations to run.
+            Defaults to 5.
         method (str, optional): method used to compute sqrt. Defaults to "NR".
 
     Returns:
@@ -870,10 +879,9 @@ def sqrt(
 # Trigonometry
 
 
-def cossin(
-    arr: NadaArray, iterations: Optional[int] = 10
-) -> Tuple["NadaArray", "NadaArray"]:
-    r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the formula:
+def cossin(arr: NadaArray, iterations: int = 10) -> "NadaArray":
+    r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the
+    formula:
 
     .. math::
         Re\{e^{i * input}\}, Im\{e^{i * input}\} = \cos(input), \sin(input)
@@ -888,7 +896,7 @@ def cossin(
     return arr.cossin(iterations=iterations)
 
 
-def cos(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
+def cos(arr: NadaArray, iterations: int = 10) -> "NadaArray":
     r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
 
     Note: unstable outside [-30, 30]
@@ -902,7 +910,7 @@ def cos(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
     return arr.cos(iterations=iterations)
 
 
-def sin(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
+def sin(arr: NadaArray, iterations: int = 10) -> "NadaArray":
     r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
 
     Note: unstable outside [-30, 30]
@@ -916,7 +924,7 @@ def sin(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
     return arr.sin(iterations=iterations)
 
 
-def tan(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
+def tan(arr: NadaArray, iterations: int = 10) -> "NadaArray":
     r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
 
     Note: unstable outside [-30, 30]
@@ -935,8 +943,8 @@ def tan(arr: NadaArray, iterations: Optional[int] = 10) -> "NadaArray":
 
 def tanh(
     arr: NadaArray,
-    chebyshev_terms: Optional[int] = 32,
-    method: Optional[str] = "reciprocal",
+    chebyshev_terms: int = 32,
+    method: str = "reciprocal",
 ) -> "NadaArray":
     r"""Computes the hyperbolic tangent function using the identity
 
@@ -986,8 +994,8 @@ def tanh(
 
 def sigmoid(
     arr: NadaArray,
-    chebyshev_terms: Optional[int] = 32,
-    method: Optional[str] = "reciprocal",
+    chebyshev_terms: int = 32,
+    method: str = "reciprocal",
 ) -> "NadaArray":
     r"""Computes the sigmoid function using the following definition
 
@@ -1009,7 +1017,8 @@ def sigmoid(
 
         "motzkin" - computes tanh via approximation from the paper
             "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-            on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+            on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses
+            the identity:
 
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -1039,8 +1048,8 @@ def sigmoid(
 
 def gelu(
     arr: NadaArray,
-    method: Optional[str] = "tanh",
-    tanh_method: Optional[str] = "reciprocal",
+    method: str = "tanh",
+    tanh_method: str = "reciprocal",
 ) -> "NadaArray":
     r"""Computes the gelu function using the following definition
 
@@ -1078,7 +1087,7 @@ def gelu(
 
 def silu(
     arr: NadaArray,
-    method_sigmoid: Optional[str] = "reciprocal",
+    method_sigmoid: str = "reciprocal",
 ) -> "NadaArray":
     r"""Computes the gelu function using the following definition
 
@@ -1100,7 +1109,8 @@ def silu(
 
         "motzkin" - computes tanh via approximation from the paper
             "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
-            on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the identity:
+            on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses the
+            identity:
 
             .. math::
                 \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
@@ -1114,7 +1124,8 @@ def silu(
             Note: stable for x in [-500, 500]. Unstable otherwise.
 
     Args:
-        method_sigmoid (str, optional): method used to compute sigmoid function. Defaults to "reciprocal".
+        method_sigmoid (str, optional): method used to compute sigmoid function.
+            Defaults to "reciprocal".
 
     Returns:
         NadaArray: The sigmoid evaluation.
