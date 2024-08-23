@@ -13,6 +13,8 @@ def nada_main():
 
     c = na.NadaArray(np.array([a, na.rational(1.5)]))
 
+    result_sign = c.sign()
+    result_abs = c.abs()
     result_exp = c.exp()
     result_log = c.log()
     result_rec_NR = c.reciprocal(method="NR")
@@ -35,7 +37,9 @@ def nada_main():
     result_silu_motz = c.silu(method_sigmoid="motzkin")
 
     final_result = (
-        result_exp.output(parties[1], "result_exp")
+        result_sign.output(parties[1], "result_sign")
+        + result_abs.output(parties[1], "result_abs")
+        + result_exp.output(parties[1], "result_exp")
         + result_log.output(parties[1], "result_log")
         + result_rec_NR.output(parties[1], "result_rec_NR")
         + result_rec_log.output(parties[1], "result_rec_log")

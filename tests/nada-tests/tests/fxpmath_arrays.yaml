@@ -84,3 +84,12 @@ expected_outputs:
     SecretInteger: "1"
   result_sin_0:
     SecretInteger: "0"
+  result_sign_1:
+    Integer: "65536"
+  result_sign_0:
+    SecretInteger: "65536"
+  result_abs_1:
+    Integer: "98304"
+  result_abs_0:
+    SecretInteger: "3"
+
