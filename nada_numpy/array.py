@@ -16,8 +16,8 @@ from nada_numpy.context import UnsafeArithmeticSession
 from nada_numpy.nada_typing import (NadaBoolean, NadaCleartextType,
                                     NadaInteger, NadaRational,
                                     NadaUnsignedInteger)
-from nada_numpy.types import (Rational, SecretRational, get_log_scale,
-                              public_rational, rational, secret_rational)
+from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
+                              public_rational, rational, secret_rational, sign)
 from nada_numpy.utils import copy_metadata
 
 
@@ -1077,6 +1077,666 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if isinstance(result, np.ndarray):
             return NadaArray(result)
         return result
+
+    # Non-linear functions
+
+    def sign(self) -> "NadaArray":
+        """Computes the sign value (0 is considered positive)"""
+        if self.is_rational:
+            return self.apply(sign)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sign is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def abs(self) -> "NadaArray":
+        """Computes the absolute value"""
+        if self.is_rational:
+            return self.apply(fxp_abs)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Abs is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def exp(self, iterations: int = 8) -> "NadaArray":
+        """
+        Approximates the exponential function using a limit approximation.
+
+        The exponential function is approximated using the following limit:
+
+            exp(x) = lim_{n -> ∞} (1 + x / n) ^ n
+
+        The exponential function is computed by choosing n = 2 ** d, where d is set to `iterations`.
+        The calculation is performed by computing (1 + x / n) once and then squaring it `d` times.
+
+        Approximation accuracy range (with 16 bit precision):
+        + ---------------------------------- +
+        |  Input range x |  Relative error   |
+        + ---------------------------------- +
+        |   [-2, 2]      |       <1%         |
+        |   [-7, 7]      |       <10%        |
+        |   [-8, 15]     |       <35%        |
+        + ---------------------------------- +
+
+        Args:
+            iterations (int, optional): The number of iterations for the limit approximation.
+                Defaults to 8.
+
+        Returns:
+            NadaArray: The approximated value of the exponential function.
+        """
+        if self.is_rational:
+
+            def exp(x):
+                return x.exp(iterations=iterations)
+
+            return self.apply(exp)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Exp is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def polynomial(self, coefficients: list) -> "NadaArray":
+        """
+        Computes a polynomial function on a value with given coefficients.
+
+        The coefficients can be provided as a list of values.
+        They should be ordered from the linear term (order 1) first,
+        ending with the highest order term.
+        **Note: The constant term is not included.**
+
+        Args:
+            coefficients (list): The coefficients of the polynomial, ordered by increasing degree.
+
+        Returns:
+            NadaArray: The result of the polynomial function applied to the input x.
+        """
+        if self.is_rational:
+
+            def polynomial(x):
+                return x.polynomial(coefficients=coefficients)
+
+            return self.apply(polynomial)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Polynomial is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def log(
+        self,
+        input_in_01: bool = False,
+        iterations: int = 2,
+        exp_iterations: int = 8,
+        order: int = 8,
+    ) -> "NadaArray":
+        """
+        Approximates the natural logarithm using 8th order modified Householder iterations.
+        This approximation is accurate within 2% relative error on the interval [0.0001, 250].
+
+        The iterations are computed as follows:
+
+            h = 1 - x * exp(-y_n)
+            y_{n+1} = y_n - sum(h^k / k for k in range(1, order + 1))
+
+        Approximation accuracy range (with 16 bit precision):
+        + ------------------------------------- +
+        |    Input range x  |  Relative error   |
+        + ------------------------------------- +
+        | [0.001, 200]      |     <1%           |
+        | [0.00003, 253]    |     <10%          |
+        | [0.0000001, 253]  |     <40%          |
+        | [253, +∞[         |     Unstable      |
+        + ------------------------------------- +
+
+        Args:
+            input_in_01 (bool, optional): Indicates if the input is within the domain [0, 1].
+                This setting optimizes the function for this domain, useful for computing
+                log-probabilities in entropy functions.
+
+                To shift the domain of convergence, a constant 'a' is used with the identity:
+
+                    ln(u) = ln(au) - ln(a)
+
+                Given the convergence domain for log() function is approximately [1e-4, 1e2],
+                we set a = 100.
+                Defaults to False.
+            iterations (int, optional): Number of Householder iterations for the approximation.
+                Defaults to 2.
+            exp_iterations (int, optional): Number of iterations for the limit
+                approximation of exp. Defaults to 8.
+            order (int, optional): Number of polynomial terms used (order of
+                Householder approximation). Defaults to 8.
+
+        Returns:
+            NadaArray: The approximate value of the natural logarithm.
+        """
+        if self.is_rational:
+
+            def log(x):
+                return x.log(
+                    input_in_01=input_in_01,
+                    iterations=iterations,
+                    exp_iterations=exp_iterations,
+                    order=order,
+                )
+
+            return self.apply(log)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Log is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def reciprocal(  # pylint: disable=too-many-arguments
+        self,
+        all_pos: bool = False,
+        initial: Optional["Rational"] = None,
+        input_in_01: bool = False,
+        iterations: int = 10,
+        log_iters: int = 1,
+        exp_iters: int = 8,
+        method: str = "NR",
+    ) -> "NadaArray":
+        r"""
+        Approximates the reciprocal of a number through two possible methods: Newton-Raphson
+        and log.
+
+        Methods:
+            'NR' : `Newton-Raphson`_ method computes the reciprocal using iterations
+                    of :math:`x_{i+1} = (2x_i - x * x_i^2)` and uses
+                    :math:`3*exp(1 - 2x) + 0.003` as an initial guess by default.
+
+                    Approximation accuracy range (with 16 bit precision):
+                    + ------------------------------------ +
+                    | Input range |x|  |  Relative error   |
+                    + ------------------------------------ +
+                    | [0.1, 64]        |       <0%         |
+                    | [0.0003, 253]    |       <15%        |
+                    | [0.00001, 253]   |       <90%        |
+                    | [253, +∞[        |     Unstable      |
+                    + ------------------------------------ +
+
+            'log' : Computes the reciprocal of the input from the observation that:
+                    :math:`x^{-1} = exp(-log(x))`
+
+                    Approximation accuracy range (with 16 bit precision):
+                    + ------------------------------------ +
+                    | Input range |x|  |  Relative error   |
+                    + ------------------------------------ +
+                    | [0.0003, 253]    |       <15%        |
+                    | [0.00001, 253]   |       <90%        |
+                    | [253, +∞[        |     Unstable      |
+                    + ------------------------------------ +
+
+        Args:
+            all_pos (bool, optional): determines whether all elements of the
+                input are known to be positive, which optimizes the step of
+                computing the sign of the input. Defaults to False.
+            initial (Rational, optional): sets the initial value for the
+                Newton-Raphson method. By default, this will be set to :math:
+                `3*exp(-(x-.5)) + 0.003` as this allows the method to converge over
+                a fairly large domain.
+            input_in_01 (bool, optional) : Allows a user to indicate that the input is
+                        in the range [0, 1], causing the function optimize for this range.
+                        This is useful for improving the accuracy of functions on
+                        probabilities (e.g. entropy functions).
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run
+                            for the `NR` method. Defaults to 10.
+            log_iters (int, optional): determines the number of Householder
+                iterations to run when computing logarithms for the `log` method. Defaults to 1.
+            exp_iters (int, optional): determines the number of exp
+                iterations to run when computing exp. Defaults to 8.
+            method (str, optional): method used to compute reciprocal. Defaults to "NR".
+
+        Returns:
+            NadaArray: The approximate value of the reciprocal
+
+        .. _Newton-Raphson:
+            https://en.wikipedia.org/wiki/Newton%27s_method
+        """
+        if self.is_rational:
+            # pylint:disable=duplicate-code
+            def reciprocal(x):
+                return x.reciprocal(
+                    all_pos=all_pos,
+                    initial=initial,
+                    input_in_01=input_in_01,
+                    iterations=iterations,
+                    log_iters=log_iters,
+                    exp_iters=exp_iters,
+                    method=method,
+                )
+
+            return self.apply(reciprocal)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Reciprocal is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def inv_sqrt(
+        self,
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
+    ) -> "NadaArray":
+        r"""
+        Computes the inverse square root of the input using the Newton-Raphson method.
+
+        Approximation accuracy range (with 16 bit precision):
+        + ---------------------------------- +
+        | Input range x  |  Relative error   |
+        + ---------------------------------- +
+        | [0.1, 170]     |       <0%         |
+        | [0.001, 200]   |       <50%        |
+        | [200, +∞[      |     Unstable      |
+        + ---------------------------------- +
+
+        Args:
+            initial (Union[SecretRational, None], optional): sets the initial value for the
+                        Newton-Raphson iterations. By default, this will be set to allow the
+                        method to converge over a fairly large domain.
+            iterations (int, optional): determines the number of Newton-Raphson iterations to run.
+            method (str, optional): method used to compute inv_sqrt. Defaults to "NR".
+
+        Returns:
+            NadaArray: The approximate value of the inv_sqrt.
+
+        .. _Newton-Raphson:
+            https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
+        """
+        if self.is_rational:
+
+            def inv_sqrt(x):
+                return x.inv_sqrt(initial=initial, iterations=iterations, method=method)
+
+            return self.apply(inv_sqrt)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Inverse square-root is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def sqrt(
+        self,
+        initial: Optional["SecretRational"] = None,
+        iterations: int = 5,
+        method: str = "NR",
+    ) -> "NadaArray":
+        r"""
+        Computes the square root of the input by computing its inverse square root using
+        the Newton-Raphson method and multiplying by the input.
+
+        Approximation accuracy range (with 16 bit precision):
+        + ---------------------------------- +
+        | Input range x  |  Relative error   |
+        + ---------------------------------- +
+        | [0.1, 170]     |       <0%         |
+        | [0.001, 200]   |       <50%        |
+        | [200, +∞[      |     Unstable      |
+        + ---------------------------------- +
+
+        Args:
+            initial (Union[SecretRational, None], optional): sets the initial value for the inverse
+                square root Newton-Raphson iterations. By default, this will be set to allow
+                convergence over a fairly large domain. Defaults to None.
+            iterations (int, optional):  determines the number of Newton-Raphson iterations to run.
+                Defaults to 5.
+            method (str, optional): method used to compute sqrt. Defaults to "NR".
+
+        Returns:
+            NadaArray: The approximate value of the sqrt.
+
+        .. _Newton-Raphson:
+            https://en.wikipedia.org/wiki/Fast_inverse_square_root#Newton's_method
+        """
+        if self.is_rational:
+
+            def sqrt(x):
+                return x.sqrt(initial=initial, iterations=iterations, method=method)
+
+            return self.apply(sqrt)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Square-root is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    # Trigonometry
+
+    def cossin(self, iterations: int = 10) -> "NadaArray":
+        r"""Computes cosine and sine through e^(i * input) where i is the imaginary unit through the
+        formula:
+
+        .. math::
+            Re\{e^{i * input}\}, Im\{e^{i * input}\} = \cos(input), \sin(input)
+
+        Args:
+            iterations (int, optional): determines the number of iterations to run. Defaults to 10.
+
+        Returns:
+            Tuple[NadaArray, NadaArray]:
+                A tuple where the first element is cos and the second element is the sin.
+        """
+        if self.is_rational:
+
+            def cossin(x):
+                return x.cossin(iterations=iterations)
+
+            return self.apply(cossin)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Cosine and Sine are not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def cos(self, iterations: int = 10) -> "NadaArray":
+        r"""Computes the cosine of the input using cos(x) = Re{exp(i * x)}.
+
+        Note: unstable outside [-30, 30]
+
+        Args:
+            iterations (int, optional): determines the number of iterations to run. Defaults to 10.
+
+        Returns:
+            NadaArray: The approximate value of the cosine.
+        """
+        if self.is_rational:
+
+            def cos(x):
+                return x.cos(iterations=iterations)
+
+            return self.apply(cos)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Cosine is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def sin(self, iterations: int = 10) -> "NadaArray":
+        r"""Computes the sine of the input using sin(x) = Im{exp(i * x)}.
+
+        Note: unstable outside [-30, 30]
+
+        Args:
+            iterations (int, optional): determines the number of iterations to run. Defaults to 10.
+
+        Returns:
+            NadaArray: The approximate value of the sine.
+        """
+        if self.is_rational:
+
+            def sin(x):
+                return x.sin(iterations=iterations)
+
+            return self.apply(sin)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sine is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def tan(self, iterations: int = 10) -> "NadaArray":
+        r"""Computes the tan of the input using tan(x) = sin(x) / cos(x).
+
+        Note: unstable outside [-30, 30]
+
+        Args:
+            iterations (int, optional): determines the number of iterations to run. Defaults to 10.
+
+        Returns:
+            NadaArray: The approximate value of the tan.
+        """
+        if self.is_rational:
+
+            def tan(x):
+                return x.tan(iterations=iterations)
+
+            return self.apply(tan)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Tangent is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    # Activation functions
+
+    def tanh(
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
+    ) -> "NadaArray":
+        r"""Computes the hyperbolic tangent function using the identity
+
+        .. math::
+            tanh(x) = 2\sigma(2x) - 1
+
+        Methods:
+        If a valid method is given, this function will compute tanh using that method:
+
+            "reciprocal" - computes tanh using the identity
+
+                .. math::
+                tanh(x) = 2\sigma(2x) - 1
+
+                Note: stable for x in [-250, 250]. Unstable otherwise.
+
+            "chebyshev" - computes tanh via Chebyshev approximation with truncation.
+
+                .. math::
+                    tanh(x) = \sum_{j=1}^chebyshev_terms c_{2j - 1} P_{2j - 1} (x / maxval)
+
+                where c_i is the ith Chebyshev series coefficient and P_i is ith polynomial.
+
+                Note: stable for all input range as the approximation is truncated
+                        to +/-1 outside [-1, 1].
+
+            "motzkin" - computes tanh via approximation from the paper
+                "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+
+                Note: stable for all input range as the approximation is truncated
+                        to +/-1 outside [-1, 1].
+
+        Args:
+            chebyshev_terms (int, optional): highest degree of Chebyshev polynomials.
+                            Must be even and at least 6. Defaults to 32.
+            method (str, optional): method used to compute tanh function. Defaults to "reciprocal".
+
+        Returns:
+            NadaArray: The tanh evaluation.
+
+        Raises:
+            ValueError: Raised if method type is not supported.
+        """
+        if self.is_rational:
+
+            def tanh(x):
+                return x.tanh(chebyshev_terms=chebyshev_terms, method=method)
+
+            return self.apply(tanh)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Hyperbolic tangent is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def sigmoid(
+        self, chebyshev_terms: int = 32, method: str = "reciprocal"
+    ) -> "NadaArray":
+        r"""Computes the sigmoid function using the following definition
+
+        .. math::
+            \sigma(x) = (1 + e^{-x})^{-1}
+
+        Methods:
+        If a valid method is given, this function will compute sigmoid
+            using that method:
+
+            "chebyshev" - computes tanh via Chebyshev approximation with
+                truncation and uses the identity:
+
+                .. math::
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
+
+            "motzkin" - computes tanh via approximation from the paper
+                "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique. It uses
+                the identity:
+
+                .. math::
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
+
+            "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
+                the reciprocal
+
+                Note: stable for x in [-500, 500]. Unstable otherwise.
+
+        Args:
+            chebyshev_terms (int, optional): highest degree of Chebyshev polynomials.
+                            Must be even and at least 6. Defaults to 32.
+            method (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
+
+        Returns:
+            NadaArray: The sigmoid evaluation.
+
+        Raises:
+            ValueError: Raised if method type is not supported.
+        """
+        if self.is_rational:
+
+            def sigmoid(x):
+                return x.sigmoid(chebyshev_terms=chebyshev_terms, method=method)
+
+            return self.apply(sigmoid)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Sigmoid is not compatible with {dtype},\
+                only with Rational and SecretRational types."
+        )
+
+    def gelu(
+        self, method: str = "tanh", tanh_method: str = "reciprocal"
+    ) -> "NadaArray":
+        r"""Computes the gelu function using the following definition
+
+        .. math::
+            gelu(x) = x/2 * (1 + tanh(\sqrt{2/\pi} * (x + 0.04471 * x^3)))
+
+        Methods:
+        If a valid method is given, this function will compute gelu
+            using that method:
+
+            "tanh" - computes gelu using the common approximation function
+
+                Note: stable for x in [-18, 18]. Unstable otherwise.
+
+            "motzkin" - computes gelu via approximation from the paper
+                "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
+                on section 5.2 based on the Motzkin’s polynomial preprocessing technique.
+
+                Note: stable for all input range as the approximation is truncated
+                to relu function outside [-2.7, 2.7].
+
+        Args:
+            method (str, optional): method used to compute gelu function. Defaults to "tanh".
+            tanh_method (str, optional): method used for tanh function. Defaults to "reciprocal".
+
+        Returns:
+            NadaArray: The gelu evaluation.
+
+        Raises:
+            ValueError: Raised if method type is not supported.
+        """
+        if self.is_rational:
+
+            def gelu(x):
+                return x.gelu(method=method, tanh_method=tanh_method)
+
+            return self.apply(gelu)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Gelu is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
+
+    def silu(
+        self,
+        method_sigmoid: str = "reciprocal",
+    ) -> "NadaArray":
+        r"""Computes the gelu function using the following definition
+
+        .. math::
+            silu(x) = x * sigmoid(x)
+
+        Sigmoid methods:
+        If a valid method is given, this function will compute sigmoid
+            using that method:
+
+            "chebyshev" - computes tanh via Chebyshev approximation with
+                truncation and uses the identity:
+
+                .. math::
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
+
+            "motzkin" - computes tanh via approximation from the paper
+                "BOLT: Privacy-Preserving, Accurate and Efficient Inference for Transformers"
+                on section 5.3 based on the Motzkin’s polynomial preprocessing technique.
+                It uses the identity:
+
+                .. math::
+                    \sigma(x) = \frac{1}{2}tanh(\frac{x}{2}) + \frac{1}{2}
+
+                Note: stable for all input range as the approximation is truncated
+                        to 0/1 outside [-1, 1].
+
+            "reciprocal" - computes sigmoid using :math:`1 + e^{-x}` and computing
+                the reciprocal
+
+                Note: stable for x in [-500, 500]. Unstable otherwise.
+
+        Args:
+            method_sigmoid (str, optional): method used to compute sigmoid function.
+                Defaults to "reciprocal".
+
+        Returns:
+            NadaArray: The sigmoid evaluation.
+
+        Raises:
+            ValueError: Raised if sigmoid method type is not supported.
+        """
+        if self.is_rational:
+
+            def silu(x):
+                return x.silu(method_sigmoid=method_sigmoid)
+
+            return self.apply(silu)
+
+        dtype = get_dtype(self.inner)
+        raise TypeError(
+            f"Silu is not compatible with {dtype}, only with Rational and SecretRational types."
+        )
 
 
 def _check_type_compatibility(
