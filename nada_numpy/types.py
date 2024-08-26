@@ -2601,7 +2601,7 @@ def sign(x: _NadaRational) -> _NadaRational:
     ltz_cond = x < rational(0)
     ltz = ltz_cond.if_else(rational(1), rational(0))
 
-    return rational(1) - rational(2) * ltz
+    return rational(1) - ltz - ltz
 
 
 def fxp_abs(x: _NadaRational) -> _NadaRational:
