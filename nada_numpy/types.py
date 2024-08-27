@@ -2929,7 +2929,6 @@ def _chebyshev_polynomials(x: _NadaRational, terms: int) -> np.ndarray:
 
     # return polynomials
 
-
     polynomials = [x]
     y = rational(4) * x * x - rational(2)
     z = y - rational(1)

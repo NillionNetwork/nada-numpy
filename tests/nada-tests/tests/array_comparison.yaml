@@ -1,0 +1,99 @@
+---
+program: array_comparison
+inputs:
+  A_0:
+    SecretInteger: "1"
+  A_1:
+    SecretInteger: "100"
+  A_2:
+    SecretInteger: "0"
+  B_0:
+    SecretInteger: "8"
+  B_1:
+    SecretInteger: "101"
+  B_2:
+    SecretInteger: "0"
+expected_outputs:
+  my_output_1_0:
+    SecretBoolean: false
+  my_output_1_1:
+    SecretBoolean: false
+  my_output_1_2:
+    SecretBoolean: true
+
+  my_output_2_0:
+    SecretBoolean: true
+  my_output_2_1:
+    SecretBoolean: false
+  my_output_2_2:
+    SecretBoolean: false
+
+  my_output_3_0:
+    SecretBoolean: true
+  my_output_3_1:
+    SecretBoolean: true
+  my_output_3_2:
+    SecretBoolean: false
+
+  my_output_4_0:
+    SecretBoolean: false
+  my_output_4_1:
+    SecretBoolean: true
+  my_output_4_2:
+    SecretBoolean: true
+
+  my_output_5_0:
+    SecretBoolean: true
+  my_output_5_1:
+    SecretBoolean: true
+  my_output_5_2:
+    SecretBoolean: false
+
+  my_output_6_0:
+    SecretBoolean: false
+  my_output_6_1:
+    SecretBoolean: false
+  my_output_6_2:
+    SecretBoolean: true
+
+  my_output_7_0:
+    SecretBoolean: true
+  my_output_7_1:
+    SecretBoolean: true
+  my_output_7_2:
+    SecretBoolean: true
+
+  my_output_8_0:
+    SecretBoolean: true
+  my_output_8_1:
+    SecretBoolean: false
+  my_output_8_2:
+    SecretBoolean: true
+
+  my_output_9_0:
+    SecretBoolean: false
+  my_output_9_1:
+    SecretBoolean: false
+  my_output_9_2:
+    SecretBoolean: false
+
+  my_output_10_0:
+    SecretBoolean: false
+  my_output_10_1:
+    SecretBoolean: true
+  my_output_10_2:
+    SecretBoolean: false
+
+  my_output_11_0:
+    SecretBoolean: false
+  my_output_11_1:
+    SecretBoolean: false
+  my_output_11_2:
+    SecretBoolean: true
+
+  my_output_12_0:
+    SecretBoolean: true
+  my_output_12_1:
+    SecretBoolean: true
+  my_output_12_2:
+    SecretBoolean: false

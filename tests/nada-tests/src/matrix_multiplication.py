@@ -1,6 +1,6 @@
+# Step 0: Nada Numpy is imported with this line
 from nada_dsl import *
 
-# Step 0: Nada Numpy is imported with this line
 import nada_numpy as na
 
 

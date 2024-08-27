@@ -7,7 +7,11 @@ def nada_main():
     parties = na.parties(3)
 
     a = na.array([3], parties[0], "A", SecretInteger)
+    b = na.array([3], parties[1], "B", SecretInteger)
 
-    result = a - Integer(1)
+    result1 = a - b
+    result2 = a - Integer(2)
 
-    return result.output(parties[1], "my_output")
+    return result1.output(parties[1], "my_output_1") + result2.output(
+        parties[2], "my_output_2"
+    )

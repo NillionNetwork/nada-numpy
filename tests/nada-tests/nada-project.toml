@@ -193,3 +193,7 @@ prime_size = 128
 [[programs]]
 path = "src/fxpmath_arrays.py"
 prime_size = 128
+
+[[programs]]
+path = "src/array_comparison.py"
+prime_size = 128

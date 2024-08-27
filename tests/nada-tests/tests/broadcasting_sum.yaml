@@ -1,15 +1,30 @@
+---
 program: broadcasting_sum
 inputs:
   A_0:
-    SecretInteger: '3'
+    SecretInteger: "10"
   A_1:
-    SecretInteger: '4'
+    SecretInteger: "8"
   A_2:
-    SecretInteger: '5'
+    SecretInteger: "4"
+  B_0:
+    SecretInteger: "10"
+  B_1:
+    SecretInteger: "4"
+  B_2:
+    SecretInteger: "2"
 expected_outputs:
-  my_output_0:
-    SecretInteger: '4'
-  my_output_1:
-    SecretInteger: '5'
-  my_output_2:
-    SecretInteger: '6'
+  my_output_1_0:
+    SecretInteger: "20"
+  my_output_1_1:
+    SecretInteger: "12"
+  my_output_1_2:
+    SecretInteger: "6"
+  my_output_2_0:
+    SecretInteger: "12"
+  my_output_2_1:
+    SecretInteger: "10"
+  my_output_2_2:
+    SecretInteger: "6"
+
+

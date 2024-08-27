@@ -52,7 +52,8 @@ TESTS = [
     # "unsigned_matrix_inverse_2",
     "fxpmath_funcs",
     "fxpmath_arrays",
-    "fxpmath_methods"
+    "fxpmath_methods",
+    "array_comparison",
 ]
 
 EXAMPLES = [
