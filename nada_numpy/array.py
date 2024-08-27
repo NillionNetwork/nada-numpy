@@ -13,9 +13,9 @@ from nada_dsl import (Boolean, Input, Integer, Output, Party, PublicInteger,
                       SecretUnsignedInteger, UnsignedInteger)
 
 from nada_numpy.context import UnsafeArithmeticSession
-from nada_numpy.nada_typing import (NadaBoolean, NadaCleartextType,
-                                    NadaInteger, NadaRational,
-                                    NadaUnsignedInteger)
+from nada_numpy.nada_typing import (AnyNadaType, NadaBoolean,
+                                    NadaCleartextType, NadaInteger,
+                                    NadaRational, NadaUnsignedInteger)
 from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
                               public_rational, rational, secret_rational, sign)
 from nada_numpy.utils import copy_metadata
@@ -390,7 +390,9 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         """
         return self.matmul(other)
 
-    def __comparison_operator(self, value: Any, operator: Callable) -> "NadaArray":
+    def __comparison_operator(
+        self, value: Union["NadaArray", "AnyNadaType", np.ndarray], operator: Callable
+    ) -> "NadaArray":
         """
         Perform element-wise comparison with broadcasting.
 
@@ -398,7 +400,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         If we don't define this method, the result will be a NadaArray with bool outputs.
 
         Args:
-            other (Any): The object to compare.
+            value (Any): The object to compare.
             operator (str): The comparison operator.
 
         Returns:
@@ -406,16 +408,27 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         """
         if isinstance(value, NadaArray):
             value = value.inner
-        result = []
-        if isinstance(value, (SecretInteger, PublicInteger, Integer)):
-            for x in self.inner:
-                result.append(operator(x, value))
-        elif isinstance(value, np.ndarray):
+        if isinstance(
+            value,
+            (
+                SecretInteger,
+                Integer,
+                SecretUnsignedInteger,
+                UnsignedInteger,
+                SecretRational,
+                Rational,
+            ),
+        ):
+            return self.apply(lambda x: operator(x, value))
+
+        if isinstance(value, np.ndarray):
             if len(self.inner) != len(value):
                 raise ValueError("Arrays must have the same length")
-            for x, y in zip(self.inner, value):
-                result.append(operator(x, y))
-        return NadaArray(np.array(result))
+            return NadaArray(
+                np.array([operator(x, y) for x, y in zip(self.inner, value)])
+            )
+
+        raise ValueError(f"Unsupported type: {type(value)}")
 
     def __eq__(self, value: Any) -> "NadaArray":  # type: ignore
         """
