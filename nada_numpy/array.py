@@ -20,7 +20,6 @@ from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
                               public_rational, rational, secret_rational, sign)
 from nada_numpy.utils import copy_metadata
 
-
 class NadaArray:  # pylint:disable=too-many-public-methods
     """
     Represents an array-like object with additional functionality.
@@ -424,9 +423,8 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         if isinstance(value, np.ndarray):
             if len(self.inner) != len(value):
                 raise ValueError("Arrays must have the same length")
-            return NadaArray(
-                np.array([operator(x, y) for x, y in zip(self.inner, value)])
-            )
+            vectorized_operator = np.vectorize(operator)
+            return NadaArray(vectorized_operator(self.inner, value))
 
         raise ValueError(f"Unsupported type: {type(value)}")
 
