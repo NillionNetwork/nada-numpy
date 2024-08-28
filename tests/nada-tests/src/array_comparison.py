@@ -10,8 +10,8 @@ from nada_numpy.nada_typing import NadaInteger, NadaRational
 def nada_main():
     parties = na.parties(2)
 
-    a = na.array([3], parties[0], "A", SecretInteger)
-    b = na.array([3], parties[1], "B", SecretInteger)
+    a = na.array([1, 3], parties[0], "A", SecretInteger)
+    b = na.array([1, 3], parties[1], "B", SecretInteger)
     c = Integer(1)
 
     d = a == b
