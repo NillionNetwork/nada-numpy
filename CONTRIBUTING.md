@@ -46,6 +46,33 @@ and placing it in [`tests/nada-tests/tests/`](https://github.com/NillionNetwork/
 
 4. Finally, add the script to the `TESTS` array in [`tests/test_all.py`](https://github.com/NillionNetwork/nada-numpy/blob/dd112a09835c2354cbf7ecc89ad2714ca7171b20/tests/test_all.py#L6) to integrate it with the CI/CD pipeline.
 
+### Hints to add new features
+
+Below we provide some hints on how to add new features. We give two examples: adding a `NadaArray` method and adding a `Rational` method.
+
+#### New `NadaArray` method
+
+As an example, we use the `variance` operation to describe the development flow:
+
+1. **Integrate the variance function:**
+   - In [`nada_numpy/array.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/array.py), integrate the `variance` method inside the `NadaArray` class as a new member function. This will allow the `variance` to be called as `array.var()`.
+
+2. **Add a Wrapper in `nada_numpy/funcs.py`:**
+   - In `nada-numpy`, functions can also be called in the form `na.var(array)`. To support this, add a wrapper in [`nada_numpy/funcs.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/funcs.py). You can refer to the existing functions in this file to see how they simply wrap around `array.var()` in this context.
+
+#### New `Rational` method
+
+As an example, we use the exponential `exp` function to describe the development flow:
+
+1. **Integrate the exp function with Rational:**
+   - In [`nada_numpy/types.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/types.py), integrate the `exp` method inside both the `Rational` and `SecretRational` classes as a new member function. This will allow the `exp` to be called as `value.exp()`.
+
+2. **Integrate the exp function with NadaArray:**
+   - In [`nada_numpy/array.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/array.py), integrate the `exp` method inside the `NadaArray` class as a new member function. This will allow the `exp` to be called as `array.exp()`.
+
+3. **Add a Wrapper in `nada_numpy/funcs.py`:**
+   - In `nada-numpy`, functions can also be called in the form `na.exp(array)`. To support this, add a wrapper in [`nada_numpy/funcs.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/funcs.py). You can refer to the existing functions in this file to see how they simply wrap around `array.exp()` in this context.
+
 ## Submit a Pull Request
 
 We actively welcome your pull requests. Please follow these steps to successfully submit a PR:
@@ -65,34 +92,6 @@ black . && isort .
 poetry run pylint
 poetry run mypy
 ```
-
-## Hints to add new features
-
-Below we provide some hints on how to add new features. We give two examples: adding a `NadaArray` method and adding a `Rational` method.
-
-### New `NadaArray` method
-
-As an example, we use the `variance` operation to describe the development flow:
-
-1. **Integrate the variance function:**
-   - In [`nada_numpy/array.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/array.py), integrate the `variance` method inside the `NadaArray` class as a new member function. This will allow the `variance` to be called as `array.var()`.
-
-2. **Add a Wrapper in `nada_numpy/funcs.py`:**
-   - In `nada-numpy`, functions can also be called in the form `na.var(array)`. To support this, add a wrapper in [`nada_numpy/funcs.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/funcs.py). You can refer to the existing functions in this file to see how they simply wrap around `array.var()` in this context.
-
-### New `Rational` method
-
-As an example, we use the exponential `exp` function to describe the development flow:
-
-1. **Integrate the exp function with Rational:**
-   - In [`nada_numpy/types.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/types.py), integrate the `exp` method inside both the `Rational` and `SecretRational` classes as a new member function. This will allow the `exp` to be called as `value.exp()`.
-
-2. **Integrate the exp function with NadaArray:**
-   - In [`nada_numpy/array.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/array.py), integrate the `exp` method inside the `NadaArray` class as a new member function. This will allow the `exp` to be called as `array.exp()`.
-
-3. **Add a Wrapper in `nada_numpy/funcs.py`:**
-   - In `nada-numpy`, functions can also be called in the form `na.exp(array)`. To support this, add a wrapper in [`nada_numpy/funcs.py`](https://github.com/NillionNetwork/nada-numpy/blob/main/nada_numpy/funcs.py). You can refer to the existing functions in this file to see how they simply wrap around `array.exp()` in this context.
-
 
 ## Open Issues
 
