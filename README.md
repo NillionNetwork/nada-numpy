@@ -37,6 +37,12 @@ poetry install
 poetry run pytest
 ```
 
+## Join Nillion community and contribute
+
+Please join the Nillion community on [Discord](https://discord.com/invite/nillionnetwork).
+
+See the [CONTRIBUTING](./CONTRIBUTING.md) file for how to contribute to `nada-numpy`.
+
 ## License
 
 This project is licensed under the Apache2 License. See the LICENSE file for details.
