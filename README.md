@@ -41,7 +41,7 @@ poetry run pytest
 
 Please join the Nillion community on [Discord](https://discord.com/invite/nillionnetwork).
 
-See the [CONTRIBUTING](./CONTRIBUTING) file for how to contribute to `nada-numpy`.
+See the [CONTRIBUTING](./CONTRIBUTING.md) file for how to contribute to `nada-numpy`.
 
 ## License
 
