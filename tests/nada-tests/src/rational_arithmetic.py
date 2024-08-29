@@ -24,8 +24,6 @@ def nada_main():
     out_9 = b**0  # 1 -> 65536
     out_10 = a ** (-3)  # 0.03051757812499999 -> 2000
 
-    assert a == a**1, a**1
-
     return [
         Output(out_0.value, "my_output_0", parties[0]),
         Output(out_1.value, "my_output_1", parties[0]),

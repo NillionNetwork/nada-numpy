@@ -1,7 +1,5 @@
 program: private_inverse
 inputs:
-  A_0:
-    SecretUnsignedInteger: '3'
+  A_0: 3
 expected_outputs:
-  my_output:
-    SecretUnsignedInteger: '1'
+  my_output: 1

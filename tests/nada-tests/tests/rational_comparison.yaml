@@ -1,37 +1,20 @@
 program: rational_comparison
 inputs:
-  my_input_0:
-    SecretInteger: '78643'
-  my_input_1:
-    Integer: '209715'
+  my_input_0: 78643
+  my_input_1: 209715
 expected_outputs:
-  my_output_0:
-    Boolean: true
-  my_output_1:
-    Boolean: true
-  my_output_2:
-    Boolean: false
-  my_output_3:
-    Boolean: false
-  my_output_4:
-    Boolean: false
-  my_output_5:
-    SecretBoolean: false
-  my_output_6:
-    SecretBoolean: false
-  my_output_7:
-    SecretBoolean: true
-  my_output_8:
-    SecretBoolean: true
-  my_output_9:
-    SecretBoolean: false
-  my_output_10:
-    Boolean: true
-  my_output_12:
-    Boolean: true
-  my_output_13:
-    Boolean: true
-  my_output_14:
-    Boolean: false
-  my_output_15:
-    Boolean: false
+  my_output_0: true
+  my_output_1: true
+  my_output_2: false
+  my_output_3: false
+  my_output_4: false
+  my_output_5: false
+  my_output_6: false
+  my_output_7: true
+  my_output_8: true
+  my_output_9: false
+  my_output_10: true
+  my_output_12: true
+  my_output_13: true
+  my_output_14: false
+  my_output_15: false

@@ -12,6 +12,10 @@ def nada_main():
     b = na.array([3], parties[0], "B", SecretInteger)
     c = na.array([3], parties[0], "C", PublicInteger)
 
+    a += na.rational(0)
+    b += Integer(0)
+    c += Integer(0)
+
     # Mixed secretrational - secretinteger
     with pytest.raises(TypeError):
         na.NadaArray(np.array([a[0], b[0]]))

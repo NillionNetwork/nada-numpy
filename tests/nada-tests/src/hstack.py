@@ -9,4 +9,8 @@ def nada_main():
     a = na.array([3], parties[0], "A", SecretInteger)
     b = na.array([3], parties[1], "B", SecretInteger)
 
-    return a.hstack(b).output(parties[2], "my_output")
+    c = a.hstack(b)
+
+    c += Integer(0)
+
+    return c.output(parties[2], "my_output")

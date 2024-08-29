@@ -1,19 +1,11 @@
 program: logistic_regression_rational
 inputs:
-  B_1:
-    SecretInteger: '65536'
-  A_2:
-    SecretInteger: '65536'
-  B_2:
-    SecretInteger: '65536'
-  A_0:
-    SecretInteger: '65536'
-  B_0:
-    SecretInteger: '65536'
-  bias_0:
-    SecretInteger: '65536'
-  A_1:
-    SecretInteger: '65536'
+  B_1: 65536
+  A_2: 65536
+  B_2: 65536
+  A_0: 65536
+  B_0: 65536
+  bias_0: 65536
+  A_1: 65536
 expected_outputs:
-  my_output_0:
-    SecretInteger: '262144'
+  my_output_0: 262144

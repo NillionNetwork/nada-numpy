@@ -1,27 +1,15 @@
 program: hstack
 inputs:
-  A_1:
-    SecretInteger: '3'
-  A_2:
-    SecretInteger: '3'
-  B_1:
-    SecretInteger: '3'
-  A_0:
-    SecretInteger: '3'
-  B_2:
-    SecretInteger: '3'
-  B_0:
-    SecretInteger: '3'
+  A_1: 3
+  A_2: 3
+  B_1: 3
+  A_0: 3
+  B_2: 3
+  B_0: 3
 expected_outputs:
-  my_output_4:
-    SecretInteger: '3'
-  my_output_3:
-    SecretInteger: '3'
-  my_output_5:
-    SecretInteger: '3'
-  my_output_1:
-    SecretInteger: '3'
-  my_output_0:
-    SecretInteger: '3'
-  my_output_2:
-    SecretInteger: '3'
+  my_output_4: 3
+  my_output_3: 3
+  my_output_5: 3
+  my_output_1: 3
+  my_output_0: 3
+  my_output_2: 3

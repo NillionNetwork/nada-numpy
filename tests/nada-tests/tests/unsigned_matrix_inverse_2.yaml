@@ -1,41 +1,22 @@
 program: unsigned_matrix_inverse
 inputs:
-  A_0_0:
-    SecretUnsignedInteger: '1'
-  A_0_1:
-    SecretUnsignedInteger: '2'
-  A_0_2:
-    SecretUnsignedInteger: '3'
-  A_1_0:
-    SecretUnsignedInteger: '4'
-  A_1_1:
-    SecretUnsignedInteger: '5'
-  A_1_2:
-    SecretUnsignedInteger: '6'
-  A_2_0:
-    SecretUnsignedInteger: '7'
-  A_2_1:
-    SecretUnsignedInteger: '8'
-  A_2_2:
-    SecretUnsignedInteger: '10'
-  B:
-    UnsignedInteger: '456'
+  A_0_0: 1
+  A_0_1: 2
+  A_0_2: 3
+  A_1_0: 4
+  A_1_1: 5
+  A_1_2: 6
+  A_2_0: 7
+  A_2_1: 8
+  A_2_2: 10
+  B: 456
 expected_outputs:
-  my_output_0_0:
-    SecretUnsignedInteger: '6148914690879302315'
-  my_output_0_1:
-    SecretUnsignedInteger: '12297829381758604630'
-  my_output_0_2:
-    SecretUnsignedInteger: '1'
-  my_output_1_0:
-    SecretUnsignedInteger: '6148914690879302315'
-  my_output_1_1:
-    SecretUnsignedInteger: '12297829381758604635'
-  my_output_1_2:
-    SecretUnsignedInteger: '18446744072637906945'
-  my_output_2_0:
-    SecretUnsignedInteger: '1'
-  my_output_2_1:
-    SecretUnsignedInteger: '18446744072637906945'
-  my_output_2_2:
-    SecretUnsignedInteger: '1'
+  my_output_0_0: 6148914690879302315
+  my_output_0_1: 12297829381758604630
+  my_output_0_2: 1
+  my_output_1_0: 6148914690879302315
+  my_output_1_1: 12297829381758604635
+  my_output_1_2: 18446744072637906945
+  my_output_2_0: 1
+  my_output_2_1: 18446744072637906945
+  my_output_2_2: 1

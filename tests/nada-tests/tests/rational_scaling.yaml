@@ -1,15 +1,9 @@
 program: rational_scaling
 inputs:
-  A_1:
-    SecretInteger: '12884901888'
-  A_2:
-    SecretInteger: '12884901888'
-  A_0:
-    SecretInteger: '12884901888'
+  A_1: 12884901888
+  A_2: 12884901888
+  A_0: 12884901888
 expected_outputs:
-  my_output_0:
-    SecretInteger: '21474836480'
-  my_output_1:
-    SecretInteger: '21474836480'
-  my_output_2:
-    SecretInteger: '21474836480'
+  my_output_0: 21474836480
+  my_output_1: 21474836480
+  my_output_2: 21474836480

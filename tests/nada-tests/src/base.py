@@ -8,4 +8,6 @@ def nada_main():
 
     a = na.array([3], parties[0], "A", SecretInteger)
 
+    a += Integer(0)
+
     return a.output(parties[1], "my_output")

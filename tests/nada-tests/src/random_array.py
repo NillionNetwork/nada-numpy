@@ -20,6 +20,8 @@ def nada_main():
         assert random_arr_2.shape == (4, 2, 3), random_arr_2.shape
         assert isinstance(random_arr_2.item(0), supported_type)
 
+    a += Integer(0)
+
     with pytest.raises(Exception):
         na.random((1,), PublicInteger)
 

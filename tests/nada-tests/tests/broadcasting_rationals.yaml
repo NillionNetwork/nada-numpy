@@ -1,59 +1,31 @@
 program: broadcasting_rationals
 inputs:
-  X_2:
-    SecretInteger: '196608'
-  y:
-    SecretInteger: '262144'
-  X_1:
-    SecretInteger: '131072'
-  X_0:
-    SecretInteger: '65536'
+  X_2: 196608
+  y: 262144
+  X_1: 131072
+  X_0: 65536
 expected_outputs:
-  my_output_a_0:
-    SecretInteger: '327680'
-  my_output_a_1:
-    SecretInteger: '393216'
-  my_output_a_2:
-    SecretInteger: '458752'
-  my_output_b_0:
-    SecretInteger: '327680'
-  my_output_b_1:
-    SecretInteger: '393216'
-  my_output_b_2:
-    SecretInteger: '458752'
-  my_output_c_0:
-    SecretInteger: '-196608'
-  my_output_c_1:
-    SecretInteger: '-131072'
-  my_output_c_2:
-    SecretInteger: '-65536'
-  my_output_d_0:
-    SecretInteger: '196608'
-  my_output_d_1:
-    SecretInteger: '131072'
-  my_output_d_2:
-    SecretInteger: '65536'
-  my_output_e_0:
-    SecretInteger: '262144'
-  my_output_e_1:
-    SecretInteger: '524288'
-  my_output_e_2:
-    SecretInteger: '786432'
-  my_output_f_0:
-    SecretInteger: '262144'
-  my_output_f_1:
-    SecretInteger: '524288'
-  my_output_f_2:
-    SecretInteger: '786432'
-  my_output_g_0:
-    SecretInteger: '16384'
-  my_output_g_1:
-    SecretInteger: '32768'
-  my_output_g_2:
-    SecretInteger: '49152'
-  my_output_h_0:
-    SecretInteger: '262144'
-  my_output_h_1:
-    SecretInteger: '131072'
-  my_output_h_2:
-    SecretInteger: '87381'
+  my_output_a_0: 327680
+  my_output_a_1: 393216
+  my_output_a_2: 458752
+  my_output_b_0: 327680
+  my_output_b_1: 393216
+  my_output_b_2: 458752
+  my_output_c_0: -196608
+  my_output_c_1: -131072
+  my_output_c_2: -65536
+  my_output_d_0: 196608
+  my_output_d_1: 131072
+  my_output_d_2: 65536
+  my_output_e_0: 262144
+  my_output_e_1: 524288
+  my_output_e_2: 786432
+  my_output_f_0: 262144
+  my_output_f_1: 524288
+  my_output_f_2: 786432
+  my_output_g_0: 16384
+  my_output_g_1: 32768
+  my_output_g_2: 49152
+  my_output_h_0: 262144
+  my_output_h_1: 131072
+  my_output_h_2: 87381

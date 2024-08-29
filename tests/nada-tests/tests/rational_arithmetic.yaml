@@ -1,29 +1,16 @@
 program: rational_arithmetic
 inputs:
-  my_input_1:
-    SecretInteger: '78643'
-  my_input_0:
-    Integer: '294912'
+  my_input_1: 78643
+  my_input_0: 294912
 expected_outputs:
-  my_output_0:
-    Integer: '504627'
-  my_output_1:
-    Integer: '-85197'
-  my_output_2:
-    Integer: '943717'
-  my_output_3:
-    Integer: '46603'
-  my_output_4:
-    SecretInteger: '288358'
-  my_output_5:
-    SecretInteger: '131072'
-  my_output_6:
-    SecretInteger: '251657'
-  my_output_7:
-    SecretInteger: '174762'
-  my_output_8:
-    Integer: '720568878'
-  my_output_9:
-    Integer: '65536'
-  my_output_10:
-    Integer: '2000'
+  my_output_0: 504627
+  my_output_1: -85197
+  my_output_2: 943717
+  my_output_3: 46603
+  my_output_4: 288358
+  my_output_5: 131072
+  my_output_6: 251657
+  my_output_7: 174762
+  my_output_8: 720568878
+  my_output_9: 65536
+  my_output_10: 2000
