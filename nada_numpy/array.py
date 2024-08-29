@@ -20,6 +20,7 @@ from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
                               public_rational, rational, secret_rational, sign)
 from nada_numpy.utils import copy_metadata
 
+
 class NadaArray:  # pylint:disable=too-many-public-methods
     """
     Represents an array-like object with additional functionality.

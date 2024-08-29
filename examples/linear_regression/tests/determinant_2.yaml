@@ -1,24 +1,13 @@
----
 program: determinant
 inputs:
-  A_0_1:
-    SecretInteger: "3"
-  A_2_2:
-    SecretInteger: "3"
-  A_1_0:
-    SecretInteger: "3"
-  A_1_2:
-    SecretInteger: "3"
-  A_2_0:
-    SecretInteger: "3"
-  A_0_0:
-    SecretInteger: "3"
-  A_1_1:
-    SecretInteger: "3"
-  A_2_1:
-    SecretInteger: "3"
-  A_0_2:
-    SecretInteger: "3"
+  A_0_1: 3
+  A_2_2: 3
+  A_1_0: 3
+  A_1_2: 3
+  A_2_0: 3
+  A_0_0: 3
+  A_1_1: 3
+  A_2_1: 3
+  A_0_2: 3
 expected_outputs:
-  my_output:
-    Integer: "0"
+  my_output: 0

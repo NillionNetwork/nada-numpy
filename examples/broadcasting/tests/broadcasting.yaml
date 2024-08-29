@@ -1,35 +1,18 @@
----
 program: broadcasting
 inputs:
-  B_1:
-    SecretInteger: "3"
-  A_0:
-    SecretInteger: "3"
-  C_1:
-    SecretInteger: "3"
-  B_0:
-    SecretInteger: "3"
-  D_0:
-    SecretInteger: "3"
-  C_2:
-    SecretInteger: "3"
-  C_0:
-    SecretInteger: "3"
-  A_2:
-    SecretInteger: "3"
-  A_1:
-    SecretInteger: "3"
-  D_1:
-    SecretInteger: "3"
-  B_2:
-    SecretInteger: "3"
-  D_2:
-    SecretInteger: "3"
-
+  B_1: 3
+  A_0: 3
+  C_1: 3
+  B_0: 3
+  D_0: 3
+  C_2: 3
+  C_0: 3
+  A_2: 3
+  A_1: 3
+  D_1: 3
+  B_2: 3
+  D_2: 3
 expected_outputs:
-  my_output_1:
-    SecretInteger: "-3"
-  my_output_2:
-    SecretInteger: "-3"
-  my_output_0:
-    SecretInteger: "-3"
+  my_output_1: -3
+  my_output_2: -3
+  my_output_0: -3
