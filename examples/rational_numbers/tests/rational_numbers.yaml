@@ -1,9 +1,6 @@
 program: rational_numbers
 inputs:
-  my_input_0:
-    SecretInteger: '209715'
-  my_input_1:
-    SecretInteger: '294912'
+  my_input_0: 209715
+  my_input_1: 294912
 expected_outputs:
-  my_output:
-    SecretInteger: '294912'
+  my_output: 294912

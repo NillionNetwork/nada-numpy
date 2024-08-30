@@ -1,44 +1,24 @@
----
 program: fxpmath_funcs
 inputs:
-  my_input_0:
-    SecretInteger: "65536"
+  my_input_0: 65536
 expected_outputs:
-  result_gelu:
-    SecretInteger: "-13"
-  result_cos:
-    SecretInteger: "-32566"
-  result_isqrt:
-    SecretInteger: "-2341"
-  result_gelu_motz:
-    SecretInteger: "0"
-  result_silu:
-    SecretInteger: "655340"
-  result_sin:
-    SecretInteger: "57328"
-  result_tanh_che:
-    SecretInteger: "19089"
-  result_tanh_motz:
-    SecretInteger: "24917"
-  result_silu_che:
-    SecretInteger: "0"
-  result_sig_motz:
-    SecretInteger: "65536"
-  result_tanh:
-    SecretInteger: "56624"
-  result_rec_log:
-    SecretInteger: "15552"
-  result_sig_che:
-    SecretInteger: "31130"
-  result_sig:
-    SecretInteger: "34401"
-  result_tan:
-    SecretInteger: "-922765"
-  result_sqrt:
-    SecretInteger: "262128"
-  result_log:
-    SecretInteger: "298843"
-  result_exp:
-    SecretInteger: "480249"
-  result_rec_NR:
-    SecretInteger: "32768"
+  result_gelu: -13
+  result_cos: -32566
+  result_isqrt: -2341
+  result_gelu_motz: 0
+  result_silu: 655340
+  result_sin: 57328
+  result_tanh_che: 19089
+  result_tanh_motz: 24917
+  result_silu_che: 0
+  result_sig_motz: 65536
+  result_tanh: 56624
+  result_rec_log: 15552
+  result_sig_che: 31130
+  result_sig: 34401
+  result_tan: -922765
+  result_sqrt: 262128
+  result_log: 298843
+  result_exp: 480249
+  result_rec_NR: 32768
+  result_silu_motz: 0

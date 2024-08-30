@@ -1,23 +1,13 @@
 program: dot_product_rational
 inputs:
-  A_0:
-    SecretInteger: '65536'
-  A_1:
-    SecretInteger: '131072'
-  A_2:
-    SecretInteger: '196608'
-  B_0:
-    SecretInteger: '65536'
-  B_1:
-    SecretInteger: '131072'
-  B_2:
-    SecretInteger: '196608'
+  A_0: 65536
+  A_1: 131072
+  A_2: 196608
+  B_0: 65536
+  B_1: 131072
+  B_2: 196608
 expected_outputs:
-  my_output_a:
-    SecretInteger: '917504'
-  my_output_b:
-    SecretInteger: '917504'
-  my_output_c:
-    SecretInteger: '393216'
-  my_output_d:
-    SecretInteger: '393216'
+  my_output_a: 917504
+  my_output_b: 917504
+  my_output_c: 393216
+  my_output_d: 393216

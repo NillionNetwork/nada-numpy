@@ -1,23 +1,13 @@
 program: functional_operations
 inputs:
-  A_1:
-    SecretInteger: '3'
-  B_0:
-    SecretInteger: '3'
-  B_1:
-    SecretInteger: '3'
-  A_0:
-    SecretInteger: '3'
+  A_1: 3
+  B_0: 3
+  B_1: 3
+  A_0: 3
 expected_outputs:
-  my_output_A_0_0:
-    SecretInteger: '3'
-  my_output_B_0_1:
-    SecretInteger: '3'
-  my_output_A_0_2:
-    Integer: '20'
-  my_output_B_0_2:
-    Integer: '20'
-  my_output_A_0_1:
-    SecretInteger: '3'
-  my_output_B_0_0:
-    SecretInteger: '3'
+  my_output_A_0_0: 3
+  my_output_B_0_1: 3
+  my_output_A_0_2: 20
+  my_output_B_0_2: 20
+  my_output_A_0_1: 3
+  my_output_B_0_0: 3

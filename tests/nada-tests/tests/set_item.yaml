@@ -1,27 +1,15 @@
 program: set_item
 inputs:
-  A_2_1:
-    SecretInteger: '3'
-  A_1_1:
-    SecretInteger: '3'
-  A_2_2:
-    SecretInteger: '3'
-  A_0_0:
-    SecretInteger: '3'
-  A_1_0:
-    SecretInteger: '3'
-  A_1_2:
-    SecretInteger: '3'
-  A_2_0:
-    SecretInteger: '3'
-  A_0_2:
-    SecretInteger: '3'
-  A_0_1:
-    SecretInteger: '3'
+  A_2_1: 3
+  A_1_1: 3
+  A_2_2: 3
+  A_0_0: 3
+  A_1_0: 3
+  A_1_2: 3
+  A_2_0: 3
+  A_0_2: 3
+  A_0_1: 3
 expected_outputs:
-  my_output_1:
-    SecretInteger: '11'
-  my_output_2:
-    SecretInteger: '12'
-  my_output_0:
-    SecretInteger: '10'
+  my_output_1: 11
+  my_output_2: 12
+  my_output_0: 10

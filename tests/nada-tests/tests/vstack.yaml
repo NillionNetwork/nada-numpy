@@ -1,27 +1,15 @@
 program: vstack
 inputs:
-  A_2:
-    SecretInteger: '3'
-  B_1:
-    SecretInteger: '3'
-  B_0:
-    SecretInteger: '3'
-  B_2:
-    SecretInteger: '3'
-  A_0:
-    SecretInteger: '3'
-  A_1:
-    SecretInteger: '3'
+  A_2: 3
+  B_1: 3
+  B_0: 3
+  B_2: 3
+  A_0: 3
+  A_1: 3
 expected_outputs:
-  my_output_1_2:
-    SecretInteger: '3'
-  my_output_0_1:
-    SecretInteger: '3'
-  my_output_0_0:
-    SecretInteger: '3'
-  my_output_1_0:
-    SecretInteger: '3'
-  my_output_0_2:
-    SecretInteger: '3'
-  my_output_1_1:
-    SecretInteger: '3'
+  my_output_1_2: 3
+  my_output_0_1: 3
+  my_output_0_0: 3
+  my_output_1_0: 3
+  my_output_0_2: 3
+  my_output_1_1: 3

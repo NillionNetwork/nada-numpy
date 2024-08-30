@@ -10,6 +10,9 @@ def nada_main():
     a = na.array([3], parties[0], "A", SecretInteger)
     b = na.array([3], parties[0], "B", na.SecretRational)
 
+    a += Integer(0)
+    b += na.rational(0)
+
     # Test all for a native NadaType
     _ = na.sum(a)
     _ = na.compress(a, [True, True, False], axis=0)

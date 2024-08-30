@@ -1,93 +1,54 @@
 program: matrix_multiplication_rational
 inputs:
-  A_0_0:
-    SecretInteger: '65536'
-  A_0_1:
-    SecretInteger: '131072'
-  A_0_2:
-    SecretInteger: '196608'
-  A_1_0:
-    SecretInteger: '262144'
-  A_1_1:
-    SecretInteger: '327680'
-  A_1_2:
-    SecretInteger: '393216'
-  A_2_0:
-    SecretInteger: '458752'
-  A_2_1:
-    SecretInteger: '524288'
-  A_2_2:
-    SecretInteger: '589824'
-  B_0_0:
-    SecretInteger: '65536'
-  B_0_1:
-    SecretInteger: '131072'
-  B_0_2:
-    SecretInteger: '196608'
-  B_1_0:
-    SecretInteger: '262144'
-  B_1_1:
-    SecretInteger: '327680'
-  B_1_2:
-    SecretInteger: '393216'
-  B_2_0:
-    SecretInteger: '458752'
-  B_2_1:
-    SecretInteger: '524288'
-  B_2_2:
-    SecretInteger: '589824'
-  C_0:
-    SecretInteger: '65536'
-  C_1:
-    SecretInteger: '0'
-  C_2:
-    SecretInteger: '0'
+  A_0_0: 65536
+  A_0_1: 131072
+  A_0_2: 196608
+  A_1_0: 262144
+  A_1_1: 327680
+  A_1_2: 393216
+  A_2_0: 458752
+  A_2_1: 524288
+  A_2_2: 589824
+  B_0_0: 65536
+  B_0_1: 131072
+  B_0_2: 196608
+  B_1_0: 262144
+  B_1_1: 327680
+  B_1_2: 393216
+  B_2_0: 458752
+  B_2_1: 524288
+  B_2_2: 589824
+  C_0: 65536
+  C_1: 0
+  C_2: 0
 expected_outputs:
-  my_output_0_0:
-    SecretInteger: '1966080'
-  my_output_0_1:
-    SecretInteger: '2359296'
-  my_output_0_2:
-    SecretInteger: '2752512'
-  my_output_1_0:
-    SecretInteger: '4325376'
-  my_output_1_1:
-    SecretInteger: '5308416'
-  my_output_1_2:
-    SecretInteger: '6291456'
-  my_output_2_0:
-    SecretInteger: '6684672'
-  my_output_2_1:
-    SecretInteger: '8257536'
-  my_output_2_2:
-    SecretInteger: '9830400'
-  my_output_b_0:
-    SecretInteger: '65536'
-  my_output_b_1:
-    SecretInteger: '262144'
-  my_output_b_2:
-    SecretInteger: '458752'
-  my_output_c_0_0:
-    SecretInteger: '393216'
-  my_output_c_0_1:
-    SecretInteger: '393216'
-  my_output_c_0_2:
-    SecretInteger: '393216'
-  my_output_c_1_0:
-    SecretInteger: '983040'
-  my_output_c_1_1:
-    SecretInteger: '983040'
-  my_output_c_1_2:
-    SecretInteger: '983040'
-  my_output_c_2_0:
-    SecretInteger: '1572864'
-  my_output_c_2_1:
-    SecretInteger: '1572864'
-  my_output_c_2_2:
-    SecretInteger: '1572864'
-  my_output_d_0_0:
-    SecretInteger: '786432'
-  my_output_d_1_0:
-    SecretInteger: '786432'
-  my_output_d_2_0:
-    SecretInteger: '786432'
+  my_output_0_0: 1966080
+  my_output_0_1: 2359296
+  my_output_0_2: 2752512
+  my_output_1_0: 4325376
+  my_output_1_1: 5308416
+  my_output_1_2: 6291456
+  my_output_2_0: 6684672
+  my_output_2_1: 8257536
+  my_output_2_2: 9830400
+  my_output_b_0: 65536
+  my_output_b_1: 262144
+  my_output_b_2: 458752
+  my_output_c_0_0: 393216
+  my_output_c_0_1: 393216
+  my_output_c_0_2: 393216
+  my_output_c_1_0: 983040
+  my_output_c_1_1: 983040
+  my_output_c_1_2: 983040
+  my_output_c_2_0: 1572864
+  my_output_c_2_1: 1572864
+  my_output_c_2_2: 1572864
+  my_output_d_0_0: 786432
+  my_output_d_0_1: 983040
+  my_output_d_0_2: 1179648
+  my_output_d_1_0: 786432
+  my_output_d_1_1: 983040
+  my_output_d_1_2: 1179648
+  my_output_d_2_0: 786432
+  my_output_d_2_1: 983040
+  my_output_d_2_2: 1179648

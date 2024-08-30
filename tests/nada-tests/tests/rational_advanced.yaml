@@ -1,31 +1,17 @@
 program: rational_advanced
 inputs:
-  my_input_0:
-    SecretInteger: '209715'
-  my_input_1:
-    Integer: '1229'
+  my_input_0: 209715
+  my_input_1: 1229
 expected_outputs:
-  out_3:
-    SecretInteger: '16495343040'
-  out_5:
-    SecretInteger: '11182979'
-  out_8:
-    Integer: '1475'
-  out_0:
-    SecretInteger: '174734'
-  out_7:
-    SecretInteger: '170'
-  out_9:
-    Integer: '4194304'
-  out_10:
-    Integer: '96668224'
-  out_2:
-    SecretInteger: '24580'
-  out_1:
-    SecretInteger: '16495343040'
-  out_4:
-    SecretInteger: '3932'
-  out_6:
-    SecretInteger: '257739735'
-  out_11:
-    Integer: '64'
+  out_3: 16495343040
+  out_5: 11182979
+  out_8: 1475
+  out_0: 174734
+  out_7: 170
+  out_9: 4194304
+  out_10: 96668224
+  out_2: 24580
+  out_1: 16495343040
+  out_4: 3932
+  out_6: 257739735
+  out_11: 64

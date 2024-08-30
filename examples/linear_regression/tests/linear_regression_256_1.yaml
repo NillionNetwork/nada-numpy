@@ -1,38 +1,19 @@
----
-program: linear_regression_256  
+program: linear_regression_256
 inputs:
-  A_0_0:
-      SecretInteger: "-256"
-  A_0_1:
-      SecretInteger: "-199"
-  A_0_2:
-      SecretInteger: "-142"
-  A_1_0:
-      SecretInteger: "-85"
-  A_1_1:
-      SecretInteger: "-28"
-  A_1_2:
-      SecretInteger: "28"
-  A_2_0:
-      SecretInteger: "85"
-  A_2_1:
-      SecretInteger: "142"
-  A_2_2:
-      SecretInteger: "256"
-  b_0:
-      SecretInteger: "-256"
-  b_1:
-      SecretInteger: "-199"
-  b_2:
-      SecretInteger: "-142"
-#   lambda_0: 
-#     Integer: "1"
+  A_0_0: -256
+  A_0_1: -199
+  A_0_2: -142
+  A_1_0: -85
+  A_1_1: -28
+  A_1_2: 28
+  A_2_0: 85
+  A_2_1: 142
+  A_2_2: 256
+  b_0: -256
+  b_1: -199
+  b_2: -142
 expected_outputs:
-  b:
-    SecretInteger: "330643400256"
-  w_0:
-    SecretInteger: "1102041164640"
-  w_1:
-    SecretInteger: "-993683999568"
-  w_2:
-    SecretInteger: "1868226984"
+  b: 330643400256
+  w_0: 1102041164640
+  w_1: -993683999568
+  w_2: 1868226984

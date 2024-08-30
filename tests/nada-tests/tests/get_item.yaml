@@ -1,11 +1,7 @@
 program: get_item
 inputs:
-  A_1:
-    SecretInteger: '3'
-  A_0:
-    SecretInteger: '3'
-  A_2:
-    SecretInteger: '3'
+  A_1: 3
+  A_0: 3
+  A_2: 3
 expected_outputs:
-  my_output:
-    SecretInteger: '9'
+  my_output: 9

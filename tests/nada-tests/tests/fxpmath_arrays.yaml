@@ -1,95 +1,48 @@
----
 program: fxpmath_arrays
 inputs:
-  my_input_0:
-    SecretInteger: "3"
+  my_input_0: 3
 expected_outputs:
-  result_sig_0:
-    SecretInteger: "32711"
-  result_sqrt_1:
-    Integer: "80265"
-  result_sig_motz_1:
-    Integer: "53477"
-  result_silu_0:
-    SecretInteger: "1"
-  result_gelu_0:
-    SecretInteger: "1"
-  result_tan_1:
-    Integer: "888645"
-  result_tanh_1:
-    Integer: "59434"
-  result_tan_0:
-    SecretInteger: "0"
-  result_exp_0:
-    SecretInteger: "65536"
-  result_sig_1:
-    Integer: "53644"
-  result_silu_motz_1:
-    Integer: "80215"
-  result_gelu_motz_1:
-    Integer: "91629"
-  result_sig_che_1:
-    Integer: "53580"
-  result_log_0:
-    SecretInteger: "-614828"
-  result_sqrt_0:
-    SecretInteger: "45"
-  result_silu_che_0:
-    SecretInteger: "1"
-  result_rec_NR_1:
-    Integer: "43692"
-  result_tanh_che_1:
-    Integer: "65536"
-  result_gelu_motz_0:
-    SecretInteger: "103"
-  result_exp_1:
-    Integer: "292119"
-  result_isqrt_1:
-    Integer: "53510"
-  result_cos_1:
-    Integer: "4846"
-  result_tanh_motz_1:
-    Integer: "59394"
-  result_cos_0:
-    SecretInteger: "65536"
-  result_sig_che_0:
-    SecretInteger: "32768"
-  result_rec_log_0:
-    SecretInteger: "65040192"
-  result_sig_motz_0:
-    SecretInteger: "32686"
-  result_log_1:
-    Integer: "26359"
-  result_tanh_0:
-    SecretInteger: "-114"
-  result_sin_1:
-    Integer: "65710"
-  result_gelu_1:
-    Integer: "91839"
-  result_silu_che_1:
-    Integer: "80370"
-  result_tanh_motz_0:
-    SecretInteger: "-160"
-  result_tanh_che_0:
-    SecretInteger: "2"
-  result_rec_NR_0:
-    SecretInteger: "451510139"
-  result_rec_log_1:
-    Integer: "34575"
-  result_silu_1:
-    Integer: "80466"
-  result_isqrt_0:
-    SecretInteger: "989647"
-  result_silu_motz_0:
-    SecretInteger: "1"
-  result_sin_0:
-    SecretInteger: "0"
-  result_sign_1:
-    Integer: "65536"
-  result_sign_0:
-    SecretInteger: "65536"
-  result_abs_1:
-    Integer: "98304"
-  result_abs_0:
-    SecretInteger: "3"
-
+  result_sig_0: 32711
+  result_sqrt_1: 80265
+  result_sig_motz_1: 53477
+  result_silu_0: 1
+  result_gelu_0: 1
+  result_tan_1: 888645
+  result_tanh_1: 59434
+  result_tan_0: 0
+  result_exp_0: 65536
+  result_sig_1: 53644
+  result_silu_motz_1: 80215
+  result_gelu_motz_1: 91629
+  result_sig_che_1: 53580
+  result_log_0: -614828
+  result_sqrt_0: 45
+  result_silu_che_0: 1
+  result_rec_NR_1: 43692
+  result_tanh_che_1: 65536
+  result_gelu_motz_0: 103
+  result_exp_1: 292119
+  result_isqrt_1: 53510
+  result_cos_1: 4846
+  result_tanh_motz_1: 59394
+  result_cos_0: 65536
+  result_sig_che_0: 32768
+  result_rec_log_0: 65040192
+  result_sig_motz_0: 32686
+  result_log_1: 26359
+  result_tanh_0: -114
+  result_sin_1: 65710
+  result_gelu_1: 91839
+  result_silu_che_1: 80370
+  result_tanh_motz_0: -160
+  result_tanh_che_0: 2
+  result_rec_NR_0: 451510139
+  result_rec_log_1: 34575
+  result_silu_1: 80466
+  result_isqrt_0: 989647
+  result_silu_motz_0: 1
+  result_sin_0: 0
+  result_sign_1: 65536
+  result_sign_0: 65536
+  result_abs_1: 98304
+  result_abs_0: 3

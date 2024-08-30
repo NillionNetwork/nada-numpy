@@ -14,6 +14,8 @@ def nada_main():
     b = na.NadaArray(np.array([]))
     c = na.NadaArray(np.array([na.rational(1.5)]))
 
+    a += Integer(0)
+
     assert not a.empty
     assert b.empty
     assert not c.empty

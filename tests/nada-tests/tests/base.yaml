@@ -1,15 +1,9 @@
 program: base
 inputs:
-  A_1:
-    SecretInteger: '3'
-  A_2:
-    SecretInteger: '3'
-  A_0:
-    SecretInteger: '3'
+  A_1: 3
+  A_2: 3
+  A_0: 3
 expected_outputs:
-  my_output_0:
-    SecretInteger: '3'
-  my_output_1:
-    SecretInteger: '3'
-  my_output_2:
-    SecretInteger: '3'
+  my_output_0: 3
+  my_output_1: 3
+  my_output_2: 3

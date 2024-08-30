@@ -1,21 +1,12 @@
 program: rational_operability
 inputs:
-  A_1:
-    SecretInteger: '196608'
-  A_2:
-    SecretInteger: '196608'
-  A_0:
-    SecretInteger: '196608'
-  B_1:
-    Integer: '131072'
-  B_2:
-    Integer: '131072'
-  B_0:
-    Integer: '131072'
+  A_1: 196608
+  A_2: 196608
+  A_0: 196608
+  B_1: 131072
+  B_2: 131072
+  B_0: 131072
 expected_outputs:
-  my_output_0:
-    SecretInteger: '327680'
-  my_output_1:
-    SecretInteger: '327680'
-  my_output_2:
-    SecretInteger: '327680'
+  my_output_0: 327680
+  my_output_1: 327680
+  my_output_2: 327680

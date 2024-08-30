@@ -1,39 +1,23 @@
 program: rational_if_else
 inputs:
-  A:
-    SecretInteger: '78643'
-  B:
-    SecretInteger: '294912'
-  C:
-    SecretInteger: '65536'
-  D:
-    SecretInteger: '1'
-  E:
-    SecretUnsignedInteger: '1'
+  A: 78643
+  B: 294912
+  C: 65536
+  D: 1
+  E: 1
 expected_outputs:
-  out_0:
-    SecretInteger: '294912'
-  out_1:
-    SecretInteger: '294912'
-  out_2:
-    SecretInteger: '78643'
-  out_3:
-    SecretInteger: '78643'
-  out_4:
-    SecretInteger: '1'
-  out_5:
-    SecretInteger: '1'
-  out_6:
-    SecretInteger: '1'
-  out_7:
-    SecretInteger: '1'
-  out_8:
-    Integer: '131072'
-  out_9:
-    Integer: '65536'
-  out_10:
-    Integer: '1'
-  out_11:
-    SecretInteger: '1'
-  out_12:
-    SecretUnsignedInteger: '1'
+  out_0: 294912
+  out_1: 294912
+  out_2: 78643
+  out_3: 78643
+  out_4: 1
+  out_5: 1
+  out_6: 1
+  out_7: 1
+  out_8: 131072
+  out_9: 65536
+  out_10: 1
+  out_11: 1
+  out_12: 1
+
+  out_13: 1

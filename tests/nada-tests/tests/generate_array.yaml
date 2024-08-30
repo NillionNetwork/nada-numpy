@@ -1,17 +1,10 @@
 program: generate_array
 inputs:
-  a:
-    SecretInteger: '3'
+  a: 3
 expected_outputs:
-  my_output_0_0:
-    SecretInteger: '8'
-  my_output_0_1:
-    SecretInteger: '8'
-  my_output_0_2:
-    SecretInteger: '8'
-  my_output_1_0:
-    SecretInteger: '8'
-  my_output_1_1:
-    SecretInteger: '8'
-  my_output_1_2:
-    SecretInteger: '8'
+  my_output_0_0: 8
+  my_output_0_1: 8
+  my_output_0_2: 8
+  my_output_1_0: 8
+  my_output_1_1: 8
+  my_output_1_2: 8
