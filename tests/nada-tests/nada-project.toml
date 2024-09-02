@@ -197,3 +197,7 @@ prime_size = 128
 [[programs]]
 path = "src/array_comparison.py"
 prime_size = 128
+
+[[programs]]
+path = "src/shuffle.py"
+prime_size = 128

@@ -1,6 +1,8 @@
 """
-This module provides common functions to work with Nada Numpy, including the creation
-and manipulation of arrays and party objects.
+This module provides common functions to work with Nada Numpy. It includes: 
+- the creation and manipulation of arrays and party objects.
+- non-linear functions over arrays.
+- random operations over arrays: random generation, shuffling.
 """
 
 # pylint:disable=too-many-lines
@@ -75,6 +77,7 @@ __all__ = [
     "sigmoid",
     "gelu",
     "silu",
+    "shuffle",
 ]
 
 
@@ -1134,3 +1137,156 @@ def silu(
         ValueError: Raised if sigmoid method type is not supported.
     """
     return arr.silu(method_sigmoid=method_sigmoid)
+
+
+def shuffle(arr: NadaArray) -> NadaArray:
+    """
+    Shuffles a 1D array using the Benes network.
+
+    This function rearranges the elements of a 1-dimensional array in a deterministic but seemingly
+    random order based on the Benes network, a network used in certain types of sorting and
+    switching circuits. The Benes network requires the input array's length to be a power of two
+    (e.g., 2, 4, 8, 16, ...).
+
+    Note: The resulting shuffled arrays contain the same elements as the input arrays.
+
+    Args:
+        NadaArray: The input array to be shuffled. This must be a 1-dimensional NumPy array.
+            The length of the array must be a power of two.
+
+    Returns:
+        NadaArray: The shuffled version of the input array. The output is a new array where
+            the elements have been rearranged according to the Benes network.
+
+    Raises:
+        ValueError: If the length of the input array is not a power of two.
+
+    Example:
+    ```python
+    import nada_numpy as na
+
+    # Example arrays with different data types
+    parties = na.parties(2)
+    a = na.array([8], parties[0], "A", na.Rational)
+    b = na.array([8], parties[0], "B", na.SecretRational)
+    c = na.array([8], parties[0], "C", PublicInteger)
+    d = na.array([8], parties[0], "D", SecretInteger)
+
+    # Shuffling the arrays
+    shuffled_a = shuffle(a)
+    shuffled_b = shuffle(b)
+    shuffled_c = shuffle(c)
+    ```
+
+    Frequency analysis:
+
+        This script performs a frequency analysis of a shuffle function implemented using a Benes
+        network. It includes a function for shuffle, a test function for evaluating randomness,
+        and an example of running the test. Below is an overview of the code and its output.
+
+        1. **Shuffle Function**:
+
+        The `shuffle` function shuffles a 1D array using a Benes network approach.
+        The Benes network is defined by the function `_benes_network(n)`, which should provide the
+        network stages required for the shuffle.
+
+        ```python
+        import numpy as np
+        import random
+
+        def rand_bool():
+            # Simulates a random boolean value
+            return random.choice([0, 1]) == 0
+
+        def swap_gate(a, b):
+            # Conditionally swaps two values based on a random boolean
+            rbool = rand_bool()
+            return (b, a) if rbool else (a, b)
+
+        def shuffle(array):
+            # Applies Benes network shuffle to a 1D array
+            if array.ndim != 1:
+                raise ValueError("Input array must be a 1D array.")
+
+            n = array.size
+            bnet = benes_network(n)
+            swap_array = np.ones(n)
+
+            first_numbers = np.arange(0, n, 2)
+            second_numbers = np.arange(1, n, 2)
+            pairs = np.column_stack((first_numbers, second_numbers))
+
+            for stage in bnet:
+                for ((i0, i1), (a, b)) in zip(pairs, stage):
+                    swap_array[i0], swap_array[i1] = swap_gate(array[a], array[b])
+                array = swap_array.copy()
+
+            return array
+            ```
+
+        2. **Randomness Test Function:**:
+        The test_shuffle_randomness function evaluates the shuffle function by performing
+        multiple shuffles and counting the occurrences of each element at each position.
+
+                ```python
+                def test_shuffle_randomness(vector_size, num_shuffles):
+                    # Initializes vector and count matrix
+                    vector = np.arange(vector_size)
+                    counts = np.zeros((vector_size, vector_size), dtype=int)
+
+                    # Performs shuffling and counts occurrences
+                    for _ in range(num_shuffles):
+                        shuffled_vector = shuffle(vector)
+                        for position, element in enumerate(shuffled_vector):
+                            counts[int(element), position] += 1
+
+                    # Computes average counts and deviation
+                    average_counts = num_shuffles / vector_size
+                    deviation = np.abs(counts - average_counts)
+
+                    return counts, average_counts, deviation
+                ```
+
+
+        Running the `test_shuffle_randomness` function with a vector size of 8 and 100,000 shuffles
+        provides the following results:
+
+                ```python
+                vector_size = 8  # Size of the vector
+                num_shuffles = 100000  # Number of shuffles to perform
+
+                counts, average_counts, deviation = test_shuffle_randomness(vector_size,
+                                                                            num_shuffles)
+
+                print("Counts of numbers appearances at each position:")
+                for i in range(vector_size):
+                    print(f"Number {i}: {counts[i]}")
+                print("Expected count of number per slot:", average_counts)
+                print("\nDeviation from the expected average:")
+                for i in range(vector_size):
+                    print(f"Number {i}: {deviation[i]}")
+                ```
+                ```bash
+                >>> Counts of numbers appearances at each position:
+                >>> Number 0: [12477 12409 12611 12549 12361 12548 12591 12454]
+                >>> Number 1: [12506 12669 12562 12414 12311 12408 12377 12753]
+                >>> Number 2: [12595 12327 12461 12607 12492 12721 12419 12378]
+                >>> Number 3: [12417 12498 12586 12433 12627 12231 12638 12570]
+                >>> Number 4: [12370 12544 12404 12337 12497 12743 12588 12517]
+                >>> Number 5: [12559 12420 12416 12791 12508 12489 12360 12457]
+                >>> Number 6: [12669 12459 12396 12394 12757 12511 12423 12391]
+                >>> Number 7: [12407 12674 12564 12475 12447 12349 12604 12480]
+                >>> Expected count of number per slot: 12500.0
+                >>>
+                >>> Deviation from the expected average:
+                >>> Number 0: [ 23.  91. 111.  49. 139.  48.  91.  46.]
+                >>> Number 1: [  6. 169.  62.  86. 189.  92. 123. 253.]
+                >>> Number 2: [ 95. 173.  39. 107.   8. 221.  81. 122.]
+                >>> Number 3: [ 83.   2.  86.  67. 127. 269. 138.  70.]
+                >>> Number 4: [130.  44.  96. 163.   3. 243.  88.  17.]
+                >>> Number 5: [ 59.  80.  84. 291.   8.  11. 140.  43.]
+                >>> Number 6: [169.  41. 104. 106. 257.  11.  77. 109.]
+                >>> Number 7: [ 93. 174.  64.  25.  53. 151. 104.  20.]
+                ```
+    """
+    return arr.shuffle()

@@ -53,6 +53,7 @@ TESTS = [
     "fxpmath_funcs",
     "fxpmath_arrays",
     "fxpmath_methods",
+    "shuffle",
     "array_comparison",
 ]
 
