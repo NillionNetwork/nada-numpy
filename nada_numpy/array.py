@@ -5,7 +5,8 @@
 
 # pylint:disable=too-many-lines
 
-from typing import Any, Callable, Optional, Sequence, Union, get_args, overload
+from typing import (Any, Callable, Optional, Sequence, Tuple, Union, get_args,
+                    overload)
 
 import numpy as np
 from nada_dsl import (Boolean, Input, Integer, Output, Party, PublicInteger,
@@ -16,8 +17,9 @@ from nada_numpy.context import UnsafeArithmeticSession
 from nada_numpy.nada_typing import (AnyNadaType, NadaBoolean,
                                     NadaCleartextType, NadaInteger,
                                     NadaRational, NadaUnsignedInteger)
-from nada_numpy.types import (Rational, SecretRational, fxp_abs, get_log_scale,
-                              public_rational, rational, secret_rational, sign)
+from nada_numpy.types import (Rational, SecretBoolean, SecretRational, fxp_abs,
+                              get_log_scale, public_rational, rational,
+                              secret_rational, sign)
 from nada_numpy.utils import copy_metadata
 
 
@@ -775,6 +777,176 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             raise ValueError(f"Unsupported nada_type: {nada_type}")
 
         return NadaArray(np.array(NadaArray._create_list(dims, None, None, generator)))
+
+    def shuffle(self) -> "NadaArray":
+        """
+        Shuffles a 1D array using the Benes network.
+
+        This function rearranges the elements of a 1-dimensional array in a deterministic but
+        seemingly random order based on the Benes network, a network used in certain types of
+        sorting and switching circuits. The Benes network requires the input array's length
+        to be a power of two (e.g., 2, 4, 8, 16, ...).
+
+        Note: The resulting shuffled arrays contain the same elements as the input arrays.
+
+        Args:
+            NadaArray: The input array to be shuffled. This must be a 1-dimensional NumPy array.
+                The length of the array must be a power of two.
+
+        Returns:
+            NadaArray: The shuffled version of the input array. The output is a new array where
+                the elements have been rearranged according to the Benes network.
+
+        Raises:
+            ValueError: If the length of the input array is not a power of two.
+
+        Example:
+        ```python
+        import nada_numpy as na
+
+        # Example arrays with different data types
+        parties = na.parties(2)
+        a = na.array([8], parties[0], "A", na.Rational)
+        b = na.array([8], parties[0], "B", na.SecretRational)
+        c = na.array([8], parties[0], "C", PublicInteger)
+        d = na.array([8], parties[0], "D", SecretInteger)
+
+        # Shuffling the arrays
+        shuffled_a = a.shuffle()
+        shuffled_b = b.shuffle()
+        shuffled_c = c.shuffle()
+        ```
+
+        Frequency analysis:
+
+            This script performs a frequency analysis of a shuffle function implemented using a
+            Benes network. It includes a function for shuffle, a test function for evaluating
+            randomness, and an example of running the test. Below is an overview of the code and
+            its output.
+
+            1. **Shuffle Function**:
+
+            The `shuffle` function shuffles a 1D array using a Benes network approach.
+            The Benes network is defined by the function `_benes_network(n)`, which should provide
+            the network stages required for the shuffle.
+
+            ```python
+            import numpy as np
+            import random
+
+            def rand_bool():
+                # Simulates a random boolean value
+                return random.choice([0, 1]) == 0
+
+            def swap_gate(a, b):
+                # Conditionally swaps two values based on a random boolean
+                rbool = rand_bool()
+                return (b, a) if rbool else (a, b)
+
+            def shuffle(array):
+                # Applies Benes network shuffle to a 1D array
+                if array.ndim != 1:
+                    raise ValueError("Input array must be a 1D array.")
+
+                n = array.size
+                bnet = benes_network(n)
+                swap_array = np.ones(n)
+
+                first_numbers = np.arange(0, n, 2)
+                second_numbers = np.arange(1, n, 2)
+                pairs = np.column_stack((first_numbers, second_numbers))
+
+                for stage in bnet:
+                    for ((i0, i1), (a, b)) in zip(pairs, stage):
+                        swap_array[i0], swap_array[i1] = swap_gate(array[a], array[b])
+                    array = swap_array.copy()
+
+                return array
+                ```
+
+            2. **Randomness Test Function:**:
+            The test_shuffle_randomness function evaluates the shuffle function by performing
+            multiple shuffles and counting the occurrences of each element at each position.
+
+                    ```python
+                    def test_shuffle_randomness(vector_size, num_shuffles):
+                        # Initializes vector and count matrix
+                        vector = np.arange(vector_size)
+                        counts = np.zeros((vector_size, vector_size), dtype=int)
+
+                        # Performs shuffling and counts occurrences
+                        for _ in range(num_shuffles):
+                            shuffled_vector = shuffle(vector)
+                            for position, element in enumerate(shuffled_vector):
+                                counts[int(element), position] += 1
+
+                        # Computes average counts and deviation
+                        average_counts = num_shuffles / vector_size
+                        deviation = np.abs(counts - average_counts)
+
+                        return counts, average_counts, deviation
+                    ```
+
+
+            Running the `test_shuffle_randomness` function with a vector size of 8 and 100,000
+            shuffles provides the following results:
+
+                    ```python
+                    vector_size = 8  # Size of the vector
+                    num_shuffles = 100000  # Number of shuffles to perform
+
+                    counts, average_counts, deviation = test_shuffle_randomness(vector_size,
+                                                                                num_shuffles)
+
+                    print("Counts of numbers appearances at each position:")
+                    for i in range(vector_size):
+                        print(f"Number {i}: {counts[i]}")
+                    print("Expected count of number per slot:", average_counts)
+                    print("\nDeviation from the expected average:")
+                    for i in range(vector_size):
+                        print(f"Number {i}: {deviation[i]}")
+                    ```
+                    ```bash
+                    >>> Counts of numbers appearances at each position:
+                    >>> Number 0: [12477 12409 12611 12549 12361 12548 12591 12454]
+                    >>> Number 1: [12506 12669 12562 12414 12311 12408 12377 12753]
+                    >>> Number 2: [12595 12327 12461 12607 12492 12721 12419 12378]
+                    >>> Number 3: [12417 12498 12586 12433 12627 12231 12638 12570]
+                    >>> Number 4: [12370 12544 12404 12337 12497 12743 12588 12517]
+                    >>> Number 5: [12559 12420 12416 12791 12508 12489 12360 12457]
+                    >>> Number 6: [12669 12459 12396 12394 12757 12511 12423 12391]
+                    >>> Number 7: [12407 12674 12564 12475 12447 12349 12604 12480]
+                    >>> Expected count of number per slot: 12500.0
+                    >>>
+                    >>> Deviation from the expected average:
+                    >>> Number 0: [ 23.  91. 111.  49. 139.  48.  91.  46.]
+                    >>> Number 1: [  6. 169.  62.  86. 189.  92. 123. 253.]
+                    >>> Number 2: [ 95. 173.  39. 107.   8. 221.  81. 122.]
+                    >>> Number 3: [ 83.   2.  86.  67. 127. 269. 138.  70.]
+                    >>> Number 4: [130.  44.  96. 163.   3. 243.  88.  17.]
+                    >>> Number 5: [ 59.  80.  84. 291.   8.  11. 140.  43.]
+                    >>> Number 6: [169.  41. 104. 106. 257.  11.  77. 109.]
+                    >>> Number 7: [ 93. 174.  64.  25.  53. 151. 104.  20.]
+                    ```
+        """
+        arr = self.copy()
+        # Ensure the array is a 1D array
+        if arr.ndim != 1:
+            raise ValueError("Input array must be a 1D array.")
+
+        n = arr.size
+        bnet = _benes_network(n)
+        swap_arr = arr.copy()
+
+        evens = np.arange(0, n, 2)
+        odds = np.arange(1, n, 2)
+        pairs = np.column_stack((evens, odds))
+        for stage in bnet:
+            for (i0, i1), (a, b) in zip(pairs, stage):
+                swap_arr[i0], swap_arr[i1] = _swap_gate(arr[a], arr[b])
+            arr = swap_arr.copy()
+
+        return arr
 
     def __len__(self):
         """
@@ -1535,8 +1707,8 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             iterations (int, optional): determines the number of iterations to run. Defaults to 10.
 
         Returns:
-            Tuple[NadaArray, NadaArray]:
-                A tuple where the first element is cos and the second element is the sin.
+            NadaArray:
+                An array of tuples where the first element is cos and the second element is the sin.
         """
         if self.is_rational:
 
@@ -1922,3 +2094,106 @@ def get_dtype(
         if all(unique_type in get_args(base_dtype) for unique_type in unique_types):
             return base_dtype
     raise TypeError(f"Nada-incompatible dtypes detected in `{unique_types}`.")
+
+
+# Shuffle
+
+
+def _butterfly_block(base: int, step: int) -> np.ndarray:
+    """
+    Generates a butterfly block of connections for a given base index and step.
+
+    Parameters:
+        base (int): The starting index for the butterfly block.
+        step (int): The step size used to calculate the indices for connections.
+
+    Returns:
+        np.ndarray: A 2D array of connections where each row represents a pair of
+            connected indices.
+    """
+    # Create a range of indices
+    indices = np.arange(0, step, 2)
+    # First half
+    stage_i_1st_half = np.column_stack((base + indices, base + (indices + step)))
+    # Second half
+    stage_i_2nd_half = np.column_stack(
+        (base + (indices + step + 1), base + (indices + 1))
+    )
+    # Concatenate the two halves
+    return np.vstack((stage_i_1st_half, stage_i_2nd_half))
+
+
+def _benes_network(n: int) -> np.ndarray:
+    """
+    Constructs the Benes network for a given number of inputs/outputs.
+
+    Args:
+        n (int): The number of inputs/outputs. Must be a power of 2.
+
+    Returns:
+        np.ndarray: A 3D array where each 2D array represents the connections for a stage in the
+                network. Each row in the 2D array represents a pair of connected indices.
+    """
+    if (n & (n - 1)) != 0 or n <= 0:
+        raise ValueError(
+            f"Benes network generation error. You asked for a benes network on {n} elemenst.\
+                             The number of inputs must be a power of 2 and greater than 0. "
+        )
+
+    stages = []
+    log_n = int(np.log2(n))
+
+    # Stage 0: Initial connections (adjacent pairs)
+    indices = np.arange(0, n, 2)
+    stage_0 = np.column_stack((indices, indices + 1))
+    stages.append(stage_0)
+
+    # Stages 1 to log_n:
+    for stage_i in range(1, log_n):
+        step = n // 2**stage_i  # index step between the first and second half of blocks
+        nr_of_halfs = 2**stage_i
+        stage_i_connections = []
+
+        for idx in range(0, nr_of_halfs, 2):
+            base = idx * step
+            halves = _butterfly_block(base, step)
+            stage_i_connections.append(halves)
+
+        # Combine the connections for the current stage
+        stage = np.vstack(stage_i_connections)
+        stages.append(stage)
+
+    # Reverse the stages for the second half
+    stages += stages[1:][::-1]
+
+    return np.array(stages)
+
+
+def _rand_bool() -> SecretBoolean:
+    """
+    Generates a random boolean.
+    """
+    r = NadaArray.random((1,), SecretRational)[0]
+    return r > rational(0)
+
+
+_SwapTypes = Union[
+    Rational,
+    SecretRational,
+    SecretInteger,
+    PublicInteger,
+    Integer,
+    PublicUnsignedInteger,
+    SecretUnsignedInteger,
+]
+
+
+def _swap_gate(a: _SwapTypes, b: _SwapTypes) -> Tuple[_SwapTypes, _SwapTypes]:
+    """
+    Conditionally swaps two secret-shared rational numbers using a random boolean value.
+    """
+    rbool = _rand_bool()
+    # swap
+    r1 = rbool.if_else(a, b)
+    r2 = rbool.if_else(b, a)
+    return r1, r2
