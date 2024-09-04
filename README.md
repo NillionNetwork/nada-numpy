@@ -7,13 +7,21 @@
 ## Features
 
 ### Use Numpy Array Features
+
 - **Dot Product**: Compute the dot product between two NadaArray objects.
 - **Element-wise Operations**: Perform element-wise addition, subtraction, multiplication, and division with broadcasting support.
 - **Stacking**: Horizontally and vertically stack arrays.
+
+### Use additional Array helpers
+
+- **Shuffling**: Our implementation shuffles a 1D array using the Benes network, which rearranges elements in a deterministic yet seemingly random order. The Benes network is commonly used in sorting and switching circuits and requires the input array length to be a power of two (e.g., 2, 4, 8, 16). The shuffled array contains the same elements as the input, just in a different order.
+
 ### Use Decimal Numbers in Nada
+
 - **Rational Number Support**: Our implementation of `Rational` and `SecretRational` allows the use of simplified implementations of decimal numbers on top of Nillion.
 
 ## Installation
+
 ### Using pip
 
 ```bash
@@ -21,6 +29,7 @@ pip install nada-numpy
 ```
 
 ### From Sources
+
 You can install the nada-numpy library using Poetry:
 
 ```bash

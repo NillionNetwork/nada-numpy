@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nada-numpy"
-version = "0.5.0"
+version = "0.5.1"
 description = "Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network."
 authors = ["José Cabrero-Holgueras <jose.cabrero@nillion.com>"]
 readme = "README.md"
