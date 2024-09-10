@@ -98,3 +98,7 @@ expected_outputs:
   my_output_method_d_5: 0
   my_output_method_d_6: 0
   my_output_method_d_7: 0
+  at_least_one_diff_element: true
+  at_least_one_diff_element_method: true
+  elements_are_preserved: true
+  elements_are_preserved_method: true
