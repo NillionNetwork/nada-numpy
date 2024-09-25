@@ -1348,7 +1348,8 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             SecretRational: Result of the addition.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            return NotImplemented  # Lays the groundwork for broadcasting to Nada Array if it implements it
+            # Lays the groundwork for broadcasting to Nada Array if it implements it
+            return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot add values with different scales.")
