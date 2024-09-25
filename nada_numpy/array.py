@@ -1516,7 +1516,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             f"Log is not compatible with {dtype}, only with Rational and SecretRational types."
         )
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,

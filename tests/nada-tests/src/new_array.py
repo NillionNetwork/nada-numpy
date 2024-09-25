@@ -14,4 +14,5 @@ def nada_main():
     assert isinstance(a[0, 0, 0], SecretInteger), "a[0][0] should be a SecretInteger"
     assert isinstance(a[0], na.NadaArray), "a[0] should be a NadaArray"
 
+    a += Integer(0)
     return a.output(parties[1], "my_output")

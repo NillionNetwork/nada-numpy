@@ -61,36 +61,13 @@ def array(
         Dict: A dictionary mapping generated names to Nillion input objects.
     """
     # TODO: Use  this version when check for zero values is removed
-    # if len(arr.shape) == 1:
-    #     if nada_type == Rational:
-    #         nada_type = public_rational  # type: ignore
-    #     elif nada_type == SecretRational:
-    #         nada_type = secret_rational  # type: ignore
-    #     return {
-    #         f"{prefix}_{i}": (nada_type(int(arr[i]))) for i in range(arr.shape[0])  # type: ignore
-    #     }
-
-    # TODO: remove check for zero values when pushing zero secrets is supported
-
     if len(arr.shape) == 1:
         if nada_type == Rational:
-            return {
-                f"{prefix}_{i}": (public_rational(arr[i])) for i in range(arr.shape[0])
-            }
-        if nada_type == SecretRational:
-            return {
-                f"{prefix}_{i}": (
-                    secret_rational(arr[i]) if arr[i] != 0 else SecretInteger(1)
-                )
-                for i in range(arr.shape[0])
-            }
+            nada_type = public_rational  # type: ignore
+        elif nada_type == SecretRational:
+            nada_type = secret_rational  # type: ignore
         return {
-            f"{prefix}_{i}": (
-                nada_type(int(arr[i]))  # type: ignore
-                if (nada_type in (Integer, UnsignedInteger) or int(arr[i]) != 0)
-                else nada_type(1)  # type: ignore
-            )
-            for i in range(arr.shape[0])
+            f"{prefix}_{i}": (nada_type(int(arr[i]))) for i in range(arr.shape[0])  # type: ignore
         }
     return {
         k: v

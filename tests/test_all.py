@@ -47,8 +47,6 @@ TESTS = [
     "type_guardrails",
     "shape",
     "get_vec",
-    "determinant",
-    "linear_regression_256",
     # Not supported yet
     # "unsigned_matrix_inverse",
     "private_inverse",
@@ -62,25 +60,26 @@ TESTS = [
 ]
 
 EXAMPLES = [
-    ("dot_product", "dot_product"),
-    ("matrix_multiplication", "matrix_multiplication"),
-    ("broadcasting", "broadcasting"),
-    ("rational_numbers", "rational_numbers"),
-    ("linear_regression", "determinant_1"),
-    ("linear_regression", "determinant_2"),
-    ("linear_regression", "determinant_3"),
-    ("linear_regression", "gauss_jordan"),
-    ("linear_regression", "matrix_inverse"),
-    ("linear_regression", "linear_regression"),
-    ("linear_regression", "linear_regression_1"),
-    ("linear_regression", "linear_regression_2"),
-    ("linear_regression", "linear_regression_256_1"),
-    ("linear_regression", "linear_regression_256_2"),
-    ("linear_regression", "modular_inverse"),
+    # FORMAT: (EXAMPLES_DIR (DIR), EXAMPLE_NAME (PY), TEST_NAME (YAML))
+    ("dot_product", "dot_product", "dot_product"),
+    ("matrix_multiplication", "matrix_multiplication", "matrix_multiplication"),
+    ("broadcasting", "broadcasting", "broadcasting"),
+    ("rational_numbers", "rational_numbers", "rational_numbers"),
+    ("linear_regression", "determinant", "determinant_1"),
+    ("linear_regression", "determinant", "determinant_2"),
+    ("linear_regression", "determinant", "determinant_3"),
+    ("linear_regression", "gauss_jordan", "gauss_jordan"),
+    ("linear_regression", "matrix_inverse", "matrix_inverse"),
+    ("linear_regression", "linear_regression", "linear_regression"),
+    ("linear_regression", "linear_regression", "linear_regression_1"),
+    ("linear_regression", "linear_regression", "linear_regression_2"),
+    ("linear_regression", "linear_regression", "linear_regression_256_1"),
+    ("linear_regression", "linear_regression", "linear_regression_256_2"),
+    ("linear_regression", "modular_inverse", "modular_inverse"),
 ]
 
-TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
-    (os.path.join("examples/", test[0]), test[1]) for test in EXAMPLES
+TESTS = [("tests/nada-tests/", test, test) for test in TESTS] + [
+    (os.path.join("examples/", test[0]), test[1], test[2]) for test in EXAMPLES
 ]
 
 
@@ -104,7 +103,7 @@ def build_nada(test_dir):
 
 def run_nada(test_dir):
     result = subprocess.run(
-        ["nada", "test", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
+        ["nada", "test", test_dir[2]], cwd=test_dir[0], capture_output=True, text=True
     )
 
     # if "shape" in test_dir[1]:

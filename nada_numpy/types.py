@@ -24,7 +24,7 @@ _NadaType = Union[
 ]
 
 
-class SecretBoolean(dsl.SecretBoolean):
+class SecretBoolean(dsl.SecretBoolean): # pylint:disable=too-many-ancestors
     """SecretBoolean rational wrapper"""
 
     def __init__(self, value: dsl.SecretBoolean) -> None:
@@ -80,7 +80,7 @@ class SecretBoolean(dsl.SecretBoolean):
         return result
 
 
-class PublicBoolean(dsl.PublicBoolean):
+class PublicBoolean(dsl.PublicBoolean): # pylint:disable=too-many-ancestors
     """PublicBoolean rational wrapper"""
 
     def __init__(self, value: dsl.PublicBoolean) -> None:
@@ -839,7 +839,7 @@ class Rational:  # pylint:disable=too-many-public-methods
             raise TypeError("log input should be of type Rational.")
         return result
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,
@@ -1975,7 +1975,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             raise TypeError("log input should be of type SecretRational.")
         return result
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,
@@ -2673,7 +2673,7 @@ def log(
     return y
 
 
-def reciprocal(  # pylint: disable=too-many-arguments
+def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
     x: _NadaRational,
     all_pos: bool = False,
     initial: Optional[Rational] = None,
