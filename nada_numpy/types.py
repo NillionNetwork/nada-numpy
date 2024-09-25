@@ -169,6 +169,7 @@ class Rational:  # pylint:disable=too-many-public-methods
         if not isinstance(value, (Integer, PublicInteger)):
             raise TypeError(f"Cannot instantiate Rational from type `{type(value)}`.")
 
+        self.base_type = "Rational"
         if log_scale is None:
             log_scale = get_log_scale()
         self._log_scale = log_scale
@@ -1299,6 +1300,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
                 f"Cannot instantiate SecretRational from type `{type(value)}`."
             )
 
+        self.base_type = "Rational"
         if log_scale is None:
             log_scale = get_log_scale()
         self._log_scale = log_scale
@@ -1346,7 +1348,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             SecretRational: Result of the addition.
         """
         if not isinstance(other, (Rational, SecretRational)):
-            return NotImplemented
+            return NotImplemented # Lays the groundwork for broadcasting to Nada Array if it implements it
 
         if not ignore_scale and self.log_scale != other.log_scale:
             raise ValueError("Cannot add values with different scales.")
