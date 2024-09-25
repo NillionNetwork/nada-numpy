@@ -1780,14 +1780,14 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             raise ValueError("Cannot compare values with different scales.")
         return self.value.public_equals(other.value)
 
-    def reveal(self) -> Rational:
+    def to_public(self) -> Rational:
         """
         Reveal the SecretRational value.
 
         Returns:
             Rational: Revealed SecretRational value.
         """
-        return Rational(self.value.reveal(), self.log_scale)
+        return Rational(self.value.to_public(), self.log_scale)
 
     def trunc_pr(self, arg_0: _NadaRational) -> "SecretRational":
         """

@@ -550,14 +550,14 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         """
         return NadaArray(np.vstack((self.inner, other.inner)))
 
-    def reveal(self) -> "NadaArray":
+    def to_public(self) -> "NadaArray":
         """
-        Reveal the elements of the array.
+        Reveal the elements of the array and make them public
 
         Returns:
             NadaArray: A new NadaArray with revealed values.
         """
-        return self.apply(lambda x: x.reveal())
+        return self.apply(lambda x: x.to_public())
 
     def apply(self, func: Callable[[Any], Any]) -> "NadaArray":
         """

@@ -11,8 +11,8 @@ def nada_main():
     a = na.array([3, 3], parties[0], "A", SecretInteger)
     b = na.array([3, 3], parties[1], "B", na.SecretRational)
 
-    c = a.reveal()
-    d = b.reveal()
+    c = a.to_public()
+    d = b.to_public()
 
     assert c.dtype == NadaInteger, c.dtype
     assert c.shape == a.shape
@@ -21,9 +21,9 @@ def nada_main():
     assert d.shape == b.shape
 
     with pytest.raises(Exception):
-        c.reveal()
+        c.to_public()
     with pytest.raises(Exception):
-        d.reveal()
+        d.to_public()
 
     return na.output(c, parties[2], "my_output_A") + na.output(
         d, parties[2], "my_output_B"

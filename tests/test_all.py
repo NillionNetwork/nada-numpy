@@ -5,6 +5,7 @@ import pytest
 
 TESTS = [
     "base",
+    "new_array",
     "dot_product",
     "sum",
     "broadcasting_sum",
@@ -46,6 +47,8 @@ TESTS = [
     "type_guardrails",
     "shape",
     "get_vec",
+    "determinant",
+    "linear_regression_256",
     # Not supported yet
     # "unsigned_matrix_inverse",
     "private_inverse",
@@ -55,18 +58,29 @@ TESTS = [
     "fxpmath_methods",
     "shuffle",
     "array_comparison",
+    "private_inverse",
 ]
 
 EXAMPLES = [
-    "dot_product",
-    "matrix_multiplication",
-    "broadcasting",
-    "rational_numbers",
-    "linear_regression",
+    ("dot_product", "dot_product"),
+    ("matrix_multiplication", "matrix_multiplication"),
+    ("broadcasting", "broadcasting"),
+    ("rational_numbers", "rational_numbers"),
+    ("linear_regression", "determinant_1"),
+    ("linear_regression", "determinant_2"),
+    ("linear_regression", "determinant_3"),
+    ("linear_regression", "gauss_jordan"),
+    ("linear_regression", "matrix_inverse"),
+    ("linear_regression", "linear_regression"),
+    ("linear_regression", "linear_regression_1"),
+    ("linear_regression", "linear_regression_2"),
+    ("linear_regression", "linear_regression_256_1"),
+    ("linear_regression", "linear_regression_256_2"),
+    ("linear_regression", "modular_inverse"),
 ]
 
 TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
-    (os.path.join("examples/", test), test) for test in EXAMPLES
+    (os.path.join("examples/", test[0]), test[1]) for test in EXAMPLES
 ]
 
 
@@ -81,6 +95,9 @@ def build_nada(test_dir):
         ["nada", "build", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
     err = result.stderr.lower() + result.stdout.lower()
+    if test_dir[1] == "determinant" and test_dir[0] == "examples/":
+        print(err)
+        raise Exception("Error")
     if result.returncode != 0 or "error" in err or "fail" in err:
         pytest.fail(f"Build {test_dir}:\n{result.stdout + result.stderr}")
 

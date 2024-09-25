@@ -113,7 +113,7 @@ def matrix_inverse(matrix: np.ndarray, modulo: int):
     n = matrix.shape[0]
     R, detR = random_lu_matrix(n)  # n by n random matrix R with determinant detR
     # Revealing matrix RA
-    RA = (R @ matrix).reveal()
+    RA = (R @ matrix).to_public()
     # # Concatenating RA and R
     RAR = RA.hstack(R)
     # Performing Gauss-Jordan elimination

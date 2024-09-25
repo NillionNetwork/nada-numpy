@@ -27,7 +27,7 @@ def nada_main():
     # out_10 = a << UnsignedInteger(1)
     # out_11 = a >> UnsignedInteger(1)
 
-    out_12 = a.reveal()
+    out_12 = a.to_public()
 
     # These for now do not make much sense for users
     # out_13 = a.trunc_pr(Integer(0))

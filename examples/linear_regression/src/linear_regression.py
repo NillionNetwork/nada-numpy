@@ -91,7 +91,7 @@ def linsol(A: NadaArray, b: NadaArray, modulo: int):
     )  # (n, n) random matrix R with inverse determinant detR_inv
 
     # Revealing matrix RA
-    RA = (R @ A).reveal()  # (n, n) revealed matrix
+    RA = (R @ A).to_public()  # (n, n) revealed matrix
 
     # Computing Rb as a secret matrix multiplication of R and b
     Rb = R @ b  # (n, n) @ (n,) = (n,)
