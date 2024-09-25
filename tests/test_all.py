@@ -69,7 +69,7 @@ EXAMPLES = [
     ("linear_regression", "determinant", "determinant_2"),
     ("linear_regression", "determinant", "determinant_3"),
     ("linear_regression", "gauss_jordan", "gauss_jordan"),
-    ("linear_regression", "matrix_inverse", "matrix_inverse"),
+    ("linear_regression", "matrix_inverse", "nada-test::matrix_inverse.py:my_test"),
     ("linear_regression", "linear_regression", "linear_regression"),
     ("linear_regression", "linear_regression", "linear_regression_1"),
     ("linear_regression", "linear_regression", "linear_regression_2"),

@@ -2,6 +2,9 @@ name = "linear-regression"
 version = "0.1.0"
 authors = [""]
 
+[test_framework.nada-test]
+command = "nada-test ./tests"
+
 [[programs]]
 path = "src/linear_regression.py"
 prime_size = 64

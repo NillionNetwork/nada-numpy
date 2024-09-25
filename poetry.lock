@@ -564,6 +564,19 @@ lint = ["pylint (>=2.17,<3.3)"]
 test = ["pytest (>=7.4,<9.0)", "pytest-cov (>=4,<6)"]
 
 [[package]]
+name = "nada-test"
+version = "0.6.0"
+description = "Nillion Nada Test Framework"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "nada_test-0.6.0-py3-none-any.whl", hash = "sha256:985bf53411562478684b5869ea0c7c5dfe8e936bf776477338430a20d8cde062"},
+]
+
+[package.extras]
+lint = ["pylint (>=2.17,<3.3)"]
+
+[[package]]
 name = "nillion-python-helpers"
 version = "0.3.1"
 description = ""
@@ -1224,4 +1237,4 @@ linter = ["black", "isort"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "988468fb1d039ce86e25f619f2c62893e0baf09176b6341402dc500184baa865"
+content-hash = "2a8caf5f826dcc51363c5ee9f6c5e82452dfe780d95b2e4e487e3ef61eac32ad"
