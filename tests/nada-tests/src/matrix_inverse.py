@@ -49,7 +49,7 @@ def private_modular_inverse(
     r = SecretUnsignedInteger.random()
 
     ra = r * secret  # Masking our secret
-    ra_revealed = ra.reveal()  # Revealing the masked secret
+    ra_revealed = ra.to_public()  # Revealing the masked secret
 
     ra_inv = public_modular_inverse(
         ra_revealed, modulo
@@ -140,7 +140,7 @@ def matrix_inverse(matrix: np.ndarray, modulo: int):
     n = matrix.shape[0]
     R, detR = random_lu_matrix(n)  # n by n random matrix R with determinant detR
     # Revealing matrix RA
-    RA = (R @ matrix).reveal()
+    RA = (R @ matrix).to_public()
     # # Concatenating RA and R
     RAR = RA.hstack(R)
     # Performing Gauss-Jordan elimination

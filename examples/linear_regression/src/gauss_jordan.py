@@ -51,7 +51,7 @@ def nada_main():
 
     A = na.array([3, 3], parties[0], "A", nada_type=SecretInteger)
 
-    A = A.reveal()
+    A = A.to_public()
     A_inv = gauss_jordan_zn(A, PRIME)
     outputs = na.output(A_inv, parties[2], "my_output")
 

@@ -56,7 +56,7 @@ def private_modular_inverse(secret: SecretInteger, modulo: int) -> SecretInteger
     r = SecretInteger.random()
 
     ra = r * secret  # Masking our secret
-    ra_revealed = ra.reveal()  # Revealing the masked secret
+    ra_revealed = ra.to_public()  # Revealing the masked secret
 
     ra_inv = public_modular_inverse(
         ra_revealed, modulo
@@ -144,7 +144,7 @@ def matrix_inverse(matrix: np.ndarray, modulo: int):
     n = matrix.shape[0]
     R, detR = random_lu_matrix(n)  # n by n random matrix R with determinant detR
     # Revealing matrix RA
-    RA = (R @ matrix).reveal()
+    RA = (R @ matrix).to_public()
     # # Concatenating RA and R
     RAR = RA.hstack(R)
     # Performing Gauss-Jordan elimination
@@ -241,7 +241,7 @@ def linsol(A: NadaArray, b: NadaArray, modulo: int):
     )  # (n, n) random matrix R with inverse determinant detR_inv
 
     # Revealing matrix RA
-    RA = (R @ A).reveal()  # (n, n) revealed matrix
+    RA = (R @ A).to_public()  # (n, n) revealed matrix
 
     # Computing Rb as a secret matrix multiplication of R and b
     Rb = R @ b  # (n, n) @ (n,) = (n,)

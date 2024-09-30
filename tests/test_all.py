@@ -5,6 +5,7 @@ import pytest
 
 TESTS = [
     "base",
+    "new_array",
     "dot_product",
     "sum",
     "broadcasting_sum",
@@ -55,18 +56,30 @@ TESTS = [
     "fxpmath_methods",
     "shuffle",
     "array_comparison",
+    "private_inverse",
 ]
 
 EXAMPLES = [
-    "dot_product",
-    "matrix_multiplication",
-    "broadcasting",
-    "rational_numbers",
-    "linear_regression",
+    # FORMAT: (EXAMPLES_DIR (DIR), EXAMPLE_NAME (PY), TEST_NAME (YAML))
+    ("dot_product", "dot_product", "dot_product"),
+    ("matrix_multiplication", "matrix_multiplication", "matrix_multiplication"),
+    ("broadcasting", "broadcasting", "broadcasting"),
+    ("rational_numbers", "rational_numbers", "rational_numbers"),
+    ("linear_regression", "determinant", "determinant_1"),
+    ("linear_regression", "determinant", "determinant_2"),
+    ("linear_regression", "determinant", "determinant_3"),
+    ("linear_regression", "gauss_jordan", "gauss_jordan"),
+    ("linear_regression", "matrix_inverse", "nada-test::matrix_inverse.py:my_test"),
+    ("linear_regression", "linear_regression", "linear_regression"),
+    ("linear_regression", "linear_regression", "linear_regression_1"),
+    ("linear_regression", "linear_regression", "linear_regression_2"),
+    ("linear_regression", "linear_regression", "linear_regression_256_1"),
+    ("linear_regression", "linear_regression", "linear_regression_256_2"),
+    ("linear_regression", "modular_inverse", "modular_inverse"),
 ]
 
-TESTS = [("tests/nada-tests/", test) for test in TESTS] + [
-    (os.path.join("examples/", test), test) for test in EXAMPLES
+TESTS = [("tests/nada-tests/", test, test) for test in TESTS] + [
+    (os.path.join("examples/", test[0]), test[1], test[2]) for test in EXAMPLES
 ]
 
 
@@ -81,13 +94,16 @@ def build_nada(test_dir):
         ["nada", "build", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
     err = result.stderr.lower() + result.stdout.lower()
+    if test_dir[1] == "determinant" and test_dir[0] == "examples/":
+        print(err)
+        raise Exception("Error")
     if result.returncode != 0 or "error" in err or "fail" in err:
         pytest.fail(f"Build {test_dir}:\n{result.stdout + result.stderr}")
 
 
 def run_nada(test_dir):
     result = subprocess.run(
-        ["nada", "test", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
+        ["nada", "test", test_dir[2]], cwd=test_dir[0], capture_output=True, text=True
     )
 
     # if "shape" in test_dir[1]:

@@ -550,14 +550,14 @@ class NadaArray:  # pylint:disable=too-many-public-methods
         """
         return NadaArray(np.vstack((self.inner, other.inner)))
 
-    def reveal(self) -> "NadaArray":
+    def to_public(self) -> "NadaArray":
         """
-        Reveal the elements of the array.
+        Reveal the elements of the array and make them public
 
         Returns:
             NadaArray: A new NadaArray with revealed values.
         """
-        return self.apply(lambda x: x.reveal())
+        return self.apply(lambda x: x.to_public())
 
     def apply(self, func: Callable[[Any], Any]) -> "NadaArray":
         """
@@ -1516,7 +1516,7 @@ class NadaArray:  # pylint:disable=too-many-public-methods
             f"Log is not compatible with {dtype}, only with Rational and SecretRational types."
         )
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,

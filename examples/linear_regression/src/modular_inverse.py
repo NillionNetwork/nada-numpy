@@ -55,7 +55,7 @@ def private_modular_inverse(secret: SecretInteger, modulo: int) -> SecretInteger
     r = SecretInteger.random()
 
     ra = r * secret  # Masking our secret
-    ra_revealed = ra.reveal()  # Revealing the masked secret
+    ra_revealed = ra.to_public()  # Revealing the masked secret
 
     ra_inv = public_modular_inverse(
         ra_revealed, modulo

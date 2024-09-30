@@ -24,7 +24,7 @@ _NadaType = Union[
 ]
 
 
-class SecretBoolean(dsl.SecretBoolean):
+class SecretBoolean(dsl.SecretBoolean): # pylint:disable=too-many-ancestors
     """SecretBoolean rational wrapper"""
 
     def __init__(self, value: dsl.SecretBoolean) -> None:
@@ -80,7 +80,7 @@ class SecretBoolean(dsl.SecretBoolean):
         return result
 
 
-class PublicBoolean(dsl.PublicBoolean):
+class PublicBoolean(dsl.PublicBoolean): # pylint:disable=too-many-ancestors
     """PublicBoolean rational wrapper"""
 
     def __init__(self, value: dsl.PublicBoolean) -> None:
@@ -169,6 +169,7 @@ class Rational:  # pylint:disable=too-many-public-methods
         if not isinstance(value, (Integer, PublicInteger)):
             raise TypeError(f"Cannot instantiate Rational from type `{type(value)}`.")
 
+        self.base_type = "Rational"
         if log_scale is None:
             log_scale = get_log_scale()
         self._log_scale = log_scale
@@ -838,7 +839,7 @@ class Rational:  # pylint:disable=too-many-public-methods
             raise TypeError("log input should be of type Rational.")
         return result
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,
@@ -1299,6 +1300,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
                 f"Cannot instantiate SecretRational from type `{type(value)}`."
             )
 
+        self.base_type = "Rational"
         if log_scale is None:
             log_scale = get_log_scale()
         self._log_scale = log_scale
@@ -1346,6 +1348,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             SecretRational: Result of the addition.
         """
         if not isinstance(other, (Rational, SecretRational)):
+            # Lays the groundwork for broadcasting to Nada Array if it implements it
             return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
@@ -1780,14 +1783,14 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             raise ValueError("Cannot compare values with different scales.")
         return self.value.public_equals(other.value)
 
-    def reveal(self) -> Rational:
+    def to_public(self) -> Rational:
         """
         Reveal the SecretRational value.
 
         Returns:
             Rational: Revealed SecretRational value.
         """
-        return Rational(self.value.reveal(), self.log_scale)
+        return Rational(self.value.to_public(), self.log_scale)
 
     def trunc_pr(self, arg_0: _NadaRational) -> "SecretRational":
         """
@@ -1972,7 +1975,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             raise TypeError("log input should be of type SecretRational.")
         return result
 
-    def reciprocal(  # pylint: disable=too-many-arguments
+    def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
         self,
         all_pos: bool = False,
         initial: Optional["Rational"] = None,
@@ -2670,7 +2673,7 @@ def log(
     return y
 
 
-def reciprocal(  # pylint: disable=too-many-arguments
+def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
     x: _NadaRational,
     all_pos: bool = False,
     initial: Optional[Rational] = None,

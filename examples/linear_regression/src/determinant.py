@@ -38,7 +38,7 @@ def nada_main():
     parties = na.parties(3)
 
     X = na.array([3, 3], parties[0], "A", SecretInteger)
-    X = X.reveal()
+    X = X.to_public()
     detX = determinant(X)
 
     return na.output(detX, parties[2], "my_output")

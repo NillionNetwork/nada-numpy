@@ -40,7 +40,7 @@ def public_modular_inverse(
     power = value ** Integer(
         mod - 1
     )  # value ** modulo = value ** (modulo // 2)  * modulo ** (modulo // 2)
-    power = power * power * value if rem else Integer(1)  # value ** mo
+    power = power * power * (value if rem else Integer(1))  # value ** mo
     return power
 
 
@@ -133,14 +133,7 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
 
     # Forward elimination
     for i in range(rows):
-        # # Find pivot row
-        # pivot_row = i
-        # while pivot_row < rows and (mat[pivot_row][i] == Integer(0)) is Boolean(True):
-        #     pivot_row += 1
-
-        # # Swap pivot row with current row
-        # mat[[i, pivot_row]] = mat[[pivot_row, i]]
-
+        
         # Scale pivot row to have leading 1
         diagonal_element = mat[i][i]
         pivot_inv = public_modular_inverse(diagonal_element, modulo)
@@ -168,7 +161,7 @@ def matrix_inverse(matrix: np.ndarray, modulo: int):
     R, detR = random_lu_matrix(n)  # n by n random matrix R with determinant detR
 
     # Revealing matrix RA
-    RA = (R @ matrix).reveal()
+    RA = (R @ matrix).to_public()
     # # Concatenating RA and R
     RAR = RA.hstack(R)
     # Performing Gauss-Jordan elimination
@@ -186,7 +179,7 @@ start_time = time.time()
 def nada_main():
     parties = na.parties(3)
 
-    A = na.array([4, 4], parties[0], "A", nada_type=SecretInteger)
+    A = na.array([10, 10], parties[0], "A", nada_type=SecretInteger)
     A_inv = matrix_inverse(A, PRIME)
 
     result = A @ A_inv

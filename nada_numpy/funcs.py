@@ -730,7 +730,7 @@ def log(
     )
 
 
-def reciprocal(  # pylint: disable=too-many-arguments
+def reciprocal(  # pylint: disable=too-many-arguments disable=too-many-positional-arguments
     arr: NadaArray,
     all_pos: bool = False,
     initial: Optional["Rational"] = None,

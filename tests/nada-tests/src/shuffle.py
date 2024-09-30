@@ -2,15 +2,17 @@
 
 from typing import List
 
+import numpy as np
 from nada_dsl import Integer, Output, PublicInteger, SecretInteger
 
-import numpy as np
 import nada_numpy as na
 from nada_numpy import shuffle
+
 
 def bool_to_int(bool):
     """Casting bool to int"""
     return bool.if_else(Integer(0), Integer(1))
+
 
 def count(vec, element):
     """
@@ -24,7 +26,7 @@ def count(vec, element):
         result += int_b
 
     return result
-    
+
 
 def nada_main() -> List[Output]:
 
@@ -36,7 +38,6 @@ def nada_main() -> List[Output]:
     c = na.array([n], parties[0], "C", PublicInteger)
     d = na.array([n], parties[0], "D", SecretInteger)
 
-    
     # As a function
 
     shuffled_a = shuffle(a)
@@ -50,24 +51,23 @@ def nada_main() -> List[Output]:
     result_c = shuffled_c - shuffled_c
     result_d = shuffled_d - shuffled_d
 
-    # 2. Randomness: show at least one element is in a different position 
+    # 2. Randomness: show at least one element is in a different position
     # true if equal
-    diff_position_bool = [a[i] == shuffled_a[i] for i in range(n)] 
+    diff_position_bool = [a[i] == shuffled_a[i] for i in range(n)]
     # cast to int (true -> 0 and false -> 1)
-    diff_position = np.array([bool_to_int(element) for element in diff_position_bool]) 
+    diff_position = np.array([bool_to_int(element) for element in diff_position_bool])
     # add them
     sum = diff_position.sum()
     # if all are equal => all are 0 => sum is zero
     at_least_one_diff_element = sum > Integer(0)
-    
-    # 3. Show elements are preserved: 
+
+    # 3. Show elements are preserved:
     check = Integer(0)
     for ai in a:
         nr_ai_in_shufled_a = count(shuffled_a, ai)
         nr_ai_in_a = count(a, ai)
         check += bool_to_int(nr_ai_in_shufled_a == nr_ai_in_a)
     elements_are_preserved = check == Integer(0)
-    
 
     # As a method
 
@@ -82,24 +82,25 @@ def nada_main() -> List[Output]:
     result_method_c = shuffled_method_c - shuffled_method_c
     result_method_d = shuffled_method_d - shuffled_method_d
 
-    # 2. Randomness: show at least one element is in a different position 
+    # 2. Randomness: show at least one element is in a different position
     # true if equal
-    diff_position_bool_method = [a[i] == shuffled_method_a[i] for i in range(n)] 
+    diff_position_bool_method = [a[i] == shuffled_method_a[i] for i in range(n)]
     # cast to int (true -> 0 and false -> 1)
-    diff_position_method = np.array([bool_to_int(element) for element in diff_position_bool_method])
+    diff_position_method = np.array(
+        [bool_to_int(element) for element in diff_position_bool_method]
+    )
     # add them
     sum_method = diff_position_method.sum()
     # if all are equal => all are 0 => sum is zero
     at_least_one_diff_element_method = sum_method > Integer(0)
 
-    # 3. Show elements are preserved: 
+    # 3. Show elements are preserved:
     check = Integer(0)
     for ai in a:
         nr_ai_in_shufled_a = count(shuffled_method_a, ai)
         nr_ai_in_a = count(a, ai)
         check += bool_to_int(nr_ai_in_shufled_a == nr_ai_in_a)
     elements_are_preserved_method = check == Integer(0)
-
 
     return (
         na.output(result_a, parties[1], "my_output_a")
@@ -111,7 +112,13 @@ def nada_main() -> List[Output]:
         + na.output(result_method_c, parties[1], "my_output_method_c")
         + na.output(result_method_d, parties[1], "my_output_method_d")
         + na.output(at_least_one_diff_element, parties[1], "at_least_one_diff_element")
-        + na.output(at_least_one_diff_element_method, parties[1], "at_least_one_diff_element_method")
+        + na.output(
+            at_least_one_diff_element_method,
+            parties[1],
+            "at_least_one_diff_element_method",
+        )
         + na.output(elements_are_preserved, parties[1], "elements_are_preserved")
-        + na.output(elements_are_preserved_method, parties[1], "elements_are_preserved_method")
+        + na.output(
+            elements_are_preserved_method, parties[1], "elements_are_preserved_method"
+        )
     )
