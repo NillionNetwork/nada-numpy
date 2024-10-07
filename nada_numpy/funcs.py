@@ -78,6 +78,7 @@ __all__ = [
     "gelu",
     "silu",
     "shuffle",
+    "var",
 ]
 
 
@@ -1290,3 +1291,18 @@ def shuffle(arr: NadaArray) -> NadaArray:
                 ```
     """
     return arr.shuffle()
+
+def var(array: NadaArray) -> NadaArray:
+    """
+    Computes the variance of the array elements
+
+    args:
+        array (nadaarray): input array
+
+    returns:
+        nadaarray: the variance of the array elements
+    """
+
+    return array.var()
+
+

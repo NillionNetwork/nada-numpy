@@ -1,0 +1,9 @@
+---
+program: variance
+inputs:
+  A_0: 3
+  A_1: 3
+  A_2: 3
+  A_3: 3
+expected_outputs:
+  my_output_0: 0
