@@ -57,6 +57,7 @@ TESTS = [
     "shuffle",
     "array_comparison",
     "private_inverse",
+    "var",
 ]
 
 EXAMPLES = [
