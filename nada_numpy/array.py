@@ -948,6 +948,31 @@ class NadaArray:  # pylint:disable=too-many-public-methods
 
         return arr
 
+    def var(self) -> "NadaArray":
+        """
+        Compute the variable of array elements.
+
+        Returns:
+            nadaarray: the variance of array elements
+        """
+
+        # Compute the mean
+        m = self.mean()
+
+        # Initialise the sum to 0
+        sum = Integer(0)
+
+        # compute (x_i - mean)^2
+
+        for v in self.inner:
+            diff = v - m
+            sum += (diff * diff)
+
+        # compute variance
+        var = sum / Integer(self.size)
+
+        return NadaArray(np.array([var]))
+
     def __len__(self):
         """
         Overrides the default behavior of returning the length of the object.
