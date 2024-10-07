@@ -201,3 +201,7 @@ prime_size = 128
 [[programs]]
 path = "src/shuffle.py"
 prime_size = 128
+
+[[programs]]
+path = "src/variance.py"
+prime_size = 128
