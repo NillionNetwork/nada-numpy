@@ -1,11 +1,11 @@
 """Nada numpy client unit tests"""
 
 import numpy as np
-import nillion_client as nillion
+import py_nillion_client as nillion
 import pytest
 
 import nada_numpy as na
-import nada_numpy.client as na_client
+import nada_numpy.legacy_client as na_client
 
 
 class TestClient:

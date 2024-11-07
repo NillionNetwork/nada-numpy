@@ -125,7 +125,7 @@ class TestSuite:
 
 def test_client():
     import numpy as np
-    import py_nillion_client as nillion
+    import nillion_client as nillion
 
     import nada_numpy.client as na_client  # For use with Python Client
 
@@ -133,38 +133,34 @@ def test_client():
 
     assert parties is not None
 
-    secrets = nillion.NadaValues(
-        na_client.concat(
+    secrets = na_client.concat(
             [
                 na_client.array(np.ones((3, 3)), "A", nillion.SecretInteger),
                 na_client.array(np.ones((3, 3)), "B", nillion.SecretUnsignedInteger),
             ]
         )
-    )
 
     assert secrets is not None
 
-    public_variables = nillion.NadaValues(
-        na_client.concat(
+    public_variables = na_client.concat(
             [
                 na_client.array(np.zeros((4, 4)), "C", nillion.Integer),
                 na_client.array(np.zeros((3, 3)), "D", nillion.UnsignedInteger),
             ]
         )
-    )
 
     assert public_variables is not None
 
 
 def test_rational_client():
-    import py_nillion_client as nillion
+    import nillion_client as nillion
 
     import nada_numpy.client as na_client  # For use with Python Client
 
     secret_rational = na_client.secret_rational(3.2)
 
-    assert type(secret_rational) == nillion.SecretInteger
+    assert isinstance(secret_rational, nillion.SecretInteger)
 
     rational = na_client.public_rational(1.7)
 
-    assert type(rational) == nillion.Integer
+    assert isinstance(rational, nillion.Integer)

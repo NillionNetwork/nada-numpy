@@ -7,10 +7,13 @@ from typing import Dict, List, Optional, Union
 
 import numpy as np
 # pylint:disable=no-name-in-module
-from nillion_client import (Integer, SecretInteger, SecretUnsignedInteger,
+from py_nillion_client import (Integer, SecretInteger, SecretUnsignedInteger,
                                UnsignedInteger)
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
+
+import logging
+logging.warning("[DEPRECATED] The legacy_client module is deprecated and will be removed in a future release. Use nada-numpy.client instead.")
 
 __all__ = [
     "parties",
