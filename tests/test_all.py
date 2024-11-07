@@ -47,10 +47,8 @@ TESTS = [
     "type_guardrails",
     "shape",
     "get_vec",
-    # Not supported yet
-    # "unsigned_matrix_inverse",
+    "unsigned_matrix_inverse",
     "private_inverse",
-    # "unsigned_matrix_inverse_2",
     "fxpmath_funcs",
     "fxpmath_arrays",
     "fxpmath_methods",
