@@ -2,22 +2,15 @@
 
 import asyncio
 import os
+
+import numpy as np
 import pytest
+from dotenv import load_dotenv
+from nillion_client import (InputPartyBinding, Network, NilChainPayer,
+                            NilChainPrivateKey, OutputPartyBinding,
+                            Permissions, PrivateKey, SecretInteger, VmClient)
 
 import nada_numpy.client as na_client
-import numpy as np
-from nillion_client import (
-    InputPartyBinding,
-    Network,
-    NilChainPayer,
-    NilChainPrivateKey,
-    OutputPartyBinding,
-    Permissions,
-    SecretInteger,
-    VmClient,
-    PrivateKey,
-)
-from dotenv import load_dotenv
 
 home = os.getenv("HOME")
 load_dotenv(f"{home}/.config/nillion/nillion-devnet.env")
@@ -47,7 +40,9 @@ async def main():
     print("-----STORE PROGRAM")
 
     # Store program
-    program_mir = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), program_mir_path), "rb").read()
+    program_mir = open(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), program_mir_path), "rb"
+    ).read()
     program_id = await client.store_program(program_name, program_mir).invoke()
 
     # Print details about stored program
@@ -55,9 +50,7 @@ async def main():
 
     ##### STORE SECRETS
     print("-----STORE SECRETS")
-    my_input_0 = {
-        "my_input_0": na_client.secret_rational(3.2)
-    }
+    my_input_0 = {"my_input_0": na_client.secret_rational(3.2)}
 
     # Create a permissions object to attach to the stored secret
     permissions = Permissions.defaults_for_user(client.user_id).allow_compute(
@@ -71,30 +64,33 @@ async def main():
 
     print("Stored values_0: ", values_0)
 
-    my_input_1 = {
-        "my_input_1": na_client.secret_rational(2.3)
-    }
+    my_input_1 = {"my_input_1": na_client.secret_rational(2.3)}
     # Store a secret, passing in the receipt that shows proof of payment
     values_1 = await client.store_values(
         my_input_1, ttl_days=5, permissions=permissions
     ).invoke()
-    
+
     print("Stored values_1: ", values_1)
 
     ##### COMPUTE
     print("-----COMPUTE")
 
     # Bind the parties in the computation to the client to set input and output parties
-    input_bindings = [InputPartyBinding(party_names[0], client.user_id), InputPartyBinding(party_names[1], client.user_id)]
+    input_bindings = [
+        InputPartyBinding(party_names[0], client.user_id),
+        InputPartyBinding(party_names[1], client.user_id),
+    ]
     output_bindings = [OutputPartyBinding(party_names[2], [client.user_id])]
 
     # Create a computation time secret to use
     compute_time_values = {
-        #"my_int2": SecretInteger(10)
+        # "my_int2": SecretInteger(10)
     }
 
     # Compute, passing in the compute time values as well as the previously uploaded value.
-    print(f"Invoking computation using program {program_id} and values id {values_0}, {values_1}")
+    print(
+        f"Invoking computation using program {program_id} and values id {values_0}, {values_1}"
+    )
     compute_id = await client.compute(
         program_id,
         input_bindings,

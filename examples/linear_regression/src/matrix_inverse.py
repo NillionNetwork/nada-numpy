@@ -133,7 +133,7 @@ def gauss_jordan_zn(mat: na.NadaArray, modulo: int):
 
     # Forward elimination
     for i in range(rows):
-        
+
         # Scale pivot row to have leading 1
         diagonal_element = mat[i][i]
         pivot_inv = public_modular_inverse(diagonal_element, modulo)

@@ -3,6 +3,7 @@ This module provides functions to work with the Python Nillion Client for handli
 secret and public variable integers and generating named party objects and input dictionaries.
 """
 
+import logging
 from typing import Dict, List, Optional, Union
 
 import numpy as np
@@ -12,8 +13,9 @@ from py_nillion_client import (Integer, SecretInteger, SecretUnsignedInteger,
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
 
-import logging
-logging.warning("[DEPRECATED] The legacy_client module is deprecated and will be removed in a future release. Use nada-numpy.client instead.")
+logging.warning(
+    "[DEPRECATED] The legacy_client module is deprecated and will be removed in a future release. Use nada-numpy.client instead."
+)
 
 __all__ = [
     "parties",

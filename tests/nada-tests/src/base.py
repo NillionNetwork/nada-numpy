@@ -1,6 +1,7 @@
-from nada_dsl import *
-import nada_numpy as na
 import numpy as np
+from nada_dsl import *
+
+import nada_numpy as na
 
 DIM1 = 10
 DIM2 = 4
@@ -8,15 +9,16 @@ DIM3 = 7
 
 DIM4 = DIM1 + DIM2 + DIM3
 
+
 def bubble_sort(array: na.NadaArray):
     size = DIM4
     for i in range(size):
-        for j in range(0,size-i-1):
-            condition = array[j] > array[j+1]
-            res1 = condition.if_else(array[j+1],array[j])
-            res2 = condition.if_else(array[j],array[j+1])
+        for j in range(0, size - i - 1):
+            condition = array[j] > array[j + 1]
+            res1 = condition.if_else(array[j + 1], array[j])
+            res2 = condition.if_else(array[j], array[j + 1])
             array[j] = res1
-            array[j+1] = res2
+            array[j + 1] = res2
 
 
 def nada_main():
@@ -39,5 +41,6 @@ def nada_main():
 
     return outs
 
+
 if __name__ == "__main__":
-   nada_main()
+    nada_main()

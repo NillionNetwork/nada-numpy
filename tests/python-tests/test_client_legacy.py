@@ -26,23 +26,37 @@ class TestClient:
         input_arr = np.array([0])
 
         nada_array_1 = na_client.array(input_arr, "test", nillion.SecretInteger)
-        assert isinstance(nada_array_1["test_0"], nillion.SecretInteger), f"SecretInteger should be SecretInteger but got {type(nada_array_1['test_0'])}"
+        assert isinstance(
+            nada_array_1["test_0"], nillion.SecretInteger
+        ), f"SecretInteger should be SecretInteger but got {type(nada_array_1['test_0'])}"
 
         nada_array_2 = na_client.array(input_arr, "test", nillion.SecretUnsignedInteger)
-        assert isinstance(nada_array_2["test_0"], nillion.SecretUnsignedInteger), f"SecretUnsignedInteger should be SecretUnsignedInteger but got {type(nada_array_2['test_0'])}"
+        assert isinstance(
+            nada_array_2["test_0"], nillion.SecretUnsignedInteger
+        ), f"SecretUnsignedInteger should be SecretUnsignedInteger but got {type(nada_array_2['test_0'])}"
 
         nada_array_3 = na_client.array(input_arr, "test", nillion.Integer)
-        assert isinstance(nada_array_3["test_0"], nillion.Integer), f"Integer should be Integer but got {type(nada_array_3['test_0'])}"
+        assert isinstance(
+            nada_array_3["test_0"], nillion.Integer
+        ), f"Integer should be Integer but got {type(nada_array_3['test_0'])}"
 
         nada_array_4 = na_client.array(input_arr, "test", nillion.Integer)
-        assert isinstance(nada_array_4["test_0"], nillion.Integer), f"Integer should be Integer but got {type(nada_array_4['test_0'])}"
+        assert isinstance(
+            nada_array_4["test_0"], nillion.Integer
+        ), f"Integer should be Integer but got {type(nada_array_4['test_0'])}"
 
         nada_array_5 = na_client.array(input_arr, "test", na.Rational)
-        assert isinstance(nada_array_5["test_0"], nillion.Integer), f"Rational should be Integer but got {type(nada_array_5['test_0'])}"
+        assert isinstance(
+            nada_array_5["test_0"], nillion.Integer
+        ), f"Rational should be Integer but got {type(nada_array_5['test_0'])}"
 
         nada_array_6 = na_client.array(input_arr, "test", na.SecretRational)
-        assert type(nada_array_6["test_0"]) == nillion.SecretInteger, f"SecretRational should be SecretInteger but got {type(nada_array_6['test_0'])}"
-        assert isinstance(nada_array_6["test_0"], nillion.SecretInteger), f"SecretRational should be SecretInteger but got {type(nada_array_6['test_0'])}"
+        assert (
+            type(nada_array_6["test_0"]) == nillion.SecretInteger
+        ), f"SecretRational should be SecretInteger but got {type(nada_array_6['test_0'])}"
+        assert isinstance(
+            nada_array_6["test_0"], nillion.SecretInteger
+        ), f"SecretRational should be SecretInteger but got {type(nada_array_6['test_0'])}"
 
     def test_array_4(self):
         input_arr = np.array([0])

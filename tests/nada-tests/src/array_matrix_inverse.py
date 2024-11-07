@@ -9,6 +9,6 @@ def nada_main():
     a = na.array([3, 3], parties[0], "A", SecretInteger)
 
     a_inv = a.inv()
-    res = a @ a_inv 
+    res = a @ a_inv
 
     return res.output(parties[1], "my_output")

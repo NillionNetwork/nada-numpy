@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 # pylint:disable=no-name-in-module
 from nillion_client import (Integer, SecretInteger, SecretUnsignedInteger,
-                               UnsignedInteger)
+                            UnsignedInteger)
 
 from nada_numpy.types import Rational, SecretRational, get_log_scale
 
