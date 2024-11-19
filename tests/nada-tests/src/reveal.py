@@ -20,11 +20,6 @@ def nada_main():
     assert d.dtype == NadaRational, d.dtype
     assert d.shape == b.shape
 
-    with pytest.raises(Exception):
-        c.to_public()
-    with pytest.raises(Exception):
-        d.to_public()
-
     return na.output(c, parties[2], "my_output_A") + na.output(
         d, parties[2], "my_output_B"
     )

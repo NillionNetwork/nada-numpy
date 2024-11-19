@@ -66,6 +66,7 @@ def array(
             nada_type = public_rational  # type: ignore
         elif nada_type == SecretRational:
             nada_type = secret_rational  # type: ignore
+        arr = np.round(arr)
         return {
             f"{prefix}_{i}": (nada_type(int(arr[i]))) for i in range(arr.shape[0])  # type: ignore
         }

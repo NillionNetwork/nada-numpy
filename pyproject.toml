@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nada-numpy"
-version = "0.5.3"
+version = "0.6.0"
 description = "Nada-Numpy is a Python library designed for algebraic operations on NumPy-like array objects on top of Nada DSL and Nillion Network."
 authors = ["José Cabrero-Holgueras <jose.cabrero@nillion.com>"]
 readme = "README.md"
@@ -8,7 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 numpy = "^1.26.4"
-nada-dsl = "^0.6.3"
+nada-dsl = "^0.7.1"
 py-nillion-client = "^0.6.0"
 nillion-python-helpers = "^0.3.0"
 black = {version="24.8.0", optional=true}

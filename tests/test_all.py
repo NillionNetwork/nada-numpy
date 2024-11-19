@@ -92,9 +92,6 @@ def build_nada(test_dir):
         ["nada", "build", test_dir[1]], cwd=test_dir[0], capture_output=True, text=True
     )
     err = result.stderr.lower() + result.stdout.lower()
-    if test_dir[1] == "determinant" and test_dir[0] == "examples/":
-        print(err)
-        raise Exception("Error")
     if result.returncode != 0 or "error" in err or "fail" in err:
         pytest.fail(f"Build {test_dir}:\n{result.stdout + result.stderr}")
 
