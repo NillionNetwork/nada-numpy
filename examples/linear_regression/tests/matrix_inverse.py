@@ -1,7 +1,10 @@
-from nada_test import nada_test, NadaTest
 import sys
-import nada_numpy.client as  na
+
 import numpy as np
+from nada_test import NadaTest, nada_test
+
+import nada_numpy.client as na
+
 
 # Functional style test
 @nada_test(program="matrix_inverse")
@@ -20,5 +23,5 @@ def my_test():
             assert value == 1, f"Expected 1 {output}, got {value}"
         else:
             assert value == 0, f"Expected 0 {output}, got {value}"
-    
-    #assert outputs["my_output"] == a + b
+
+    # assert outputs["my_output"] == a + b

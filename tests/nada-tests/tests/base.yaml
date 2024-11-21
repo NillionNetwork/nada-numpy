@@ -1,9 +1,49 @@
+---
 program: base
 inputs:
-  A_1: 3
-  A_2: 3
-  A_0: 3
+  array1_0: 5
+  array1_1: 3
+  array1_2: 42
+  array1_3: -12
+  array1_4: 3
+  array1_5: 1
+  array1_6: -5
+  array1_7: 3
+  array1_8: 1
+  array1_9: 23
+
+  array2_0: 1
+  array2_1: 2
+  array2_2: -52
+  array2_3: 11
+
+  array3_0: 53
+  array3_1: 2
+  array3_2: 15
+  array3_3: 37
+  array3_4: -1
+  array3_5: 1
+  array3_6: -2
+
 expected_outputs:
-  my_output_0: 3
-  my_output_1: 3
-  my_output_2: 3
+  out_array_0: -52
+  out_array_1: -12
+  out_array_2: -5
+  out_array_3: -2
+  out_array_4: -1
+  out_array_5: 1
+  out_array_6: 1
+  out_array_7: 1
+  out_array_8: 1
+  out_array_9: 2
+  out_array_10: 2
+  out_array_11: 3
+  out_array_12: 3
+  out_array_13: 3
+  out_array_14: 5
+  out_array_15: 11
+  out_array_16: 15
+  out_array_17: 23
+  out_array_18: 37
+  out_array_19: 42
+  out_array_20: 53

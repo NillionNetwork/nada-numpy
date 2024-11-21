@@ -24,7 +24,7 @@ _NadaType = Union[
 ]
 
 
-class SecretBoolean(dsl.SecretBoolean): # pylint:disable=too-many-ancestors
+class SecretBoolean(dsl.SecretBoolean):  # pylint:disable=too-many-ancestors
     """SecretBoolean rational wrapper"""
 
     def __init__(self, value: dsl.SecretBoolean) -> None:
@@ -80,7 +80,7 @@ class SecretBoolean(dsl.SecretBoolean): # pylint:disable=too-many-ancestors
         return result
 
 
-class PublicBoolean(dsl.PublicBoolean): # pylint:disable=too-many-ancestors
+class PublicBoolean(dsl.PublicBoolean):  # pylint:disable=too-many-ancestors
     """PublicBoolean rational wrapper"""
 
     def __init__(self, value: dsl.PublicBoolean) -> None:
