@@ -280,7 +280,7 @@ class Rational:  # pylint:disable=too-many-public-methods
             return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
-            raise ValueError("Cannot substract values with different scales.")
+            raise ValueError("Cannot subtract values with different scales.")
 
         if isinstance(other, SecretRational):
             return SecretRational(
@@ -1402,7 +1402,7 @@ class SecretRational:  # pylint:disable=too-many-public-methods
             return NotImplemented
 
         if not ignore_scale and self.log_scale != other.log_scale:
-            raise ValueError("Cannot substract values with different scales.")
+            raise ValueError("Cannot subtract values with different scales.")
 
         return SecretRational(self.value - other.value, self.log_scale)
 
@@ -2912,7 +2912,7 @@ def _chebyshev_polynomials(x: _NadaRational, terms: int) -> np.ndarray:
         NadaArray of polynomials evaluated at x of shape `(terms, *x)`.
 
     Raises:
-        ValueError: Raised if 'terrms' is odd and < 6.
+        ValueError: Raised if 'terms' is odd and < 6.
     """
     if terms % 2 != 0 or terms < 6:
         raise ValueError("Chebyshev terms must be even and >= 6")
@@ -2979,7 +2979,7 @@ def _hardtanh(
     # absolute value
     sgn = sign(x)
     abs_x = x * sgn
-    # chekc if inside [-abs_range, abs_range] interval
+    # check if inside [-abs_range, abs_range] interval
     ineight_cond = abs_x < abs_range
     result = ineight_cond.if_else(output, abs_const * sgn)
 

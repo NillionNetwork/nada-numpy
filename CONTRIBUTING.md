@@ -19,7 +19,7 @@ We recommend continuously running your code through `pylint` and `mypy` during t
 
 ### Installation
 
-1. Install [black](https://pypi.org/project/black/) and [isort](https://pycqa.github.io/isort/) for code formating
+1. Install [black](https://pypi.org/project/black/) and [isort](https://pycqa.github.io/isort/) for code formatting
 ```bash
 pip3 install black && isort
 ```
